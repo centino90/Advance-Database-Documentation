@@ -12,24 +12,26 @@ This database is made to manage the data needed for a Student Portal System. At 
 
 This database is an insource based on my plan to create a Student Portal Web Application in the future. The ERD shown in this documentation is made using Lucid Chart's general purpose diagram tool. The platform used to perform MySQL operations is PhpMyAdmin.
 
-### Table Name and Description
+### Entity Names and Description
 
 **`Users`** - is responsible for storing necessary data upon the creation of a user and when its modified.
 
-* **Students** &nbsp;`- is responsible for storing necessary data upon the creation and modification of a user that has identified itself as a student.`
+**`Students`** - is responsible for storing necessary data upon the creation and modification of a user that has identified itself as a student.
 
-* **Authors** &nbsp;`- is responsible for storing necessary data upon the creation and modification of a user that has identified itself as an author.`
+**`Authors`** - is responsible for storing necessary data upon the creation and modification of a user that has identified itself as an author.
 
-* **Schools** &nbsp;`- is responsible for storing necessary data upon the creation of a school and when its modified.`
+**`Schools`** - is responsible for storing necessary data upon the creation of a school and when its modified.
 
-* **Articles** &nbsp;`- is responsible for storing necessary data upon the creation of an article and when its modified.`
+**`Articles`** - is responsible for storing necessary data upon the creation of an article and when its modified.
 
-* **Subjects** &nbsp;`- is responsible for storing necessary data upon the creation of a subject and when its modified.`
+**`Subjects`** - is responsible for storing necessary data upon the creation of a subject and when its modified.
 
-* **Author_subscriptions** &nbsp;`- is responsible for storing necessary data upon user subscription of the authors and when its modified.`
+**`Author_subscriptions`** - is responsible for storing necessary data upon user subscription of the authors and when its modified.
 
-* **Articles_engagement** &nbsp;`- is responsible for storing necessary data upon the creation and modification of user comment within an article (creates social engagement among users).`
+**`Articles_engagement`** - is responsible for storing necessary data upon the creation and modification of user comment within an article (creates social engagement among users).
 
-* **Articles_reply** &nbsp;`- is responsible for storing necessary data upon the creation and modification of user replies within a comment.`
+**`Articles_reply`** - is responsible for storing necessary data upon the creation and modification of user replies within a comment.
 
+<br />
 
+## Database Dependency Diagram
