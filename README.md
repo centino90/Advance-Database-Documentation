@@ -45,6 +45,10 @@ This diagram shows that each entities had undergone normalization removing all d
 ## Complex Queries associated with the database
 
 Here are a list of queries with their sample output from the DBRMS:
+*Note*
+<p>Click if you notice a dropdown button labeled <b>Show more...</b>
+It will show the corresponding result of the query.
+</p>
 
 * ***Stored Procedures***
     1. **`SETUP PROCEDURE: `**
