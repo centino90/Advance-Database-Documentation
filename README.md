@@ -47,57 +47,76 @@ This diagram shows that each entities had undergone normalization removing all d
 Here are a list of queries with their sample output from the DBRMS:
 
 * ***Stored Procedures***
-    1. ```
+    1. ```SQL
+       DELIMITER //
+       CREATE PROCEDURE insertStudent(
+         IN fn varchar(15),
+         IN ln varchar(15),
+         IN ct# varchar(11),
+         IN hadd varchar(15),
+         IN zp varchar(4),
+         IN schid int(11)
+       )
+
+       BEGIN
+
+        INSERT INTO students 
+          ( fname, lname, contact#, haddress, zip, school_id ) 
+            VALUES
+              ( fn, ln, ct#, hadd, z, schid )
+
+       END //
+       DELIMITER ;
+       ```
+       
+    2. ```SQL
        SELECT * FROM TAGURU
        ```
-    2. ```
+    3. ```SQL
        SELECT * FROM TAGURU
        ```
-    3. ```
-       SELECT * FROM TAGURU
-       ```
-    4. ```
+    4. ```SQL
        SELECT * FROM TAGURU
        ```
 
 * ***Triggers*** 
-    1. ```
+    1. ```SQL
        SELECT * FROM TAGURU
        ```
-    2. ```
+    2. ```SQL
        SELECT * FROM TAGURU
        ```
-    3. ```
+    3. ```SQL
        SELECT * FROM TAGURU
        ```
-    4. ```
+    4. ```SQL
        SELECT * FROM TAGURU
        ```
 
 * ***Functions*** 
-    1. ```
+    1. ```SQL
        SELECT * FROM TAGURU
        ```
-    2. ```
+    2. ```SQL
        SELECT * FROM TAGURU
        ```
-    3. ```
+    3. ```SQL
        SELECT * FROM TAGURU
        ```
-    4. ```
+    4. ```SQL
        SELECT * FROM TAGURU
        ```
        
 * ***Transactions*** 
-    1. ```
+    1. ```SQL
        SELECT * FROM TAGURU
        ```
-    2. ```
+    2. ```SQL
        SELECT * FROM TAGURU
        ```
-    3. ```
+    3. ```SQL
        SELECT * FROM TAGURU
        ```
-    4. ```
+    4. ```SQL
        SELECT * FROM TAGURU
        ```
