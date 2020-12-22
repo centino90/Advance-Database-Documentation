@@ -77,7 +77,7 @@ Here are a list of queries with their sample output from the DBRMS:
        ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp1-1.PNG)
 
        ```SQL
-        -- then call the procedure then the result will show
+        -- then call the procedure with a random data assigned to it
         CALL insertStudent('John', 'Doe', 639154485321, 'km 11, Bayview, Sasa, Davao City', 8000, 1011);
 
         -- then select for the last time to show all the data in students table after the procedure was called
