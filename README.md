@@ -69,6 +69,9 @@ Here are a list of queries with their sample output from the DBRMS:
        END //
        DELIMITER ;
        ```
+       <details>
+       <summary>Show more</summary>
+       
        **`Query for the calling program:`**
        ```SQL
        -- first, select all data from students table. It should be empty.
@@ -86,6 +89,8 @@ Here are a list of queries with their sample output from the DBRMS:
        ```
        `Result:`
        ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp1-2.PNG)
+        </details>
+        
         *---end of item*
 
     2. **`SETUP PROCEDURE: `**
@@ -125,7 +130,7 @@ Here are a list of queries with their sample output from the DBRMS:
         `Result:`
         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp1-2.PNG)
         </details>
-        
+
         *---end of item*
 
     3. ```SQL
