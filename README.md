@@ -69,7 +69,7 @@ Here are a list of queries with their sample output from the DBRMS:
        DELIMITER ;
        ```
 
-      **`Query for the calling program:`**
+       **`Query for the calling program:`**
       
        ```SQL
        -- first, select all data from students table. It should be empty.
