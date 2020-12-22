@@ -6,7 +6,7 @@ This database is made to manage the data needed for a Student Portal System. At 
 
 <br />
 
-## Entity Relationship Diagram
+## Entity Relationship Diagram (ERD)
 
 ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/ERD.svg)
 
@@ -34,4 +34,10 @@ This database is an insource based on my plan to create a Student Portal Web App
 
 <br />
 
-## Database Dependency Diagram
+## Functional Dependency Diagram (FDD)
+
+![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/fdd1.svg)
+
+![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/fdd2.svg)
+
+![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/fdd3.svg)
