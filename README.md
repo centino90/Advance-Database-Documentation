@@ -15,12 +15,8 @@ This database is an insource based on my plan to create a Student Portal Web App
 ### Table Name and Description
 
 #### Users
-```
-- is responsible for storing necessary data upon the creation of a user and when its modified.
-  It is dependent to either two (2) entities: 
-``` 
-  **`Students`** `&` **`Authors`**
-
+`- is responsible for storing necessary data upon the creation of a user and when its modified.`
+  `It is dependent to either two (2) entities: ` **`Students`** `&` **`Authors`**
 
 #### Students
 ```
