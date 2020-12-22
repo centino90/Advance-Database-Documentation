@@ -18,19 +18,19 @@ This database is an insource based on my plan to create a Student Portal Web App
 `- is responsible for storing necessary data upon the creation of a user and when its modified.`
 <br />
 
-&nbsp;`It is dependent to either two (2) entities:`  **`Students`** `&` **`Authors`**
+&nbsp;&nbsp;&nbsp;`It is dependent to either two (2) entities:`  **`Students`** `&` **`Authors`**
 
 #### Students
 `- is responsible for storing necessary data upon the creation of a user that has identified itself as a student.`
 <br />
 
-&nbsp;`It is determinant of`  **`Users`**
+&nbsp;&nbsp;&nbsp;`It is determinant of`  **`Users`**
 
 #### Authors
 `- is responsible for storing necessary data upon the creation of a user that has identified itself as an author.`
 <br />
 
-&nbsp;`It is determinant of`  **`Users`**
+&nbsp;&nbsp;&nbsp;`It is determinant of`  **`Users`**
 
 #### Schools
 
