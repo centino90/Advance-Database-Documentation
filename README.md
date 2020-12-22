@@ -47,7 +47,8 @@ This diagram shows that each entities had undergone normalization removing all d
 Here are a list of queries with their sample output from the DBRMS:
 
 * ***Stored Procedures***
-    1. ```SQL
+    1. **`SETUP PROCEDURE: `**
+       ```SQL
        DELIMITER //
        CREATE PROCEDURE insertStudent(
          IN fn varchar(15),
@@ -87,9 +88,42 @@ Here are a list of queries with their sample output from the DBRMS:
        ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp1-2.PNG)
         *---end of item*
 
-    2. ```SQL
-       SELECT * FROM TAGURU
+    2. **`SETUP PROCEDURE: `**
+       ```SQL
+       DELIMITER //
+       CREATE PROCEDURE alterStudents(
+         OUT time_stamp CURRENT_TIMESTAMP
+       )
+
+       BEGIN
+
+        INSERT INTO students 
+          ( fname, lname, contact_no, haddress, zip, school_id ) 
+            VALUES
+              ( fn, ln, ct, hadd, z, schid )
+
+       END //
+       DELIMITER ;
        ```
+       **`Query for the calling program:`**
+       ```SQL
+       -- first, select all data from students table. It should be empty.
+        SELECT * FROM students
+       ```
+       `Result:`
+       ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp1-1.PNG)
+
+       ```SQL
+        -- then call the procedure with a random data assigned to it
+        CALL insertStudent('John', 'Doe', 639154485321, 'km 11, Bayview, Sasa, Davao City', 8000, 1011);
+
+        -- then select for the last time to show all the data in students table after the procedure was called
+        SELECT * FROM students
+       ```
+       `Result:`
+       ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp1-2.PNG)
+        *---end of item*
+
     3. ```SQL
        SELECT * FROM TAGURU
        ```
