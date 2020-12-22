@@ -47,15 +47,15 @@ This diagram shows that each entities had undergone normalization removing all d
 Here are a list of queries with their sample output from the DBRMS:
 
 * ***Stored Procedures***
-    1.  ```
+  &nbsp;```
        SELECT * FROM TAGURU
         ```
-    2.  ```
+  &nbsp;```
        SELECT * FROM TAGURU
         ```
-    3.  ```
+  &nbsp;```
        SELECT * FROM TAGURU
         ```
-    4. &nbsp;```
+  &nbsp;```
        SELECT * FROM TAGURU
         ```
