@@ -52,7 +52,7 @@ Here are a list of queries with their sample output from the DBRMS:
        CREATE PROCEDURE insertStudent(
          IN fn varchar(15),
          IN ln varchar(15),
-         IN ct# varchar(11),
+         IN ct varchar(11),
          IN hadd varchar(15),
          IN zp varchar(4),
          IN schid int(12)
@@ -61,7 +61,7 @@ Here are a list of queries with their sample output from the DBRMS:
        BEGIN
 
         INSERT INTO students 
-          ( fname, lname, contact#, haddress, zip, school_id ) 
+          ( fname, lname, contact_no, haddress, zip, school_id ) 
             VALUES
               ( fn, ln, ct, hadd, z, schid )
 
@@ -74,7 +74,7 @@ Here are a list of queries with their sample output from the DBRMS:
         SELECT * FROM students
        ```
        `Result:`
-       ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp1-1)
+       ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp1-1.png)
 
        ```SQL
         -- then call the procedure then the result will show
@@ -84,7 +84,7 @@ Here are a list of queries with their sample output from the DBRMS:
         SELECT * FROM students
        ```
        `Result:`
-       ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp1-2)
+       ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp1-2.png)
 
     2. ```SQL
        SELECT * FROM TAGURU
