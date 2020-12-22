@@ -55,7 +55,7 @@ Here are a list of queries with their sample output from the DBRMS:
          IN ct# varchar(11),
          IN hadd varchar(15),
          IN zp varchar(4),
-         IN schid int(11)
+         IN schid int(12)
        )
 
        BEGIN
@@ -63,12 +63,23 @@ Here are a list of queries with their sample output from the DBRMS:
         INSERT INTO students 
           ( fname, lname, contact#, haddress, zip, school_id ) 
             VALUES
-              ( fn, ln, ct#, hadd, z, schid )
+              ( fn, ln, ct, hadd, z, schid )
 
        END //
        DELIMITER ;
        ```
-       
+       `Result when called: `
+       ```SQL
+       -- first, select all data from students table. It should be empty.
+        SELECT * FROM students
+
+       -- then call the procedure then the result will show
+        CALL insertStudent('John', 'Doe', 639154485321, 'km 11, Bayview, Sasa, Davao City', 8000, 1011);
+
+        -- then select for the last time to show all the data in students table after the procedure was called
+        SELECT * FROM students
+       ```
+
     2. ```SQL
        SELECT * FROM TAGURU
        ```
