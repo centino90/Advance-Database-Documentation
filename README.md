@@ -68,7 +68,9 @@ Here are a list of queries with their sample output from the DBRMS:
        END //
        DELIMITER ;
        ```
+
       **`Query for the calling program:`**
+      
        ```SQL
        -- first, select all data from students table. It should be empty.
         SELECT * FROM students
