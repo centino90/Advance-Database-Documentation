@@ -8,7 +8,7 @@ This database is made to manage the data needed for a Student Portal System. At 
 
 ## Entity Relationship Diagram
 
-<img src="https://raw.githubusercontent.com/centino90/Advance-Database-Documentation/74adf78af5fc435880b8aa280bf0f1b73acb11dd/img/ERD.svg"/>
+<img src="https://https://github.com/centino90/carcrasher/blob/master/img/ERD.svg"/>
 
 This database is an insource based on my plan to create a Student Portal Web Application in the future. The ERD shown in this documentation is made using Lucid Chart's general purpose diagram tool. The platform used to perform MySQL operations is PhpMyAdmin.
 
