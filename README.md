@@ -110,7 +110,7 @@ Here are a list of queries with their sample output from the DBRMS:
        -- first, select all data from students table. It should be empty.
         SELECT * FROM students
        ```
-       `Result:`
+       <details><summary>Result</summary>
        ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp1-1.PNG)
 
        ```SQL
@@ -123,6 +123,7 @@ Here are a list of queries with their sample output from the DBRMS:
        `Result:`
        ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp1-2.PNG)
         *---end of item*
+       </details>
 
     3. ```SQL
        SELECT * FROM TAGURU
