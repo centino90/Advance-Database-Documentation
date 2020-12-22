@@ -14,7 +14,7 @@ This database is an insource based on my plan to create a Student Portal Web App
 
 ### Table Name and Description
 
-* **Users** &nbsp;`- is responsible for storing necessary data upon the creation of a user and when its modified.`
+**`Users`** - is responsible for storing necessary data upon the creation of a user and when its modified.
 
 * **Students** &nbsp;`- is responsible for storing necessary data upon the creation and modification of a user that has identified itself as a student.`
 
