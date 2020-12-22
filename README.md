@@ -39,3 +39,12 @@ This database is an insource based on my plan to create a Student Portal Web App
 ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/FDD.svg)
 
 This diagram shows that each entities had undergone normalization removing all dependencies that can cause anomalies.
+
+## Complex Queries associated with the database
+
+Here are a list of queries with their sample output from the DBRMS:
+
+* ***Stored Procedures***
+  1. ```
+       SELECT * FROM TAGURU
+     ```
