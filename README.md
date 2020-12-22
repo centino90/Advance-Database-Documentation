@@ -14,7 +14,7 @@ This database is an insource based on my plan to create a Student Portal Web App
 
 ### Table Name and Description
 
-#### Users
+* #### Users
 `- is responsible for storing necessary data upon the creation of a user and when its modified.`
 
 #### Students
@@ -24,21 +24,21 @@ This database is an insource based on my plan to create a Student Portal Web App
 `- is responsible for storing necessary data upon the creation and modification of a user that has identified itself as an author.`
 
 #### Schools
-`- is responsible for storing necessary data upon the creation of a school and when its modified`
+`- is responsible for storing necessary data upon the creation of a school and when its modified.`
 
 #### Articles
-`- is responsible for storing necessary data upon the creation of an article and when its modified`
+`- is responsible for storing necessary data upon the creation of an article and when its modified.`
 
 #### Subjects
-`- is responsible for storing necessary data upon the creation of a subject and when its modified`
+`- is responsible for storing necessary data upon the creation of a subject and when its modified.`
 
 #### Author_subscriptions
-`- is responsible for storing necessary data upon user subscription of the authors and when its modified`
+`- is responsible for storing necessary data upon user subscription of the authors and when its modified.`
 
 #### Articles_engagement
-`- is responsible for storing necessary data upon the creation and modification of user comment within an article (creates social engagement among users)`
+`- is responsible for storing necessary data upon the creation and modification of user comment within an article (creates social engagement among users).`
 
 #### Articles_reply
-`- is responsible for storing necessary data upon the creation and modification of user replies within a comment`
+`- is responsible for storing necessary data upon the creation and modification of user replies within a comment.`
 
 
