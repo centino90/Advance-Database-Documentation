@@ -2,7 +2,7 @@
 
 ## The database
 
-This database is made to manage the data needed for a Student Portal System. At the moment, it is consist of nine (9) entities and is responsible for users data management; creation, updation, & deletion management of user (students & authors) transactions and articles(although I am planning to include more features to this database system in the future). This database will be operated in a RDBMS (Relational Database Management System) called MySQL using the PhpMyAdmin platform. With that, multiple complex queries and methods to manage all of the relationships between entities will be used.
+This database is made to manage the data needed for a Student Portal System. At the moment, it is consist of nine (9) entities which are responsible for users data management; creation, updation, & deletion management of user (students & authors) transactions and articles (although I am planning to include more features to this database system in the future). This database will be operated in a RDBMS (Relational Database Management System) called MySQL using the PhpMyAdmin platform. With that, multiple complex queries and methods to manage all of the relationships between entities will be used.
 
 <br />
 
