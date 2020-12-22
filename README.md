@@ -14,30 +14,22 @@ This database is an insource based on my plan to create a Student Portal Web App
 
 ### Table Name and Description
 
-* **Users** `- is responsible for storing necessary data upon the creation of a user and when its modified.`
+* **Users** &nbsp;`- is responsible for storing necessary data upon the creation of a user and when its modified.`
 
-#### Students
-`- is responsible for storing necessary data upon the creation and modification of a user that has identified itself as a student.`
+* **Students** &nbsp;`- is responsible for storing necessary data upon the creation and modification of a user that has identified itself as a student.`
 
-#### Authors
-`- is responsible for storing necessary data upon the creation and modification of a user that has identified itself as an author.`
+* **Authors** &nbsp;`- is responsible for storing necessary data upon the creation and modification of a user that has identified itself as an author.`
 
-#### Schools
-`- is responsible for storing necessary data upon the creation of a school and when its modified.`
+* **Schools** &nbsp;`- is responsible for storing necessary data upon the creation of a school and when its modified.`
 
-#### Articles
-`- is responsible for storing necessary data upon the creation of an article and when its modified.`
+* **Articles** &nbsp;`- is responsible for storing necessary data upon the creation of an article and when its modified.`
 
-#### Subjects
-`- is responsible for storing necessary data upon the creation of a subject and when its modified.`
+* **Subjects** &nbsp;`- is responsible for storing necessary data upon the creation of a subject and when its modified.`
 
-#### Author_subscriptions
-`- is responsible for storing necessary data upon user subscription of the authors and when its modified.`
+* **Author_subscriptions** &nbsp;`- is responsible for storing necessary data upon user subscription of the authors and when its modified.`
 
-#### Articles_engagement
-`- is responsible for storing necessary data upon the creation and modification of user comment within an article (creates social engagement among users).`
+* **Articles_engagement** &nbsp;`- is responsible for storing necessary data upon the creation and modification of user comment within an article (creates social engagement among users).`
 
-#### Articles_reply
-`- is responsible for storing necessary data upon the creation and modification of user replies within a comment.`
+* **Articles_reply** &nbsp;`- is responsible for storing necessary data upon the creation and modification of user replies within a comment.`
 
 
