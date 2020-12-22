@@ -107,22 +107,22 @@ Here are a list of queries with their sample output from the DBRMS:
        ```
        <details>
        <summary>Show more</summary>
-       **`Query for the calling program:`**
-       ```SQL
-       -- first, select all data from students table. It should be empty.
-        SELECT * FROM students
-       ```
-       ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp1-1.PNG)
+        **`Query for the calling program:`**
+        ```SQL
+        -- first, select all data from students table. It should be empty.
+          SELECT * FROM students
+        ```
+        ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp1-1.PNG)
 
-       ```SQL
-        -- then call the procedure with a random data assigned to it
-        CALL insertStudent('John', 'Doe', 639154485321, 'km 11, Bayview, Sasa, Davao City', 8000, 1011);
+        ```SQL
+          -- then call the procedure with a random data assigned to it
+          CALL insertStudent('John', 'Doe', 639154485321, 'km 11, Bayview, Sasa, Davao City', 8000, 1011);
 
-        -- then select for the last time to show all the data in students table after the procedure was called
-        SELECT * FROM students
-       ```
-       `Result:`
-       ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp1-2.PNG)
+          -- then select for the last time to show all the data in students table after the procedure was called
+          SELECT * FROM students
+        ```
+        `Result:`
+        ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp1-2.PNG)
         </details>
         *---end of item*
 
