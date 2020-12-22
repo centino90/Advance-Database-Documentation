@@ -74,7 +74,7 @@ Here are a list of queries with their sample output from the DBRMS:
         SELECT * FROM students
        ```
        `Result:`
-       ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp1-2)
+       ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp1-1)
 
        ```SQL
         -- then call the procedure then the result will show
