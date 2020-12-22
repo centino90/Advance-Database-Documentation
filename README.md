@@ -68,17 +68,23 @@ Here are a list of queries with their sample output from the DBRMS:
        END //
        DELIMITER ;
        ```
-       `Result when called: `
+       `Query for the calling program:`
        ```SQL
        -- first, select all data from students table. It should be empty.
         SELECT * FROM students
+       ```
+       `Result:`
+       ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp1-2)
 
-       -- then call the procedure then the result will show
+       ```SQL
+        -- then call the procedure then the result will show
         CALL insertStudent('John', 'Doe', 639154485321, 'km 11, Bayview, Sasa, Davao City', 8000, 1011);
 
         -- then select for the last time to show all the data in students table after the procedure was called
         SELECT * FROM students
        ```
+       `Result:`
+       ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp1-2)
 
     2. ```SQL
        SELECT * FROM TAGURU
