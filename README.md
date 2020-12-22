@@ -50,54 +50,54 @@ Here are a list of queries with their sample output from the DBRMS:
     1. ```
        SELECT * FROM TAGURU
        ```
-    2.  ```
+    2. ```
        SELECT * FROM TAGURU
-        ```
-    3.  ```
+       ```
+    3. ```
        SELECT * FROM TAGURU
-        ```
-    4.  ```
+       ```
+    4. ```
        SELECT * FROM TAGURU
-        ```
+       ```
 
 * ***Triggers*** 
-    1.  ```
+    1. ```
        SELECT * FROM TAGURU
-        ```
-    2.  ```
+       ```
+    2. ```
        SELECT * FROM TAGURU
-        ```
-    3.  ```
+       ```
+    3. ```
        SELECT * FROM TAGURU
-        ```
-    4.  ```
+       ```
+    4. ```
        SELECT * FROM TAGURU
-        ```
+       ```
 
 * ***Functions*** 
-    1.  ```
+    1. ```
        SELECT * FROM TAGURU
-        ```
-    2.  ```
+       ```
+    2. ```
        SELECT * FROM TAGURU
-        ```
-    3.  ```
+       ```
+    3. ```
        SELECT * FROM TAGURU
-        ```
-    4.  ```
+       ```
+    4. ```
        SELECT * FROM TAGURU
-        ```   
-        
+       ```
+       
 * ***Transactions*** 
-    1.  ```
+    1. ```
        SELECT * FROM TAGURU
-        ```
-    2.  ```
+       ```
+    2. ```
        SELECT * FROM TAGURU
-        ```
-    3.  ```
+       ```
+    3. ```
        SELECT * FROM TAGURU
-        ```
-    4.  ```
+       ```
+    4. ```
        SELECT * FROM TAGURU
-        ```        
+       ```
