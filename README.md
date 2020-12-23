@@ -2,7 +2,7 @@
 
 ## The database
 
-This database is made to manage the data needed for a Student Portal System. At the moment, it is consist of nine (11) entities which are responsible for users data management; creation, updation, & deletion management of user (students & authors) transactions and articles (although I am planning to include more features to this database system in the future). This database will be operated in a RDBMS (Relational Database Management System) called MySQL using the PhpMyAdmin platform. With that, multiple complex queries and methods to manage all of the relationships between entities will be used.
+This database is made to manage the data needed for a Student Portal System. At the moment, it is consist of eleven (11) entities which are responsible for users data management; creation, updation, & deletion management of user (students & authors) transactions and articles (although I am planning to include more features to this database system in the future). This database is operated in a RDBMS (Relational Database Management System) called MySQL using the PhpMyAdmin platform. With that, multiple complex queries and methods to manage all of the relationships between entities are used. The diagrams shown in this documentation are made using Lucid Chart Diagram tools.
 
 <br />
 
@@ -10,7 +10,7 @@ This database is made to manage the data needed for a Student Portal System. At 
 
 ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/ERD.svg)
 
-This database is an insource based on my plan to create a Student Portal Web Application in the future. The ERD shown in this documentation is made using Lucid Chart's general purpose diagram tool.
+This database is an insource based on my plan to create a Student Portal Web Application in the future.
 
 ### Entity Names and Description
 
