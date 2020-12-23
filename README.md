@@ -2,7 +2,7 @@
 
 ## The database
 
-This database is made to manage the data needed for a Student Portal System. At the moment, it is consist of nine (9) entities which are responsible for users data management; creation, updation, & deletion management of user (students & authors) transactions and articles (although I am planning to include more features to this database system in the future). This database will be operated in a RDBMS (Relational Database Management System) called MySQL using the PhpMyAdmin platform. With that, multiple complex queries and methods to manage all of the relationships between entities will be used.
+This database is made to manage the data needed for a Student Portal System. At the moment, it is consist of nine (11) entities which are responsible for users data management; creation, updation, & deletion management of user (students & authors) transactions and articles (although I am planning to include more features to this database system in the future). This database will be operated in a RDBMS (Relational Database Management System) called MySQL using the PhpMyAdmin platform. With that, multiple complex queries and methods to manage all of the relationships between entities will be used.
 
 <br />
 
@@ -32,6 +32,10 @@ This database is an insource based on my plan to create a Student Portal Web App
 
 **`articles_reply`** - is responsible for storing necessary data upon the creation and modification of user replies within a comment.
 
+**`cities`** - is responsible for storing necessary data of a city.
+
+**`countries`** - is responsible for storing necessary data of a country.
+
 <br />
 
 ## Functional Dependency Diagram (FDD)
@@ -45,9 +49,9 @@ This diagram shows that each entities had undergone normalization removing all d
 ## Complex Queries associated with the database
 
 Here are a list of queries with their sample output from the DBRMS: 
-<br><br>
-***Note***
-<p>Click if you notice a dropdown button labeled <b>Show more...</b> <br>
+<br>
+
+<p>Note:<br>Click if you notice a dropdown button labeled <b>Show more...</b> <br>
 It will show the corresponding result of the query.
 </p>
 
