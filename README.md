@@ -44,9 +44,10 @@ This diagram shows that each entities had undergone normalization removing all d
 
 ## Complex Queries associated with the database
 
-Here are a list of queries with their sample output from the DBRMS:
-*Note*
-<p>Click if you notice a dropdown button labeled <b>Show more...</b>
+Here are a list of queries with their sample output from the DBRMS: 
+<br><br>
+***Note***
+<p>Click if you notice a dropdown button labeled <b>Show more...</b> <br>
 It will show the corresponding result of the query.
 </p>
 
