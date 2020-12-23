@@ -40,7 +40,7 @@ This database is an insource based on my plan to create a Student Portal Web App
 
 ## Functional Dependency Diagram (FDD)
 
-![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/FDD.png)
+![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/FDD.svg)
 
 This diagram shows that each entities had undergone normalization removing all dependencies that can cause anomalies.
 
