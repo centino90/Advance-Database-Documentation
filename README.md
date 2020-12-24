@@ -14,7 +14,7 @@ This database is made to manage the data needed for an Educational Blog Site. At
 
 This database is an insource that I created using the following tools:
 
-> [Lucid Chart Diagram tools](https://lucid.app/) &nbsp;&nbsp; [Online Visual-Paradigm tools](http://online.visual-paradigm.com/) &nbsp;&nbsp; [Mackaroo Mockup data](https://www.mockaroo.com/) &nbsp;&nbsp; [sql converter](https://www.convertcsv.com/csv-to-sql.htm) &nbsp;&nbsp; [fake number generator](https://fakenumber.net/phone-number/philippines) &nbsp;&nbsp; [Varchar decoder](https://www.dcode.fr/values-separation) &nbsp;&nbsp; [Random string generator](https://www.random.org/strings/?mode=advanced) &nbsp;&nbsp;
+> <a href="https://lucid.app/" target="_blank">Lucid Chart Diagram tools</a> &nbsp;&nbsp; <a href="http://online.visual-paradigm.com/" target="_blank">Online Visual-Paradigm tools</a> &nbsp;&nbsp; <a href="https://www.mockaroo.com/" target="_blank">Mackaroo Mockup data</a> &nbsp;&nbsp; <a href="https://www.convertcsv.com/csv-to-sql.htm" target="_blank">sql converter</a> &nbsp;&nbsp; <a href="https://fakenumber.net/phone-number/philippines" target="_blank">fake number generator</a> &nbsp;&nbsp; <a href="https://www.dcode.fr/values-separation" target="_blank">Varchar decoder</a> &nbsp;&nbsp; <a href="https://lucid.app/" target="_blank">Lucid Chart Diagram tools</a> &nbsp;&nbsp; <a href="https://www.random.org/strings/?mode=advanced" target="_blank">Random string generator</a>
 
 ### Entity Names and Description
 
