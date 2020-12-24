@@ -175,7 +175,7 @@ Here are a list of queries with their sample output from the DBRMS:
          SELECT @un, @em, @sadd, @stat;
         ```
         `Result:`
-        ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp2-1.PNG)
+        ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp2-1.png)
         </details>
 
         <br>
