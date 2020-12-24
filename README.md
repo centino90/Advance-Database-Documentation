@@ -110,7 +110,7 @@ Here are a list of queries with their sample output from the DBRMS:
         SELECT * FROM students;
        ```
        `Result:`
-       ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/spp1.svg)
+       ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/spp1.png)
 
        ```SQL
         -- then call the procedure with a random data assigned to it
