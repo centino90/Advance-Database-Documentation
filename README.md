@@ -62,7 +62,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
 
 * ***Stored Procedures***
-    1. **`SETUP PROCEDURE: `**
+    1. **`Query 1: `**
        ```SQL
        DELIMITER //
        CREATE PROCEDURE insertStudent(
@@ -105,10 +105,10 @@ Here are a list of queries with their sample output from the DBRMS:
        `Result:`
        ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp1-2.PNG)
         </details>
-        
-        *---end of item*
+       
+       <br>
 
-    2. **`SETUP PROCEDURE: `**
+    2. **`Query 2: `**
        ```SQL
        DELIMITER //
        CREATE PROCEDURE alterStudents(
@@ -146,7 +146,7 @@ Here are a list of queries with their sample output from the DBRMS:
         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp1-2.PNG)
         </details>
 
-        *---end of item*
+        <br>
 
     3. ```SQL
        SELECT * FROM TAGURU
