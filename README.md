@@ -63,27 +63,45 @@ Here are a list of queries with their sample output from the DBRMS:
 
 * ***Stored Procedures***
     1. **`Query 1: `**
-       ```SQL
-       DELIMITER //
-       CREATE PROCEDURE insertStudent(
-         IN fn varchar(15),
-         IN ln varchar(15),
-         IN ct varchar(16),
-         IN sadd varchar(50),
-         IN city_id int(7),
-         IN schid int(9)
-       )
+      ```SQL
+      DELIMITER //
+      CREATE PROCEDURE insertUser(
+      -- users
+      -- IN us int(11),
+      IN ucl int(11),
+      IN un varchar(50),
+      IN pw varchar(50),
+      IN rec varchar(20),
+      IN em VARCHAR(80),
+      -- users_detail
+      IN fn varchar(30),
+      IN ln varchar(30),
+      IN ct varchar(16),
+      IN sadd varchar(80),
+      IN city_id int(11),
+      IN schid int(11)    
+      )
 
-       BEGIN
+      BEGIN
 
-        INSERT INTO students 
-          ( fname, lname, contact_no, haddress, zip, school_id ) 
+      SELECT `AUTO_INCREMENT` INTO @ai
+         FROM  INFORMATION_SCHEMA.TABLES
+            WHERE TABLE_SCHEMA = 'studentportal'
+               AND TABLE_NAME = 'users_detail';
+      
+      INSERT INTO users_detail 
+         ( fname, lname, contact_no, saddress, city_id, school_id ) 
+         VALUES
+            ( fn, ln, ct, sadd, city_id, schid );
+
+      INSERT INTO users
+         ( user_id, u_cl_id, uname, pword, rec_code, email ) 
             VALUES
-              ( fn, ln, ct, sadd, city_id, schid )
+               (@ai, ucl, un, pw, rec, em);
 
-       END //
-       DELIMITER ;
-       ```
+      END //
+      DELIMITER ;
+      ```
        <details open>
        <summary>Show more...</summary>
 
