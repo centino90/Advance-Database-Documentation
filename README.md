@@ -66,13 +66,13 @@ Here are a list of queries with their sample output from the DBRMS:
       ```SQL
       DELIMITER //
       CREATE PROCEDURE insertUser(
-      -- users
+      -- users table
       IN ucl int(11),
       IN un varchar(50),
       IN pw varchar(50),
       IN rec varchar(20),
       IN em VARCHAR(80),
-      -- users_detail
+      -- users_detail table
       IN fn varchar(30),
       IN ln varchar(30),
       IN ct varchar(16),
@@ -83,6 +83,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
       BEGIN
 
+      -- assign the next increment value to a variable
       SELECT `AUTO_INCREMENT` INTO @ai
          FROM  INFORMATION_SCHEMA.TABLES
             WHERE TABLE_SCHEMA = 'studentportal'
@@ -106,23 +107,35 @@ Here are a list of queries with their sample output from the DBRMS:
 
        **`Query for the calling program:`**
        ```SQL
-       -- first, select all data from students table. It should be empty.
-        SELECT * FROM students;
+       -- check the total rows before calling the procedure to get the initial number
+         SELECT COUNT(user_id) FROM users_detail;
+         SELECT COUNT(user_id) FROM users;
        ```
        `Result:`
        ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp1-1.PNG)
 
        ```SQL
-        -- then call the procedure with a random data assigned to it
-        CALL insertStudent('John', 'Doe', +63-909-555-4117, 'km 11, Bayview, Sasa, Davao City', 1000000001, 100000005);
+         -- call the procedure using dummy data as parameters
+         CALL insertUser(
+            10001,
+            'username123',
+            'password123',
+            'MyCoD3',
+            'email@email.com',
+            'John',
+            'Doe',
+            '63-909-555-4117',
+            'km 11 Bayview, Sasa',
+            5,
+            3005
+         );
 
-        -- then select for the last time to show all the data in students table after the procedure was called
-        SELECT * FROM students;
+         -- check the total rows again after the procedure is called which should now have 1 row added to it
+         SELECT COUNT(user_id) FROM users_detail;
+         SELECT COUNT(user_id) FROM users;
        ```
        `Result:`
-
        ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp1-2.PNG)
-
        ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp1-3.PNG)
         </details>
        
@@ -130,40 +143,39 @@ Here are a list of queries with their sample output from the DBRMS:
 
    2. **`Query 2: `**
        ```SQL
-       DELIMITER //
-       CREATE PROCEDURE alterStudents(
-         OUT time_stamp CURRENT_TIMESTAMP
-       )
+         DELIMITER //
 
-       BEGIN
+         CREATE PROCEDURE selectUser(
+         IN uid INT(11),
+         OUT un VARCHAR (30),
+         OUT em VARCHAR(80),
+         OUT sadd VARCHAR(80),
+         OUT stat BOOLEAN
+         )
+         -- SELECT but not show the values that is received from this statement and assign it to different variables
+         SELECT users.uname, users.email, users_detail.saddress, users_detail.is_active INTO un, em, sadd, stat FROM users INNER JOIN users_detail ON users.user_id = 		users_detail.user_id WHERE users.user_id = uid //
 
-        INSERT INTO students 
-          ( fname, lname, contact_no, haddress, zip, school_id ) 
-            VALUES
-              ( fn, ln, ct, hadd, z, schid )
-
-       END //
-       DELIMITER ;
+         DELIMITER ;
        ```
        <details>
        <summary>Show more...</summary>
 
         **`Query for the calling program:`**
         ```SQL
-        -- first, select all data from students table. It should be empty.
-          SELECT * FROM students
-        ```
-        ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp1-1.PNG)
+         -- call procedure
+         CALL selectUser(
+            10000418,
+            @un,
+            @em,
+            @sadd,
+            @stat
+         );
 
-        ```SQL
-          -- then call the procedure with a random data assigned to it
-          CALL insertStudent('John', 'Doe', 639154485321, 'km 11, Bayview, Sasa, Davao City', 8000, 1011);
-
-          -- then select for the last time to show all the data in students table after the procedure was called
-          SELECT * FROM students
+         -- SELECT the variables one more time. This time, we are selecting it with the intention of showing the returned value
+         SELECT @un, @em, @sadd, @stat;
         ```
         `Result:`
-        ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp1-2.PNG)
+        ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp2-1.PNG)
         </details>
 
         <br>
