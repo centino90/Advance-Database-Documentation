@@ -63,7 +63,46 @@ Here are a list of queries with their sample output from the DBRMS:
 
 * ***Stored Procedures***
    1. **`Query 1: `**
-      ```SQL
+       ```SQL
+         DELIMITER //
+
+         CREATE PROCEDURE selectUser(
+         IN uid INT(11),
+         OUT un VARCHAR (30),
+         OUT em VARCHAR(80),
+         OUT sadd VARCHAR(80),
+         OUT stat BOOLEAN
+         )
+         -- SELECT but not show the values that is received from this statement and assign it to different variables
+         SELECT users.uname, users.email, users_detail.saddress, users_detail.is_active INTO un, em, sadd, stat FROM users INNER JOIN users_detail ON users.user_id = 		users_detail.user_id WHERE users.user_id = uid //
+
+         DELIMITER ;
+       ```
+       <details>
+       <summary>Show more...</summary>
+
+        **`Query for the calling program:`**
+        ```SQL
+         -- call procedure
+         CALL selectUser(
+            10000418,
+            @un,
+            @em,
+            @sadd,
+            @stat
+         );
+
+         -- SELECT the variables one more time. This time, we are selecting it with the intention of showing the returned value
+         SELECT @un, @em, @sadd, @stat;
+        ```
+        `Result:`
+        ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp2-1.png)
+        </details>
+       
+       <br>
+
+   2. **`Query 2: `**
+    ```SQL
       DELIMITER //
       CREATE PROCEDURE insertUser(
       -- users table
@@ -135,47 +174,7 @@ Here are a list of queries with their sample output from the DBRMS:
          SELECT COUNT(user_id) FROM users;
        ```
        `Result:`
-       ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp1-2.PNG)
-       ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp1-3.PNG)
-        </details>
-       
-       <br>
-
-   2. **`Query 2: `**
-       ```SQL
-         DELIMITER //
-
-         CREATE PROCEDURE selectUser(
-         IN uid INT(11),
-         OUT un VARCHAR (30),
-         OUT em VARCHAR(80),
-         OUT sadd VARCHAR(80),
-         OUT stat BOOLEAN
-         )
-         -- SELECT but not show the values that is received from this statement and assign it to different variables
-         SELECT users.uname, users.email, users_detail.saddress, users_detail.is_active INTO un, em, sadd, stat FROM users INNER JOIN users_detail ON users.user_id = 		users_detail.user_id WHERE users.user_id = uid //
-
-         DELIMITER ;
-       ```
-       <details>
-       <summary>Show more...</summary>
-
-        **`Query for the calling program:`**
-        ```SQL
-         -- call procedure
-         CALL selectUser(
-            10000418,
-            @un,
-            @em,
-            @sadd,
-            @stat
-         );
-
-         -- SELECT the variables one more time. This time, we are selecting it with the intention of showing the returned value
-         SELECT @un, @em, @sadd, @stat;
-        ```
-        `Result:`
-        ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp2-1.png)
+       ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp1-2.PNG) ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp1-3.PNG)
         </details>
 
         <br>
