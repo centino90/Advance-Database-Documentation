@@ -2,7 +2,7 @@
 
 ## The database
 
-This database is made to manage the data needed for a Student Portal System. At the moment, it is consist of eleven (11) entities which are responsible for users data management; creation, updation, & deletion management of user (students & authors) transactions and articles (although I am planning to include more features to this database system in the future). This database is operated in a RDBMS (Relational Database Management System) called MySQL using the PhpMyAdmin platform. With that, multiple complex queries and methods to manage all of the relationships between entities are used. The diagrams shown in this documentation are made using Lucid Chart Diagram tools.
+This database is made to manage the data needed for a Student Portal System. At the moment, it is consist of eleven (12) entities which are responsible for users data management; creation, updation, & deletion management of user (students & authors) transactions and articles (although I am planning to include more features to this database system in the future). This database is operated in a RDBMS (Relational Database Management System) called MySQL using the PhpMyAdmin platform. With that, multiple complex queries and methods to manage all of the relationships between entities are used. The diagrams shown in this documentation are made using Lucid Chart Diagram tools and Online Visual-Paradigm tools.
 
 <br />
 
@@ -16,9 +16,9 @@ This database is an insource based on my plan to create a Student Portal Web App
 
 **`users`** - is responsible for storing necessary data upon the creation of a user and when its modified.
 
-**`students`** - is responsible for storing necessary data upon the creation and modification of a user that has identified itself as a student.
+**`users_detail`** - is responsible for storing necessary data upon the creation and modification of a user that has identified itself as a student.
 
-**`authors`** - is responsible for storing necessary data upon the creation and modification of a user that has identified itself as an author.
+**`user_class`** - is responsible for storing necessary data of a classifier for users which is used to assign each user a user level to identify to when interacting with the system.
 
 **`schools`** - is responsible for storing necessary data upon the creation of a school and when its modified.
 
@@ -28,11 +28,13 @@ This database is an insource based on my plan to create a Student Portal Web App
 
 **`author_subscriptions`** - is responsible for storing necessary data upon user subscription of the authors and when its modified.
 
-**`articles_engagement`** - is responsible for storing necessary data upon the creation and modification of user comment within an article (creates social engagement among users).
+**`articles_comment`** - is responsible for storing necessary data upon the creation and modification of user comment within an article (creates social engagement among users).
 
 **`articles_reply`** - is responsible for storing necessary data upon the creation and modification of user replies within a comment.
 
 **`cities`** - is responsible for storing necessary data of a city.
+
+**`states`** - is responsible for storing necessary data of a state.
 
 **`countries`** - is responsible for storing necessary data of a country.
 
@@ -62,10 +64,10 @@ It will show the corresponding result of the query.
        CREATE PROCEDURE insertStudent(
          IN fn varchar(15),
          IN ln varchar(15),
-         IN ct varchar(11),
-         IN hadd varchar(15),
-         IN zp varchar(4),
-         IN schid int(12)
+         IN ct varchar(16),
+         IN sadd varchar(50),
+         IN city_id int(7),
+         IN schid int(9)
        )
 
        BEGIN
@@ -73,7 +75,7 @@ It will show the corresponding result of the query.
         INSERT INTO students 
           ( fname, lname, contact_no, haddress, zip, school_id ) 
             VALUES
-              ( fn, ln, ct, hadd, z, schid )
+              ( fn, ln, ct, sadd, city_id, schid )
 
        END //
        DELIMITER ;
@@ -84,17 +86,17 @@ It will show the corresponding result of the query.
        **`Query for the calling program:`**
        ```SQL
        -- first, select all data from students table. It should be empty.
-        SELECT * FROM students
+        SELECT * FROM students;
        ```
        `Result:`
        ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp1-1.PNG)
 
        ```SQL
         -- then call the procedure with a random data assigned to it
-        CALL insertStudent('John', 'Doe', 639154485321, 'km 11, Bayview, Sasa, Davao City', 8000, 1011);
+        CALL insertStudent('John', 'Doe', +63-909-555-4117, 'km 11, Bayview, Sasa, Davao City', 1000000001, 100000005);
 
         -- then select for the last time to show all the data in students table after the procedure was called
-        SELECT * FROM students
+        SELECT * FROM students;
        ```
        `Result:`
        ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp1-2.PNG)
