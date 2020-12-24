@@ -78,7 +78,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
          DELIMITER ;
        ```
-       <details>
+       <details open>
        <summary>Show more...</summary>
 
         **`Query for the calling program:`**
@@ -102,54 +102,54 @@ Here are a list of queries with their sample output from the DBRMS:
        <br>
 
    2. **`Query 2: `**
-    ```SQL
-      DELIMITER //
-      CREATE PROCEDURE insertUser(
-      -- users table
-      IN ucl int(11),
-      IN un varchar(50),
-      IN pw varchar(50),
-      IN rec varchar(20),
-      IN em VARCHAR(80),
-      -- users_detail table
-      IN fn varchar(30),
-      IN ln varchar(30),
-      IN ct varchar(16),
-      IN sadd varchar(80),
-      IN city_id int(11),
-      IN schid int(11)    
-      )
+      ```SQL
+         DELIMITER //
+         CREATE PROCEDURE insertUser(
+         -- users table
+         IN ucl int(11),
+         IN un varchar(50),
+         IN pw varchar(50),
+         IN rec varchar(20),
+         IN em VARCHAR(80),
+         -- users_detail table
+         IN fn varchar(30),
+         IN ln varchar(30),
+         IN ct varchar(16),
+         IN sadd varchar(80),
+         IN city_id int(11),
+         IN schid int(11)    
+         )
 
-      BEGIN
+         BEGIN
 
-      -- assign the next increment value to a variable
-      SELECT `AUTO_INCREMENT` INTO @ai
-         FROM  INFORMATION_SCHEMA.TABLES
-            WHERE TABLE_SCHEMA = 'studentportal'
-               AND TABLE_NAME = 'users_detail';
-      
-      INSERT INTO users_detail 
-         ( fname, lname, contact_no, saddress, city_id, school_id ) 
-         VALUES
-            ( fn, ln, ct, sadd, city_id, schid );
-
-      INSERT INTO users
-         ( user_id, u_cl_id, uname, pword, rec_code, email ) 
+         -- assign the next increment value to a variable
+         SELECT `AUTO_INCREMENT` INTO @ai
+            FROM  INFORMATION_SCHEMA.TABLES
+               WHERE TABLE_SCHEMA = 'studentportal'
+                  AND TABLE_NAME = 'users_detail';
+         
+         INSERT INTO users_detail 
+            ( fname, lname, contact_no, saddress, city_id, school_id ) 
             VALUES
-               (@ai, ucl, un, pw, rec, em);
+               ( fn, ln, ct, sadd, city_id, schid );
 
-      END //
-      DELIMITER ;
+         INSERT INTO users
+            ( user_id, u_cl_id, uname, pword, rec_code, email ) 
+               VALUES
+                  (@ai, ucl, un, pw, rec, em);
+
+         END //
+         DELIMITER ;
       ```
-       <details open>
+       <details>
        <summary>Show more...</summary>
 
        **`Query for the calling program:`**
-       ```SQL
+      ```SQL
        -- check the total rows before calling the procedure to get the initial number
          SELECT COUNT(user_id) FROM users_detail;
          SELECT COUNT(user_id) FROM users;
-       ```
+      ```
        `Result:`
        ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp1-1.PNG)
 
@@ -175,7 +175,7 @@ Here are a list of queries with their sample output from the DBRMS:
        ```
        `Result:`
        ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp1-2.PNG) ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp1-3.PNG)
-        </details>
+      </details>
 
         <br>
 
