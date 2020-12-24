@@ -62,12 +62,11 @@ Here are a list of queries with their sample output from the DBRMS:
 
 
 * ***Stored Procedures***
-    1. **`Query 1: `**
+   1. **`Query 1: `**
       ```SQL
       DELIMITER //
       CREATE PROCEDURE insertUser(
       -- users
-      -- IN us int(11),
       IN ucl int(11),
       IN un varchar(50),
       IN pw varchar(50),
@@ -126,7 +125,7 @@ Here are a list of queries with their sample output from the DBRMS:
        
        <br>
 
-    2. **`Query 2: `**
+   2. **`Query 2: `**
        ```SQL
        DELIMITER //
        CREATE PROCEDURE alterStudents(
