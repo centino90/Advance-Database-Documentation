@@ -2,15 +2,19 @@
 
 ## The database
 
-This database is made to manage the data needed for a Student Portal System. At the moment, it is consist of eleven (12) entities which are responsible for users data management; creation, updation, & deletion management of user (students & authors) transactions and articles (although I am planning to include more features to this database system in the future). This database is operated in a RDBMS (Relational Database Management System) called MySQL using the PhpMyAdmin platform. With that, multiple complex queries and methods to manage all of the relationships between entities are used. The diagrams shown in this documentation are made using Lucid Chart Diagram tools and Online Visual-Paradigm tools.
+This database is made to manage the data needed for an Educational Blog Site. At the moment, it is consist of eleven (12) entities which are responsible for users data management; creation, updation, & deletion management of user (students & authors) transactions and articles. This database is operated in a RDBMS (Relational Database Management System) called MySQL using the PhpMyAdmin platform. Multiple complex queries (showing entity relationships' various links and operations) are documented using this setup.
 
-<br />
+>I am planning to add more features into this database in the future.
+
+<br>
 
 ## Entity Relationship Diagram (ERD)
 
 ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/ERD.svg)
 
-This database is an insource based on my plan to create a Student Portal Web Application in the future.
+This database is an insource that I created using the following tools:
+
+> [Lucid Chart Diagram tools](https://lucid.app/) &nbsp;&nbsp; [Online Visual-Paradigm tools](http://online.visual-paradigm.com/) &nbsp;&nbsp; [Mackaroo Mockup data](https://www.mockaroo.com/) &nbsp;&nbsp; [sql converter](https://www.convertcsv.com/csv-to-sql.htm) &nbsp;&nbsp; [fake number generator](https://fakenumber.net/phone-number/philippines) &nbsp;&nbsp; [Varchar decoder](https://www.dcode.fr/values-separation) &nbsp;&nbsp; [Random string generator](https://www.random.org/strings/?mode=advanced) &nbsp;&nbsp;
 
 ### Entity Names and Description
 
@@ -53,9 +57,9 @@ This diagram shows that each entities had undergone normalization removing all d
 Here are a list of queries with their sample output from the DBRMS: 
 <br>
 
-<p>Note:<br>Click if you notice a dropdown button labeled <b>Show more...</b> <br>
-It will show the corresponding result of the query.
+><p>Note:<br>Click if you notice a dropdown button labeled <b>Show more...</b> <br> It will show the corresponding result of the query.
 </p>
+
 
 * ***Stored Procedures***
     1. **`SETUP PROCEDURE: `**
