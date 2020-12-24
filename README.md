@@ -74,7 +74,7 @@ Here are a list of queries with their sample output from the DBRMS:
          OUT stat BOOLEAN
          )
          -- SELECT but not show the values that is received from this statement and assign it to different variables
-         SELECT users.uname, users.email, users_detail.saddress, users_detail.is_active INTO un, em, sadd, stat FROM users INNER JOIN users_detail ON users.user_id = 		users_detail.user_id WHERE users.user_id = uid //
+         SELECT users.uname, users.email, users_detail.saddress, users_detail.is_active INTO un, em, sadd, stat FROM users INNER JOIN users_detail ON users.user_id = users_detail.user_id WHERE users.user_id = uid //
 
          DELIMITER ;
        ```
@@ -96,7 +96,7 @@ Here are a list of queries with their sample output from the DBRMS:
          SELECT @un, @em, @sadd, @stat;
         ```
         `Result:`
-        ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp2-1.png)
+        ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp1-1.png)
         </details>
        
        <br>
@@ -132,7 +132,8 @@ Here are a list of queries with their sample output from the DBRMS:
             ( fname, lname, contact_no, saddress, city_id, school_id ) 
             VALUES
                ( fn, ln, ct, sadd, city_id, schid );
-
+               
+         -- assign the @ai variable in here
          INSERT INTO users
             ( user_id, u_cl_id, uname, pword, rec_code, email ) 
                VALUES
@@ -151,7 +152,7 @@ Here are a list of queries with their sample output from the DBRMS:
          SELECT COUNT(user_id) FROM users;
       ```
        `Result:`
-       ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp1-1.PNG)
+       ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp2-1.png)
 
        ```SQL
          -- call the procedure using dummy data as parameters
@@ -174,7 +175,7 @@ Here are a list of queries with their sample output from the DBRMS:
          SELECT COUNT(user_id) FROM users;
        ```
        `Result:`
-       ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp1-2.PNG) ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp1-3.PNG)
+       ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp2-2.png) 
       </details>
 
         <br>
