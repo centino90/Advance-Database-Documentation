@@ -78,7 +78,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
          DELIMITER ;
        ```
-       <details open>
+       <details>
        <summary>Show more...</summary>
 
         **`Query for the calling program:`**
@@ -180,12 +180,60 @@ Here are a list of queries with their sample output from the DBRMS:
 
         <br>
 
-    3. ```SQL
+   3. **`Query 2: `**
+      ```SQL
+         DELIMITER //
+
+         CREATE PROCEDURE insertCityIllegaly(
+            nm VARCHAR(50),
+            em VARCHAR(80),
+            ln VARCHAR(16),
+            sadd VARCHAR(80),
+            cid INT(11)
+         )
+         BEGIN
+
+            -- disable the keycheck for foreign keys
+            SET foreign_key_checks = 0;
+               
+            -- insert a false city_id illegally    
+            INSERT INTO schools 
+               (name, email, landline_no, saddress, city_id)
+               VALUES 
+                  (nm, em, ln, sadd, cid);
+                     
+            -- set keycheck back to normal        
+            SET foreign_key_checks = 1;
+            
+         END //
+
+         DELIMITER ;
+      ```
+      <details>
+      <summary>Show more...</summary>
+
+      **`Query for the calling program:`**
+      ```SQL
+         CALL insertCityIllegaly(
+            'False University',
+            'false@false.com',
+            '911',
+            'False street',
+            -- this id does not exist in the city table so its an illegal insertion
+            91111111
+         );
+
+         -- select the row that was just added and it should be there.
+         SELECT * FROM schools WHERE city_id = 91111111;
+      ```
+       `Result:`
+       ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp3-1.png) 
+      <details>
+
+   4. 
+      ```SQL
        SELECT * FROM TAGURU
-       ```
-    4. ```SQL
-       SELECT * FROM TAGURU
-       ```
+      ```
 
 * ***Triggers*** 
     1. ```SQL
