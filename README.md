@@ -128,19 +128,20 @@ Here are a list of queries with their sample output from the DBRMS:
          -- use BEGIN - END if there are multiple logic/schema in one session
          BEGIN
 
-            -- assign the next increment value to a variable
+            -- assign the next increment value to a variable to use it as reference (since the next primary key is predictable due to it being incremented automatically by 1) to the user_id from users_detail table
             SELECT `AUTO_INCREMENT` 
                INTO @ai
                FROM  INFORMATION_SCHEMA.TABLES
             WHERE TABLE_SCHEMA = 'studentportal'
                AND TABLE_NAME = 'users_detail';
             
+            -- here is where the primary key originated
             INSERT INTO users_detail 
                ( fname, lname, contact_no, saddress, city_id, school_id ) 
             VALUES
                ( fn, ln, ct, sadd, city_id, schid );
                   
-            -- assign the @ai variable in here
+            -- here is where the @ai value is used as primary/foreign key
             INSERT INTO users
                ( user_id, u_cl_id, uname, pword, rec_code, email ) 
             VALUES
@@ -245,6 +246,8 @@ Here are a list of queries with their sample output from the DBRMS:
        ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp3-1.png) 
       <details>
 
+      <br>
+
    4. **`Query 4: `**
       ```SQL
          DELIMITER //
@@ -267,7 +270,7 @@ Here are a list of queries with their sample output from the DBRMS:
             -- create and throw a custom error when condition is met
             ELSE
                SIGNAL SQLSTATE '45000'
-               SET MESSAGE_TEXT = 'Custom error: Table is not users table';
+               SET MESSAGE_TEXT = 'Custom error: The credentials you submitted did not reflect the internal requirements (users or users_detail), try again';
             END IF;
             
          END //
@@ -298,6 +301,8 @@ Here are a list of queries with their sample output from the DBRMS:
        ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp4-1.png) 
       </details>
 
+      <br>
+
    5. **`Query 5: `**
       ```SQL
          DELIMITER //
@@ -313,15 +318,16 @@ Here are a list of queries with their sample output from the DBRMS:
             IF @cu >= 263 THEN
                SELECT * 
                   FROM users
-               
+            -- convert the data table into csv and setup the direction of which the converted table will be sent   
                INTO OUTFILE 'C:/CSV/users_copy.csv' 
                FIELDS ENCLOSED BY '"' 
                TERMINATED BY ';' 
                ESCAPED BY '"' 
                LINES TERMINATED BY '\r\n';
+            -- throw an error if the condition is not met
             ELSE
                SIGNAL SQLSTATE '45001'
-               SET MESSAGE_TEXT = 'Custom error: Table has not reached specified row number';
+               SET MESSAGE_TEXT = 'Custom error: Table has not reached specified row count (263), try again';
             END IF;
          END //
 
@@ -345,17 +351,166 @@ Here are a list of queries with their sample output from the DBRMS:
        ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp5-2.png)
       </details>
 
+      <br>
+
+   6. **`Query 6: `**
+      ```SQL
+         DELIMITER //
+
+         CREATE PROCEDURE showRoutines(
+            IN name VARCHAR(30)
+         )
+
+         BEGIN
+            
+            IF name = 'trigger' THEN
+               SELECT TRIGGER_NAME 
+               FROM INFORMATION_SCHEMA.triggers 
+               WHERE TRIGGER_SCHEMA = 'studentportal';
+            ELSEIF name = 'procedure' THEN
+               SHOW PROCEDURE STATUS 
+               WHERE Db = 'studentportal';
+            ELSEIF name = 'function' THEN
+               SHOW FUNCTION STATUS 
+               WHERE Db = 'studentportal';
+            ELSE
+               SIGNAL SQLSTATE '45002'
+               SET MESSAGE_TEXT = 'Custom error: The "routine" you submitted is not found, try again';
+            END IF;
+            
+         END //
+
+         DELIMITER ;
+      ```   
+      <details>
+      <summary>Show more...</summary>
+
+      **`Query for the calling program:`**
+      ```SQL
+         -- call the procedure to check each routines with either one of these parameters (procedure, trigger, function)
+         CALL showRoutines('procedure');
+      ```
+      `Result: `
+      ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp6-1.png)
+      </details>
+
+      <br>
+
+   7. **`Query 7:`**
+      ```SQL
+         DROP PROCEDURE IF EXISTS selectTable;
+
+         DELIMITER //
+
+         CREATE PROCEDURE selectTable(
+            IN tb VARCHAR(30),
+            -- use this parameter type to return a value to the caller
+            INOUT updatedTb VARCHAR(30)
+         )
+
+         BEGIN
+            -- update the returned value to the one that is just submitted
+            SET updatedTb = tb;
+            
+            -- use Prepared Statement to perform a dynamic query
+            SET @sql = CONCAT("SELECT * FROM ", tb);
+            PREPARE stmt FROM @sql;
+            EXECUTE stmt;
+            DEALLOCATE PREPARE stmt;
+            
+         END //
+
+         DELIMITER ;
+      ```
+      <details>
+      <summary>Show more...</summary>
+
+      **`Query for the calling program:`**
+      ```SQL
+         -- set the extension (label) to be appended before the table name
+         SET @ext = 'table: ';
+
+         -- call procedure in which INOUT parameter can have a 'pre-procedure' or initial value unlike either IN or OUT
+         CALL selectTable('articles', @table);
+
+         -- select the INOUT parameter to return a value just like OUT
+         SELECT CONCAT(@ext, @table) AS new_table;
+      ```
+      `Result: `
+      ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp7-1.png)
+      </details>
+
+      <br>
+
 * ***Triggers*** 
-    1. ```SQL
+   1. **`Query 8: `**
+      ```SQL
+      -- create triggers for 8 tables that has modified_at field. This will update into the current timestamp of that session.
+      CREATE TRIGGER up_artc_ma 
+         BEFORE UPDATE ON articles_comment 
+         FOR EACH ROW SET NEW.modified_at = CURRENT_TIMESTAMP;
+         
+      CREATE TRIGGER up_artr_ma 
+         BEFORE UPDATE ON articles_reply 
+         FOR EACH ROW SET NEW.modified_at = CURRENT_TIMESTAMP;
+         
+      CREATE TRIGGER up_art_ma 
+         BEFORE UPDATE ON articles 
+         FOR EACH ROW SET NEW.modified_at = CURRENT_TIMESTAMP;
+         
+      CREATE TRIGGER up_as_ma 
+         BEFORE UPDATE ON author_subscription 
+         FOR EACH ROW SET NEW.modified_at = CURRENT_TIMESTAMP;
+         
+      CREATE TRIGGER up_sch_ma 
+         BEFORE UPDATE ON schools 
+         FOR EACH ROW SET NEW.modified_at = CURRENT_TIMESTAMP;
+         
+      CREATE TRIGGER up_subj_ma 
+         BEFORE UPDATE ON subjects 
+         FOR EACH ROW SET NEW.modified_at = CURRENT_TIMESTAMP;
+         
+      CREATE TRIGGER up_us_ma 
+         BEFORE UPDATE ON users 
+         FOR EACH ROW SET NEW.modified_at = CURRENT_TIMESTAMP;
+         
+      CREATE TRIGGER up_usd_ma 
+         BEFORE UPDATE ON users_detail 
+         FOR EACH ROW SET NEW.modified_at = CURRENT_TIMESTAMP;
+       ```
+      <details>
+      <summary>Show more...</summary>
+
+      **`Query for the calling program:`**
+      ```SQL
+         -- check the initial state of the field before update
+         SELECT modified_at 
+         FROM articles 
+         WHERE article_id = 1001;
+
+         -- perform update to trigger the trigger
+         UPDATE articles
+         SET title = 'The History of Africa'
+         WHERE article_id = 1001;
+
+         -- check the field after update
+         SELECT modified_at 
+         FROM articles 
+         WHERE article_id = 1001;
+      ```
+       `Result:`
+       ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/tr1-1.png)
+      </details>
+
+      <br>
+
+   2. ```SQL
        SELECT * FROM TAGURU
        ```
-    2. ```SQL
+   3. ```SQL
        SELECT * FROM TAGURU
        ```
-    3. ```SQL
-       SELECT * FROM TAGURU
-       ```
-    4. ```SQL
+   4. ```SQL
        SELECT * FROM TAGURU
        ```
 
