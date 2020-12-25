@@ -295,8 +295,7 @@ Here are a list of queries with their sample output from the DBRMS:
          WHERE user_id = 10000000;
       ```
          `Result:`
-       ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp4-1.png)
-       ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp4-2.png) 
+       ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp4-1.png) 
       </details>
 
    5. **`Query 5: `**
@@ -343,6 +342,7 @@ Here are a list of queries with their sample output from the DBRMS:
       ```
        `Result:`
        ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp5-1.png)
+       ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp5-2.png)
       </details>
 
 * ***Triggers*** 
