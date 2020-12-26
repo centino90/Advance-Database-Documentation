@@ -9,10 +9,13 @@ This database is made to manage the data needed for an Educational Blog Site. At
 <br>
 
 ## Entity Relationship Diagram (ERD)
+ER diagram is a representation of the connection between entities. By creating one, we can define the relationship of each entities in a much more sensible and convenient manner with the symbols and principles help.
+<p>The following markers used in the ERD are defined as:</p><b>PK</b> - Primary key<br><b>FK</b> - Foreign key<b><br>PK/FK</b> - Composite key
+
 
 ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/ERD.svg)
 
-This database is an insource that I created using the following tools:
+This database and its data is an insource that I created using the following tools:
 
 <a href="https://lucid.app/" target="_blank">Lucid Chart Diagram tools</a> &nbsp;&nbsp; <a href="http://online.visual-paradigm.com/" target="_blank">Online Visual-Paradigm tools</a> &nbsp;&nbsp; <a href="https://www.mockaroo.com/" target="_blank">Mackaroo Mockup data</a> &nbsp;&nbsp; <a href="https://www.convertcsv.com/csv-to-sql.htm" target="_blank">sql converter</a> &nbsp;&nbsp; <a href="https://fakenumber.net/phone-number/philippines" target="_blank">fake number generator</a> &nbsp;&nbsp; <a href="https://www.dcode.fr/values-separation" target="_blank">Varchar decoder</a> &nbsp;&nbsp; <a href="https://www.random.org/strings/?mode=advanced" target="_blank">Random string generator</a>
 
@@ -46,9 +49,11 @@ This database is an insource that I created using the following tools:
 
 ## Functional Dependency Diagram (FDD)
 
+FDD is a representation of each entities' functional dependency. This diagram helps us remove dependencies that can cause insertion, deletion, & updation anomalies in the database.
+
 ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/FDD.svg)
 
-This diagram shows that each entities had undergone normalization removing all dependencies that can cause anomalies.
+The diagram shows that each entities had undergone normalization removing all dependencies that can cause anomalies.
 
 <br />
 
@@ -117,6 +122,7 @@ Here are a list of queries with their sample output from the DBRMS:
          IN pw varchar(50),
          IN rec varchar(20),
          IN em VARCHAR(80),
+         IN gip VARCHAR(20),
          -- users_detail table
          IN fn varchar(30),
          IN ln varchar(30),
@@ -128,25 +134,30 @@ Here are a list of queries with their sample output from the DBRMS:
          -- use BEGIN - END if there are multiple logic/schema in one session
          BEGIN
 
-            -- assign the next increment value to a variable to use it as reference (since the next primary key is predictable due to it being incremented automatically by 1) to the user_id from users_detail table
-            SELECT `AUTO_INCREMENT` 
-               INTO @ai
-               FROM  INFORMATION_SCHEMA.TABLES
-            WHERE TABLE_SCHEMA = 'studentportal'
-               AND TABLE_NAME = 'users_detail';
-            
+            -- call a procedure that gets the current increment value of the table supplied as parameter
+            -- this is based on a proc that I already made (see query #11)
+	         CALL getTableIncrement('users_detail', @ai);
+
             -- here is where the primary key originated
             INSERT INTO users_detail 
                ( fname, lname, contact_no, saddress, city_id, school_id ) 
             VALUES
                ( fn, ln, ct, sadd, city_id, schid );
-                  
+
             -- here is where the @ai value is used as primary/foreign key
             INSERT INTO users
-               ( user_id, u_cl_id, uname, pword, rec_code, email ) 
+               ( user_id, u_cl_id, uname, pword, rec_code, email, guest_ip ) 
             VALUES
-               (@ai, ucl, un, pw, rec, em);
+               (@ai, ucl, un, pw, rec,em, gip);
 
+            SET @gip = gip;
+            -- perform prepared statements that is contained within another stored proc "exec_qry (See query #10)"
+            -- create user as guest with their ip attached as their host
+            CALL exec_qry(CONCAT("CREATE user user@",@gip));
+            -- grant priveleges that is common to all users (selecting data from articles and subjects table)
+            CALL exec_qry(CONCAT("GRANT SELECT ON studentportal.articles TO user@",@gip));
+            CALL exec_qry(CONCAT("GRANT SELECT ON studentportal.subjects TO user@",@gip));
+               
          END //
 
          DELIMITER ;
@@ -173,6 +184,7 @@ Here are a list of queries with their sample output from the DBRMS:
             'password123',
             'MyCoD3',
             'email@email.com',
+            '192.168.5.5', -- this can be based on the user_ip_address or browser info that you get from a user of the application
             'John',
             'Doe',
             '63-909-555-4117',
@@ -186,6 +198,12 @@ Here are a list of queries with their sample output from the DBRMS:
             FROM users_detail;
          SELECT COUNT(user_id)
             FROM users;
+         -- in addition, also check if the current user was added to the userlist of all mysql account
+         SELECT * 
+            FROM mysql.user 
+            WHERE host = '192.168.5.5';
+         -- also check the previliges it has 
+         SHOW GRANTS FOR 'user'@'192.168.5.5'
        ```
        `Result:`
        ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp2-2.png) 
@@ -504,11 +522,9 @@ Here are a list of queries with their sample output from the DBRMS:
          )
          BEGIN
 
-            SELECT COUNT(user_id) INTO @cc 
-               FROM users;
-
             -- limit should be less or equal to the total row of the table
             IF (lim > 0) THEN
+               -- Use prepared statement to supply dynamic table_name for all tables in just 1 query
                PREPARE stmt FROM 
                CONCAT("SELECT * FROM ", tb," LIMIT ? OFFSET 1
                -- use this format to makesure the uniqueness of .csv filenames       
@@ -534,15 +550,96 @@ Here are a list of queries with their sample output from the DBRMS:
          CALL copyToCSV("users", 9999);
       ```
       `Result: `
-      ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp8-1.png)
+      ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp9-1.png)
       </details>
 
       <br>
 
+   10.   **`Query: 10`**
+         ```SQL
+            DELIMITER //
+
+            CREATE PROCEDURE exec_qry(
+               IN p_sql varchar(500)
+            )
+
+            BEGIN
+            SET @tquery = p_sql;
+            PREPARE stmt FROM @tquery;
+            EXECUTE stmt;
+            DEALLOCATE PREPARE stmt;
+            END //
+
+            DELIMITER ;
+         ```
+         <details>
+         <summary>Show more...</summary>
+
+         **`Query for the calling program:`**
+         ```SQL
+            -- this proc can receive even complex queries (see query #2)
+            -- call query 3 times with different query targets
+
+            -- basic select
+            CALL exec_qry('SELECT * FROM articles');
+            -- select with limit and offset
+            CALL exec_qry('SELECT * FROM users LIMIT 10 OFFSET 1');
+            -- shows all preveliges of root@localhost
+            CALL exec_qry(CONCAT('SHOW GRANTS FOR root@localhost'));
+
+         ```
+         `Result: `
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp10-1.png)
+         </details>
+
+         <br>
+
+   11.   **`Query 11: `**
+         ```SQL
+            DELIMITER //
+
+            CREATE PROCEDURE getTableIncrement(
+               IN tbl VARCHAR(50),
+               OUT ai VARCHAR(11)
+            )
+
+            BEGIN
+            -- assign the next increment value to a variable to use it as reference (since the next primary key is predictable due to it being incremented automatically by 1) to the user_id from users_detail table
+               SET @tbl = tbl;
+               SELECT `AUTO_INCREMENT`
+               INTO ai FROM INFORMATION_SCHEMA.TABLES
+               WHERE TABLE_SCHEMA = 'studentportal' AND TABLE_NAME = tbl;
+
+            END //
+               
+            DELIMITER ;
+         ```            
+         <details>
+         <summary>Show more...</summary>
+
+         **`Query for the calling program:`**
+         ```SQL
+            -- this proc can receive even complex queries (see query #2)
+            -- call query 3 times with different query targets
+
+            -- basic select
+            CALL exec_qry('SELECT * FROM articles');
+            -- select with limit and offset
+            CALL exec_qry('SELECT * FROM users LIMIT 10 OFFSET 1');
+            -- shows all preveliges of root@localhost
+            CALL exec_qry('SHOW GRANTS FOR root@localhost');
+
+         ```
+         `Result: `
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp11-1.png)
+         </details>
+
+         <br>
+
 * ***Triggers*** 
    1. **`Query 8: `**
       ```SQL
-      -- create triggers for 8 tables that has modified_at field. This will update into the current timestamp of that session.
+      -- create triggers for 8 tables that has modified_at field. This will update all fields based on the current timestamp of when the session is ran.
       CREATE TRIGGER up_artc_ma 
          BEFORE UPDATE ON articles_comment 
          FOR EACH ROW SET NEW.modified_at = CURRENT_TIMESTAMP;
