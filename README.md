@@ -478,8 +478,8 @@ Here are a list of queries with their sample output from the DBRMS:
 
       **`Query for the calling program:`**
       ```SQL
-         -- SET the needed data for convenience
-         SET @uname = 'admin1011';
+         -- SET the needed data for convenience. In this case, a correct one.
+         SET @uname = 'admin101';
          SET @pword = 'admin101';
 
          -- CALL the procedure in which it should return all the data from users table
