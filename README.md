@@ -260,12 +260,12 @@ Here are a list of queries with their sample output from the DBRMS:
             FROM schools 
          WHERE city_id = 91111111;
       ```
-       `Result:`
-       ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp3-1.png) 
-      <details>
+      `Result:`
+      ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp3-1.png) 
+      </details>
 
       <br>
-
+      
    4. **`Query 4: `**
       ```SQL
          DELIMITER //
