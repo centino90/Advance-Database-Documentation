@@ -494,6 +494,51 @@ Here are a list of queries with their sample output from the DBRMS:
 
       <br>
 
+   9. **`Query: 9:`**
+      ```SQL
+         DELIMITER //
+
+         CREATE PROCEDURE copyToCSV(
+            IN tb VARCHAR(50),
+            IN lim INT(11)
+         )
+         BEGIN
+
+            SELECT COUNT(user_id) INTO @cc 
+               FROM users;
+
+            -- limit should be less or equal to the total row of the table
+            IF (lim > 0) THEN
+               PREPARE stmt FROM 
+               CONCAT("SELECT * FROM ", tb," LIMIT ? OFFSET 1
+               -- use this format to makesure the uniqueness of .csv filenames       
+               INTO OUTFILE
+                  'C:/CSV/",tb,"_",CURDATE(),"_",HOUR(CURRENT_TIME),"_",MINUTE(CURRENT_TIME),"_",SECOND(CURRENT_TIME),"_copy.csv' 
+               FIELDS ENCLOSED BY '`' 
+               TERMINATED BY ';'
+               ESCAPED BY '`' 
+               LINES TERMINATED BY '\r\n'");
+               EXECUTE stmt USING lim;
+            END IF;
+            
+         END
+      ```
+      <details>
+      <summary>Show more...</summary>
+
+      **`Query for the calling program:`**
+      ```SQL
+         -- call procedure in which it should send a .csv file to our directory "C:/CSV/"
+         -- if its less or equal to 0 it should not create a csv file. If its over the row_count then it should include all data in that table
+         CALL copyToCSV("users", 0);
+         CALL copyToCSV("users", 9999);
+      ```
+      `Result: `
+      ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp8-1.png)
+      </details>
+
+      <br>
+
 * ***Triggers*** 
    1. **`Query 8: `**
       ```SQL
