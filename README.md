@@ -442,6 +442,58 @@ Here are a list of queries with their sample output from the DBRMS:
 
       <br>
 
+   8. **`Query: 8`**
+      ```SQL
+         DELIMITER //
+
+         CREATE PROCEDURE verifyUser(
+            IN un VARCHAR(50),
+            IN pw VARCHAR(50),
+            OUT is_verified BOOLEAN
+         )
+
+         BEGIN 
+            -- assign the selected field into a variable
+            SELECT user_id
+               INTO @uid
+               FROM users
+               WHERE uname = un AND pword = pw;
+            
+            -- if the select operation returned null or did not find a match, verification is failed
+            IF @uid IS NULL THEN
+               -- or you can use the SIGNAL SQLSTATE to create and throw an SQL error
+               SET is_verified = FALSE;
+            -- else verification is success and return the datatable of that user
+            ELSE
+               SET is_verified = TRUE;
+               SELECT * FROM users WHERE user_id = @uid;
+            END IF;
+            
+         END //
+
+         DELIMITER ;
+      ```
+      <details>
+      <summary>Show more...</summary>
+
+      **`Query for the calling program:`**
+      ```SQL
+         -- SET the needed data for convenience
+         SET @uname = 'admin1011';
+         SET @pword = 'admin101';
+
+         -- CALL the procedure in which it should return all the data from users table
+         CALL verifyUser(@uname, @pword, @is_verified);
+
+         -- SELECT the OUT parameter to get the ouput
+         SELECT @is_verified;
+      ```
+      `Result: `
+      ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp8-1.png)
+      </details>
+
+      <br>
+
 * ***Triggers*** 
    1. **`Query 8: `**
       ```SQL
