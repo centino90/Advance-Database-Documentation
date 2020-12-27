@@ -600,7 +600,7 @@ Here are a list of queries with their sample output from the DBRMS:
             -- select with limit and offset
             CALL exec_qry('SELECT * FROM users LIMIT 10 OFFSET 1');
             -- shows all preveliges of root@localhost
-            CALL exec_qry(CONCAT('SHOW GRANTS FOR root@localhost'));
+            CALL exec_qry('SHOW GRANTS FOR root@localhost');
 
          ```
          `Result: `
@@ -732,7 +732,7 @@ Here are a list of queries with their sample output from the DBRMS:
          <br>
    
 * ***Triggers*** 
-   1. **`Query 8: `**
+   1. **`Query 14: `**
       ```SQL
       -- create triggers for 8 tables that has modified_at field. This will update all fields based on the current timestamp of when the session is ran.
       CREATE TRIGGER up_artc_ma 
@@ -804,9 +804,32 @@ Here are a list of queries with their sample output from the DBRMS:
        ```
 
 * ***Functions*** 
-    1. ```SQL
-       SELECT * FROM TAGURU
-       ```
+    1.   **`Query: 15`** 
+         ```SQL
+            CREATE FUNCTION full_name(
+               fname CHAR(30),
+               lname CHAR(30)
+            )
+            -- DETERMINISTIC means that you insure that the result will always be the same
+            RETURNS CHAR(60) DETERMINISTIC
+            RETURN CONCAT(fname, ' ', lname);
+         ```
+         <details>
+         <summary>Show more...</summary>
+
+         **`Query for the calling program:`**
+         ```SQL
+            -- calling it the traditional way
+            SELECT user_id, full_name(fname, lname) FROM `users_detail` LIMIT 5 OFFSET 1;
+            -- calling it within a stored proc which converts it into a dynamic query
+            CALL exec_qry("SELECT full_name(fname, lname) FROM users_detail WHERE id =");
+         ```
+         `Result: `
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/func1-1.png)
+         </details>
+
+         <br>
+
     2. ```SQL
        SELECT * FROM TAGURU
        ```
