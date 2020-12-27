@@ -10,7 +10,7 @@ This database is made to manage the data needed for an Educational Blog Site. At
 
 ## Entity Relationship Diagram (ERD)
 ER diagram is a representation of the connection between entities. By creating one, we can define the relationship of each entities in a much more sensible and convenient manner with the symbols and principles help.
-<p>The following markers used in the ERD are defined as:</p><b>PK</b> - Primary key<br><b>FK</b> - Foreign key<b><br>PK/FK</b> - Composite key
+<p>The following markers used in the ERD are defined as:</p><b>PK</b> - Primary key only<br><b>FK</b> - Foreign key only<b><br>PK/FK</b> - Primary and Foreign key<br><b>2 PK/FK</b> - Composite key
 
 
 ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/ERD.svg)
@@ -66,7 +66,7 @@ Here are a list of queries with their sample output from the DBRMS:
 </p>
 
 
-* ***Stored Procedures***
+* ***Stored Routines***
    1. **`Query 1: `**
        ```SQL
          DELIMITER //
@@ -135,9 +135,8 @@ Here are a list of queries with their sample output from the DBRMS:
          BEGIN
 
             -- call a procedure that gets the current increment value of the table supplied as parameter
-            -- this is based on a proc that I already made (see query #11)
-	         CALL getTableIncrement('users_detail', @ai);
-
+            CALL getTableIncrement('users_detail', @ai);
+            
             -- here is where the primary key originated
             INSERT INTO users_detail 
                ( fname, lname, contact_no, saddress, city_id, school_id ) 
@@ -146,17 +145,31 @@ Here are a list of queries with their sample output from the DBRMS:
 
             -- here is where the @ai value is used as primary/foreign key
             INSERT INTO users
-               ( user_id, u_cl_id, uname, pword, rec_code, email, guest_ip ) 
+               ( user_id, u_cl_id, uname, pword, rec_code, email ) 
             VALUES
-               (@ai, ucl, un, pw, rec,em, gip);
+               (@ai, ucl, un, pw, rec,em);
 
-            SET @gip = gip;
-            -- perform prepared statements that is contained within another stored proc "exec_qry (See query #10)"
+            -- create users (admin, author, and student) to insure that when created it has a Db account to refer from
+            CREATE user IF NOT EXISTS 'admin'@'localhost';
+            CREATE user IF NOT EXISTS 'author'@'localhost';
+            CREATE user IF NOT EXISTS 'student'@'localhost';
+
+            -- select the label from user_class
+            SELECT label INTO @lb FROM user_class WHERE u_cl_id = ucl;
+
+            -- perform prepared statements that is contained within another stored proc "exec_qry":
             -- create user as guest with their ip attached as their host
-            CALL exec_qry(CONCAT("CREATE user user@",@gip));
-            -- grant priveleges that is common to all users (selecting data from articles and subjects table)
-            CALL exec_qry(CONCAT("GRANT SELECT ON studentportal.articles TO user@",@gip));
-            CALL exec_qry(CONCAT("GRANT SELECT ON studentportal.subjects TO user@",@gip));
+            CALL exec_qry(CONCAT("CREATE user IF NOT EXISTS @lb@localhost"));
+            
+            -- check privilege and react according to the findings:         
+            -- use that selected value here to determine if the original number of privileges has been updated (decreased)
+            CALL exec_qry(CONCAT("SELECT COUNT(user) INTO @c1 FROM mysql.columns_priv WHERE user = @lb"));
+            CALL exec_qry(CONCAT("SELECT COUNT(user) INTO @c2 FROM mysql.tables_priv WHERE user = @lb"));
+            
+            -- if so, then run this stored proc to rerun the original privileges that I initially set for them
+            IF (@c1 < 14 || @c2 < 10) THEN
+               CALL grantPrivUsers();
+            END IF;
                
          END //
 
@@ -290,7 +303,7 @@ Here are a list of queries with their sample output from the DBRMS:
                SIGNAL SQLSTATE '45000'
                SET MESSAGE_TEXT = 'Custom error: The credentials you submitted did not reflect the internal requirements (users or users_detail), try again';
             END IF;
-            
+
          END //
 
          DELIMITER ;
@@ -392,8 +405,8 @@ Here are a list of queries with their sample output from the DBRMS:
                SHOW FUNCTION STATUS 
                WHERE Db = 'studentportal';
             ELSE
-               SIGNAL SQLSTATE '45002'
-               SET MESSAGE_TEXT = 'Custom error: The "routine" you submitted is not found, try again';
+               SIGNAL SQLSTATE '45500'
+                  SET MESSAGE_TEXT = 'Custom error: The "routine" you submitted is not found, try again';
             END IF;
             
          END //
@@ -522,7 +535,7 @@ Here are a list of queries with their sample output from the DBRMS:
          )
          BEGIN
 
-            -- limit should be less or equal to the total row of the table
+            -- limit should be more than 0, otherwise no data is selected
             IF (lim > 0) THEN
                -- Use prepared statement to supply dynamic table_name for all tables in just 1 query
                PREPARE stmt FROM 
@@ -537,7 +550,9 @@ Here are a list of queries with their sample output from the DBRMS:
                EXECUTE stmt USING lim;
             END IF;
             
-         END
+         END //
+
+         DELIMITER ;
       ```
       <details>
       <summary>Show more...</summary>
@@ -636,6 +651,86 @@ Here are a list of queries with their sample output from the DBRMS:
 
          <br>
 
+   12.   **`Query: 12`**
+         ```SQL
+            DELIMITER //
+
+            CREATE PROCEDURE returnCustError(
+               IN err VARCHAR(100)
+            )
+
+            SIGNAL SQLSTATE '45000'
+               SET MESSAGE_TEXT = err //
+
+            DELIMITER ;
+         ```
+         <details>
+         <summary>Show more...</summary>
+
+         **`Query for the calling program:`**
+         ```SQL
+            -- call proc and insert the error msg you want to return
+            CALL returnCustError("Custom error: User not found");
+         ```
+         `Result: `
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp12-1.png)
+         </details>
+
+         <br>
+   
+   13.   **`Query: 13`**
+         ```SQL
+            -- student privileges
+            GRANT SELECT ON studentportal.articles TO 'student'@'localhost';
+            GRANT SELECT ON studentportal.subjects TO 'student'@'localhost';
+            GRANT SELECT ON studentportal.articles_comment TO 'student'@'localhost';
+            GRANT SELECT ON studentportal.articles_reply TO 'student'@'localhost';
+            GRANT SELECT ON studentportal.author_subscription TO 'student'@'localhost';
+
+            GRANT UPDATE (comment, modified_at) ON studentportal.articles_comment TO 'student'@'localhost';
+            GRANT UPDATE (reply, modified_at) ON studentportal.articles_reply TO 'student'@'localhost';
+            GRANT UPDATE (is_active, modified_at) ON studentportal.author_subscription TO 'student'@'localhost';
+
+            GRANT INSERT ON studentportal.articles_comment TO 'student'@'localhost';
+            GRANT INSERT ON studentportal.articles_reply TO 'student'@'localhost';
+            GRANT INSERT ON studentportal.author_subscription TO 'student'@'localhost';
+
+            -- author privileges
+            GRANT SELECT ON studentportal.articles TO 'author'@'localhost';
+            GRANT SELECT ON studentportal.subjects TO 'author'@'localhost';
+            GRANT SELECT ON studentportal.articles_comment TO 'author'@'localhost';
+            GRANT SELECT ON studentportal.articles_reply TO 'author'@'localhost';
+            GRANT SELECT ON studentportal.author_subscription TO 'author'@'localhost';
+
+            GRANT UPDATE (comment, modified_at) ON studentportal.articles_comment TO 'author'@'localhost';
+            GRANT UPDATE (reply, modified_at) ON studentportal.articles_reply TO 'author'@'localhost';
+            GRANT UPDATE (subj_id, title, content, modified_at) ON studentportal.articles TO 'author'@'localhost';
+
+            GRANT INSERT ON studentportal.articles TO 'author'@'localhost';
+            GRANT INSERT ON studentportal.articles_comment TO 'author'@'localhost';
+            GRANT INSERT ON studentportal.articles_reply TO 'author'@'localhost';
+
+            GRANT DELETE ON studentportal.articles_comment TO 'author'@'localhost';
+            GRANT DELETE ON studentportal.articles_reply TO 'author'@'localhost';
+
+            -- admin/super_user
+            -- grant all privileges including the ability to grant other users their privilege
+            GRANT ALL PRIVILEGES ON studentportal.* TO 'admin'@'localhost' WITH GRANT OPTION;
+         ```
+         <details>
+         <summary>Show more...</summary>
+
+         **`Query for the calling program:`**
+         ```SQL
+            -- call proc
+            CALL grantPrivUsers();
+         ```
+         `Result: `
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp13-1.png)
+         </details>
+
+         <br>
+   
 * ***Triggers*** 
    1. **`Query 8: `**
       ```SQL
@@ -735,3 +830,8 @@ Here are a list of queries with their sample output from the DBRMS:
     4. ```SQL
        SELECT * FROM TAGURU
        ```
+
+* ***Db User Management***
+   1. CREATE USER
+   2. GRANT PRIVILEGE
+   3. DROP USER / FLUSH PRIVILEGES
