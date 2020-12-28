@@ -56,8 +56,83 @@ Here are a list of queries with their sample output from the DBRMS:
 ><p>Note:<br>Click if you notice a dropdown button labeled <b>Show more...</b> <br> It will show the corresponding result of the query.
 </p>
 
+* ***User Management (Create User, Drop User, Grant Privilege)*** - A good database system should be able to distinguish user privileges according to user levels (user class) to designate users to their respective roles in the system and secure the database from possible attack vectors.
 
-* ***Stored Routines***
+   1. **`Query 1: `**
+      ```SQL
+         -- student privileges
+         GRANT SELECT ON studentportal.schools TO 'student'@'localhost';
+         GRANT SELECT ON studentportal.cities TO 'student'@'localhost';
+         GRANT SELECT ON studentportal.states TO 'student'@'localhost';
+         GRANT SELECT ON studentportal.countries TO 'student'@'localhost';
+         GRANT SELECT ON studentportal.articles TO 'student'@'localhost';
+         GRANT SELECT ON studentportal.subjects TO 'student'@'localhost';
+         GRANT SELECT ON studentportal.articles_comment TO 'student'@'localhost';
+         GRANT SELECT ON studentportal.articles_reply TO 'student'@'localhost';
+         GRANT SELECT ON studentportal.author_subscription TO 'student'@'localhost';
+         GRANT SELECT (uname, pword, rec_code, email, modified_at, created_at) ON studentportal.users TO 'student'@'localhost';
+         GRANT SELECT (fname, lname, contact_no, saddress, city_id, school_id) ON studentportal.users_detail TO 'student'@'localhost';
+
+         GRANT UPDATE (uname, pword, is_active) ON studentportal.users TO 'student'@'localhost';
+         GRANT UPDATE (fname, lname, contact_no, saddress, city_id, school_id) ON studentportal.users_detail TO 'student'@'localhost';
+         GRANT UPDATE (comment, modified_at) ON studentportal.articles_comment TO 'student'@'localhost';
+         GRANT UPDATE (reply, modified_at) ON studentportal.articles_reply TO 'student'@'localhost';
+         GRANT UPDATE (is_active, modified_at) ON studentportal.author_subscription TO 'student'@'localhost';
+
+         GRANT INSERT ON studentportal.articles_comment TO 'student'@'localhost';
+         GRANT INSERT ON studentportal.articles_reply TO 'student'@'localhost';
+         GRANT INSERT ON studentportal.author_subscription TO 'student'@'localhost';
+      ```
+      This is important because users should have distinct 'access level' to the database, and students have the access it needed to be able to interact with the system without jeopardizing the security;
+
+   2. **`Query 2: `**
+      ```SQL
+         -- author privileges
+         GRANT SELECT ON studentportal.schools TO 'author'@'localhost';
+         GRANT SELECT ON studentportal.cities TO 'author'@'localhost';
+         GRANT SELECT ON studentportal.states TO 'author'@'localhost';
+         GRANT SELECT ON studentportal.countries TO 'author'@'localhost';
+         GRANT SELECT ON studentportal.articles TO 'author'@'localhost';
+         GRANT SELECT ON studentportal.subjects TO 'author'@'localhost';
+         GRANT SELECT ON studentportal.articles_comment TO 'author'@'localhost';
+         GRANT SELECT ON studentportal.articles_reply TO 'author'@'localhost';
+         GRANT SELECT ON studentportal.author_subscription TO 'author'@'localhost';
+         GRANT SELECT (uname, pword, rec_code, email, modified_at, created_at) ON studentportal.users TO 'author'@'localhost';
+         GRANT SELECT (fname, lname, contact_no, saddress, city_id) ON studentportal.users_detail TO 'author'@'localhost';
+
+         GRANT UPDATE (uname, pword, is_active) ON studentportal.users TO 'author'@'localhost';
+         GRANT UPDATE (fname, lname, contact_no, saddress, city_id) ON studentportal.users_detail TO 'author'@'localhost';
+         GRANT UPDATE (comment, modified_at) ON studentportal.articles_comment TO 'author'@'localhost';
+         GRANT UPDATE (reply, modified_at) ON studentportal.articles_reply TO 'author'@'localhost';
+         GRANT UPDATE (subj_id, title, content, modified_at) ON studentportal.articles TO 'author'@'localhost';
+
+         GRANT INSERT ON studentportal.articles TO 'author'@'localhost';
+         GRANT INSERT ON studentportal.articles_comment TO 'author'@'localhost';
+         GRANT INSERT ON studentportal.articles_reply TO 'author'@'localhost';
+
+         GRANT DELETE ON studentportal.articles_comment TO 'author'@'localhost';
+         GRANT DELETE ON studentportal.articles_reply TO 'author'@'localhost';
+      ```
+      This is important because users should have distinct 'access level' to the database, and authors have the access it needed to be able to interact with the system without jeopardizing the security;
+
+   3. **`Query 3: `**
+      ```SQL
+         -- admin/super_user
+         -- grant all privileges including the ability to grant other users their privilege
+         GRANT ALL PRIVILEGES ON studentportal.* TO 'admin'@'localhost' WITH GRANT OPTION;   
+      ```
+      The admin should have all the privileges pointed to a particular database, and should be able to grant privileges to other users to manage them in accordingly.
+
+* ***Reports (Stored procedures, Stored functions, Transactions, etc.)*** - A good database system should be able to accept requests successfully, and process it to create consistent and accurate reports to send back to the users.
+   
+   1. **Record Counting** 
+   
+   **`Query 1:`**
+   ```SQL
+      SELECT * FROM USERS;
+   ```
+
+* ***Stored Procedure***
    1. **`Query 1: `**
        ```SQL
          DELIMITER //
@@ -667,12 +742,20 @@ Here are a list of queries with their sample output from the DBRMS:
    13.   **`Query: 13`**
          ```SQL
             -- student privileges
+            GRANT SELECT ON studentportal.schools TO 'student'@'localhost';
+            GRANT SELECT ON studentportal.cities TO 'student'@'localhost';
+            GRANT SELECT ON studentportal.states TO 'student'@'localhost';
+            GRANT SELECT ON studentportal.countries TO 'student'@'localhost';
             GRANT SELECT ON studentportal.articles TO 'student'@'localhost';
             GRANT SELECT ON studentportal.subjects TO 'student'@'localhost';
             GRANT SELECT ON studentportal.articles_comment TO 'student'@'localhost';
             GRANT SELECT ON studentportal.articles_reply TO 'student'@'localhost';
             GRANT SELECT ON studentportal.author_subscription TO 'student'@'localhost';
+            GRANT SELECT (uname, pword, rec_code, email, modified_at, created_at) ON studentportal.users TO 'student'@'localhost';
+            GRANT SELECT (fname, lname, contact_no, saddress, city_id, school_id) ON studentportal.users_detail TO 'student'@'localhost';
 
+            GRANT UPDATE (uname, pword, is_active) ON studentportal.users TO 'student'@'localhost';
+            GRANT UPDATE (fname, lname, contact_no, saddress, city_id, school_id) ON studentportal.users_detail TO 'student'@'localhost';
             GRANT UPDATE (comment, modified_at) ON studentportal.articles_comment TO 'student'@'localhost';
             GRANT UPDATE (reply, modified_at) ON studentportal.articles_reply TO 'student'@'localhost';
             GRANT UPDATE (is_active, modified_at) ON studentportal.author_subscription TO 'student'@'localhost';
@@ -682,12 +765,20 @@ Here are a list of queries with their sample output from the DBRMS:
             GRANT INSERT ON studentportal.author_subscription TO 'student'@'localhost';
 
             -- author privileges
+            GRANT SELECT ON studentportal.schools TO 'author'@'localhost';
+            GRANT SELECT ON studentportal.cities TO 'author'@'localhost';
+            GRANT SELECT ON studentportal.states TO 'author'@'localhost';
+            GRANT SELECT ON studentportal.countries TO 'author'@'localhost';
             GRANT SELECT ON studentportal.articles TO 'author'@'localhost';
             GRANT SELECT ON studentportal.subjects TO 'author'@'localhost';
             GRANT SELECT ON studentportal.articles_comment TO 'author'@'localhost';
             GRANT SELECT ON studentportal.articles_reply TO 'author'@'localhost';
             GRANT SELECT ON studentportal.author_subscription TO 'author'@'localhost';
+            GRANT SELECT (uname, pword, rec_code, email, modified_at, created_at) ON studentportal.users TO 'author'@'localhost';
+            GRANT SELECT (fname, lname, contact_no, saddress, city_id) ON studentportal.users_detail TO 'author'@'localhost';
 
+            GRANT UPDATE (uname, pword, is_active) ON studentportal.users TO 'author'@'localhost';
+            GRANT UPDATE (fname, lname, contact_no, saddress, city_id) ON studentportal.users_detail TO 'author'@'localhost';
             GRANT UPDATE (comment, modified_at) ON studentportal.articles_comment TO 'author'@'localhost';
             GRANT UPDATE (reply, modified_at) ON studentportal.articles_reply TO 'author'@'localhost';
             GRANT UPDATE (subj_id, title, content, modified_at) ON studentportal.articles TO 'author'@'localhost';
@@ -707,11 +798,8 @@ Here are a list of queries with their sample output from the DBRMS:
          <summary>Show more...</summary>
 
          **`Query for the calling program:`**
-         ```SQL
-            -- call proc
-            CALL grantPrivUsers();
-         ```
          `Result: `
+
          ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/gr1-1.png)
          </details>
 
