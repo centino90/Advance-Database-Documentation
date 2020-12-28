@@ -1,3 +1,10 @@
+<style>
+   pre {
+      max-height: 400px;
+      overflow-y: auto;
+   }
+</style>
+
 # Database Documentation
 
 ## The database
@@ -734,39 +741,39 @@ Here are a list of queries with their sample output from the DBRMS:
 * ***Triggers*** 
    1. **`Query 14: `**
       ```SQL
-      -- create triggers for 8 tables that has modified_at field. This will update all fields based on the current timestamp of when the session is ran.
-      CREATE TRIGGER up_artc_ma 
-         BEFORE UPDATE ON articles_comment 
-         FOR EACH ROW SET NEW.modified_at = CURRENT_TIMESTAMP;
-         
-      CREATE TRIGGER up_artr_ma 
-         BEFORE UPDATE ON articles_reply 
-         FOR EACH ROW SET NEW.modified_at = CURRENT_TIMESTAMP;
-         
-      CREATE TRIGGER up_art_ma 
-         BEFORE UPDATE ON articles 
-         FOR EACH ROW SET NEW.modified_at = CURRENT_TIMESTAMP;
-         
-      CREATE TRIGGER up_as_ma 
-         BEFORE UPDATE ON author_subscription 
-         FOR EACH ROW SET NEW.modified_at = CURRENT_TIMESTAMP;
-         
-      CREATE TRIGGER up_sch_ma 
-         BEFORE UPDATE ON schools 
-         FOR EACH ROW SET NEW.modified_at = CURRENT_TIMESTAMP;
-         
-      CREATE TRIGGER up_subj_ma 
-         BEFORE UPDATE ON subjects 
-         FOR EACH ROW SET NEW.modified_at = CURRENT_TIMESTAMP;
-         
-      CREATE TRIGGER up_us_ma 
-         BEFORE UPDATE ON users 
-         FOR EACH ROW SET NEW.modified_at = CURRENT_TIMESTAMP;
-         
-      CREATE TRIGGER up_usd_ma 
-         BEFORE UPDATE ON users_detail 
-         FOR EACH ROW SET NEW.modified_at = CURRENT_TIMESTAMP;
-       ```
+         -- create triggers for 8 tables that has modified_at field. This will update all fields based on the current timestamp of when the session is ran.
+         CREATE TRIGGER up_artc_ma 
+            BEFORE UPDATE ON articles_comment 
+            FOR EACH ROW SET NEW.modified_at = CURRENT_TIMESTAMP;
+            
+         CREATE TRIGGER up_artr_ma 
+            BEFORE UPDATE ON articles_reply 
+            FOR EACH ROW SET NEW.modified_at = CURRENT_TIMESTAMP;
+            
+         CREATE TRIGGER up_art_ma 
+            BEFORE UPDATE ON articles 
+            FOR EACH ROW SET NEW.modified_at = CURRENT_TIMESTAMP;
+            
+         CREATE TRIGGER up_as_ma 
+            BEFORE UPDATE ON author_subscription 
+            FOR EACH ROW SET NEW.modified_at = CURRENT_TIMESTAMP;
+            
+         CREATE TRIGGER up_sch_ma 
+            BEFORE UPDATE ON schools 
+            FOR EACH ROW SET NEW.modified_at = CURRENT_TIMESTAMP;
+            
+         CREATE TRIGGER up_subj_ma 
+            BEFORE UPDATE ON subjects 
+            FOR EACH ROW SET NEW.modified_at = CURRENT_TIMESTAMP;
+            
+         CREATE TRIGGER up_us_ma 
+            BEFORE UPDATE ON users 
+            FOR EACH ROW SET NEW.modified_at = CURRENT_TIMESTAMP;
+            
+         CREATE TRIGGER up_usd_ma 
+            BEFORE UPDATE ON users_detail 
+            FOR EACH ROW SET NEW.modified_at = CURRENT_TIMESTAMP;
+      ```
       <details>
       <summary>Show more...</summary>
 
