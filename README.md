@@ -4,6 +4,7 @@
       overflow-y: auto;
    }
 </style>
+<br>
 
 # Database Documentation
 
@@ -862,6 +863,8 @@ Here are a list of queries with their sample output from the DBRMS:
        ```
 
 * ***Db User Management***
+<pre style="height: 500px">
    1. CREATE USER
    2. GRANT PRIVILEGE
    3. DROP USER / FLUSH PRIVILEGES
+</pre>
