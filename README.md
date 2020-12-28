@@ -521,24 +521,19 @@ Here are a list of queries with their sample output from the DBRMS:
          DELIMITER //
 
          CREATE PROCEDURE copyToCSV(
-            IN tb VARCHAR(50),
+            IN tbl VARCHAR(50),
             IN lim INT(11)
          )
          BEGIN
 
-            -- limit should be more than 0, otherwise no data is selected
+            -- fileExtension() is a stored function that concatenate dates in order to produce a unique string (see Query #16)
+            SET @sql = CONCAT("SELECT * FROM ", tbl," LIMIT ", lim," OFFSET 1 INTO OUTFILE 'C:/CSV/",fileExtension(tbl),".csv' FIELDS ENCLOSED BY '`' TERMINATED BY ';' ESCAPED BY '`' LINES TERMINATED BY '\r\n'");
+            
+            -- limit should be less or equal to the total row of the table
             IF (lim > 0) THEN
-               -- Use prepared statement to supply dynamic table_name for all tables in just 1 query
-               PREPARE stmt FROM 
-               CONCAT("SELECT * FROM ", tb," LIMIT ? OFFSET 1
-               -- use this format to makesure the uniqueness of .csv filenames       
-               INTO OUTFILE
-                  'C:/CSV/",tb,"_",CURDATE(),"_",HOUR(CURRENT_TIME),"_",MINUTE(CURRENT_TIME),"_",SECOND(CURRENT_TIME),"_copy.csv' 
-               FIELDS ENCLOSED BY '`' 
-               TERMINATED BY ';'
-               ESCAPED BY '`' 
-               LINES TERMINATED BY '\r\n'");
-               EXECUTE stmt USING lim;
+               PREPARE stmt FROM @sql;
+               EXECUTE stmt;
+               DEALLOCATE PREPARE stmt;
             END IF;
             
          END //
@@ -717,7 +712,7 @@ Here are a list of queries with their sample output from the DBRMS:
             CALL grantPrivUsers();
          ```
          `Result: `
-         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp13-1.png)
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/gr1-1.png)
          </details>
 
          <br>
@@ -727,36 +722,36 @@ Here are a list of queries with their sample output from the DBRMS:
       ```SQL
          -- create triggers for 8 tables that has modified_at field. This will update all fields based on the current timestamp of when the session is ran.
          CREATE TRIGGER up_artc_ma 
-            BEFORE UPDATE ON articles_comment 
-            FOR EACH ROW SET NEW.modified_at = CURRENT_TIMESTAMP;
+            AFTER UPDATE ON articles_comment 
+            FOR EACH ROW SET OLD.modified_at = CURRENT_TIMESTAMP;
             
          CREATE TRIGGER up_artr_ma 
-            BEFORE UPDATE ON articles_reply 
-            FOR EACH ROW SET NEW.modified_at = CURRENT_TIMESTAMP;
+            AFTER UPDATE ON articles_reply 
+            FOR EACH ROW SET OLD.modified_at = CURRENT_TIMESTAMP;
             
          CREATE TRIGGER up_art_ma 
-            BEFORE UPDATE ON articles 
-            FOR EACH ROW SET NEW.modified_at = CURRENT_TIMESTAMP;
+            AFTER UPDATE ON articles 
+            FOR EACH ROW SET OLD.modified_at = CURRENT_TIMESTAMP;
             
          CREATE TRIGGER up_as_ma 
-            BEFORE UPDATE ON author_subscription 
-            FOR EACH ROW SET NEW.modified_at = CURRENT_TIMESTAMP;
+            AFTER UPDATE ON author_subscription 
+            FOR EACH ROW SET OLD.modified_at = CURRENT_TIMESTAMP;
             
          CREATE TRIGGER up_sch_ma 
-            BEFORE UPDATE ON schools 
-            FOR EACH ROW SET NEW.modified_at = CURRENT_TIMESTAMP;
+            AFTER UPDATE ON schools 
+            FOR EACH ROW SET OLD.modified_at = CURRENT_TIMESTAMP;
             
          CREATE TRIGGER up_subj_ma 
-            BEFORE UPDATE ON subjects 
-            FOR EACH ROW SET NEW.modified_at = CURRENT_TIMESTAMP;
+            AFTER UPDATE ON subjects 
+            FOR EACH ROW SET OLD.modified_at = CURRENT_TIMESTAMP;
             
          CREATE TRIGGER up_us_ma 
-            BEFORE UPDATE ON users 
-            FOR EACH ROW SET NEW.modified_at = CURRENT_TIMESTAMP;
+            AFTER UPDATE ON users 
+            FOR EACH ROW SET OLD.modified_at = CURRENT_TIMESTAMP;
             
          CREATE TRIGGER up_usd_ma 
-            BEFORE UPDATE ON users_detail 
-            FOR EACH ROW SET NEW.modified_at = CURRENT_TIMESTAMP;
+            AFTER UPDATE ON users_detail 
+            FOR EACH ROW SET OLD.modified_at = CURRENT_TIMESTAMP;
       ```
       <details>
       <summary>Show more...</summary>
@@ -784,12 +779,66 @@ Here are a list of queries with their sample output from the DBRMS:
 
       <br>
 
-   2. ```SQL
-       SELECT * FROM TAGURU
-       ```
-   3. ```SQL
-       SELECT * FROM TAGURU
-       ```
+   2. **`Query 15`** 
+      ```SQL
+         DELIMITER //
+
+         CREATE TRIGGER trg_upd_del_comm 
+            AFTER DELETE ON articles_comment
+            FOR EACH ROW BEGIN
+            -- when the deletion of a comment is successful, all replies within that comment are also deleted.
+            DELETE FROM articles_reply WHERE art_comm_id = OLD.art_comm_id;
+            
+            END //
+            
+         DELIMITER ;
+      ```
+      <details>
+         <summary>Show more...</summary>
+
+         **`Query for the calling program:`**
+         ```SQL
+            SET @id = 100008;
+            -- select the initial state of the replies before delition of comments
+            SELECT * FROM articles_reply WHERE art_comm_id = @id;
+            -- call this stored proc which disables all foreign key constraints associated to the query
+            CALL exec_const_qry("DELETE FROM articles_comment WHERE art_comm_id = @id");
+            -- select the new state of the replies after delition of comments. All replies within the deleted comment should be deleted also
+            SELECT * FROM articles_reply WHERE art_comm_id = @id;
+         ```
+         `Result: `
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/tr2-1.png)
+      </details>
+
+      <br>
+
+   3. **`Query: 17`** 
+      ```SQL
+         CREATE TRIGGER trg_upd_u_ud 
+            AFTER DELETE ON users
+            FOR EACH ROW
+            -- to save the user data even if the account is deleted
+            UPDATE users_detail SET is_active = FALSE;
+      ```
+      <details>
+         <summary>Show more...</summary>
+
+         **`Query for the calling program:`**
+         ```SQL
+            SET @id = 10000103;
+            -- check the initial is_active state of the user_detail
+            SELECT * FROM users_detail WHERE user_id = @id;
+            -- call this stored proc which disables all foreign key constraints associated to the query
+            CALL exec_const_qry("DELETE FROM users WHERE user_id = @id");
+            -- check the new is_active state of the user_detail after a user associated to that details is deleted
+            SELECT * FROM users_detail WHERE user_id = @id;
+         ```
+         `Result: `
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/tr3-1.png)
+      </details>
+
+      <br>
+
    4. ```SQL
        SELECT * FROM TAGURU
        ```
@@ -821,29 +870,161 @@ Here are a list of queries with their sample output from the DBRMS:
 
          <br>
 
-    2. ```SQL
-       SELECT * FROM TAGURU
-       ```
-    3. ```SQL
-       SELECT * FROM TAGURU
-       ```
-    4. ```SQL
+   2. **`Query 16`** 
+      ```SQL
+         CREATE FUNCTION full_address(
+            street VARCHAR(100),
+            city VARCHAR(50),
+            state VARCHAR(50),
+            country VARCHAR(50)
+         )
+         RETURNS VARCHAR(250) DETERMINISTIC
+         RETURN CONCAT(street, ", " , city, " City", ", ", state, ", ", country);
+      ```
+      <details>
+         <summary>Show more...</summary>
+
+         **`Query for the calling program:`**
+         ```SQL
+            -- call the function and supply the needed parameters
+            SELECT schools.name, full_address(schools.saddress, cities.name, states.name, countries.name) FROM schools INNER JOIN cities ON schools.city_id = cities.city_id INNER JOIN states ON cities.state_id = states.state_id INNER JOIN countries ON states.country_id = countries.country_id;
+         ```
+         `Result: `
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/func2-1.png)
+      </details>
+
+      <br>
+
+   3. **`Query: 19`**
+      ```SQL
+         CREATE FUNCTION file_extension(
+            tbl VARCHAR(50)
+         )
+            RETURNS VARCHAR(250) NOT DETERMINISTIC
+            RETURN CONCAT(tbl,'_',CURDATE(),"_",HOUR(CURRENT_TIME),"_",MINUTE(CURRENT_TIME),"_",SECOND(CURRENT_TIME),'_copy');
+      ```
+      <details>
+         <summary>Show more...</summary>
+
+         **`Query for the calling program:`**
+         ```SQL
+            SET @tb = 'users';
+
+            -- use this to create a unique filename every time (see Query #9)
+            SELECT CONCAT(file_extension(@tb), '.csv');
+         ```
+         `Result: `
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/func3-1.png)
+      </details>
+
+      <br>
+
+   4. ```SQL
        SELECT * FROM TAGURU
        ```
        
 * ***Transactions*** 
-    1. ```SQL
-       SELECT * FROM TAGURU
-       ```
-    2. ```SQL
-       SELECT * FROM TAGURU
-       ```
-    3. ```SQL
-       SELECT * FROM TAGURU
-       ```
-    4. ```SQL
-       SELECT * FROM TAGURU
-       ```
+   1. **`Query: _`**
+      ```SQL
+         -- means that queries next to it are now insde a transaction
+         START TRANSACTION;
+
+         -- the effects of these queries are temporary and reflected only in session.
+         -- outside this session, nothing is changed yet
+         INSERT INTO articles_comment
+            (user_Id, article_id, comment)
+            VALUES(10000105, 1001, 'Wow this article is so great. I love africa.');
+         -- savepoint is basically saving this part of the transaction (first insertion)
+         SAVEPOINT ins_a;
+
+         INSERT INTO articles_comment
+            (user_Id, article_id, comment)
+            VALUES(10000106, 1001, 'This article is not great. I hate africa.');
+         -- save second insertion
+         SAVEPOINT ins_b;
+
+         -- select the changes so far before doign a rollback. It should return 2 data set
+         SELECT * FROM articles_comment;
+
+         -- Rollback means to go back or redo the changes back to a previous state
+         -- in this case, go back to the first insertion state
+         ROLLBACK TO ins_a;
+
+         -- select the changes after the rollback. The table should only have 1 data set
+         SELECT * FROM articles_comment;
+      ```
+      <details>
+         <summary>Show more...</summary>
+         `Result: `
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/trans1-1.png)
+      </details>
+
+      <br>
+
+   2. **`Query: _`**
+      ```SQL
+            DELIMITER //
+
+            CREATE PROCEDURE testTransaction(
+               -- use this 2 variables to output the 2 test results
+               OUT result1 VARCHAR(100),
+               OUT result2 VARCHAR(100)
+            )
+
+            BEGIN
+
+               START TRANSACTION;
+
+               -- wrong credentials
+               SELECT COUNT(*) INTO @cc1 FROM users WHERE uname = 'qwesdaw' AND pword = 'qweoasdiqwe';
+               -- update the latest log of the user (base on the credentials submitted) into the current datetime
+               UPDATE users SET latest_log = CURRENT_TIMESTAMP WHERE uname = 'qwesdaw' AND pword = 'qweoasdiqwe';
+
+               IF @cc1 > 0 THEN
+                  COMMIT;
+                  SET result1 = 'verified';
+               ELSE
+                  ROLLBACK;
+                  SET result1 = 'wrong credentials';
+               END IF;
+
+               -- do the same thing but with correct credentials
+               SELECT COUNT(*) INTO @cc2 FROM users WHERE uname = 'admin101' AND pword = 'admin101';
+               UPDATE users SET latest_log = CURRENT_TIMESTAMP WHERE uname = 'admin101' AND pword = 'admin101';
+
+               IF @cc2 > 0 THEN
+                  COMMIT;
+                  SET result2 = 'verified';
+               ELSE
+                  ROLLBACK;
+                  SET result2 = 'wrong credentials';
+               END IF;
+
+               -- select the users table to check for changes
+               SELECT latest_log FROM users WHERE uname = 'admin101' AND pword = 'admin101';
+
+            END //
+
+            DELIMITER ;
+      ```
+      <details>
+         <summary>Show more...</summary>
+         **`Query for the calling program:`**
+         ```SQL
+            -- call procedure
+            CALL testTransaction(
+               @result1,
+               @result2
+            );
+
+            -- check the test results
+            SELECT @result1, @result2;
+         ```
+         `Result: `
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/trans2-1.png)
+      </details>
+
+      <br>
 
 * ***Db User Management***
 <pre style="height: 500px">
@@ -851,24 +1032,3 @@ Here are a list of queries with their sample output from the DBRMS:
    2. GRANT PRIVILEGE
    3. DROP USER / FLUSH PRIVILEGES
 </pre>
-
-```{r}
-# pretend that we have a lot of code in this chunk
-if (1 + 1 == 2) {
-  # of course that is true
-  print(mtcars)
-  # we just printed a lengthy data set
-}
-```
-
-```{css, echo=FALSE}
-.scroll-100 {
-  max-height: 100px;
-  overflow-y: auto;
-  background-color: inherit;
-}
-```
-
-```{r, class.output="scroll-100"}
-print(mtcars)
-```
