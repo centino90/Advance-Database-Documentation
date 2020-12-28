@@ -1,9 +1,19 @@
-<style>
-   pre {
-      max-height: 400px;
-      overflow-y: auto;
-   }
-</style>
+---
+title: Scrollable code blocks
+output: html_document
+---
+
+```{css, echo=FALSE}
+pre {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+pre[class] {
+  max-height: 100px;
+}
+```
+
 <br>
 
 # Database Documentation
@@ -868,3 +878,24 @@ Here are a list of queries with their sample output from the DBRMS:
    2. GRANT PRIVILEGE
    3. DROP USER / FLUSH PRIVILEGES
 </pre>
+
+```{r}
+# pretend that we have a lot of code in this chunk
+if (1 + 1 == 2) {
+  # of course that is true
+  print(mtcars)
+  # we just printed a lengthy data set
+}
+```
+
+```{css, echo=FALSE}
+.scroll-100 {
+  max-height: 100px;
+  overflow-y: auto;
+  background-color: inherit;
+}
+```
+
+```{r, class.output="scroll-100"}
+print(mtcars)
+```
