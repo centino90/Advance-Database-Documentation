@@ -1,21 +1,3 @@
----
-title: Scrollable code blocks
-output: html_document
----
-
-```{css, echo=FALSE}
-pre {
-  max-height: 300px;
-  overflow-y: auto;
-}
-
-pre[class] {
-  max-height: 100px;
-}
-```
-
-<br>
-
 # Database Documentation
 
 ## The database
@@ -39,31 +21,22 @@ This database and its data is an insource that I created using the following too
 
 ### Entity Names and Description
 
-**`users`** - is responsible for storing necessary data upon the creation of a user and when its modified.
+| Entity Name | Description |
+| --- | ----------- |
+| users | ```is responsible for storing necessary data upon the creation of a user and when its modified.``` |  
+| users_detail | ```is responsible for storing necessary data upon the creation and modification of a user that has identified itself as a student.``` |
+| user_class | ```is responsible for storing necessary data of a classifier for users which is used to assign each user a user level to identify to when interacting with the system.``` |  
+| schools | ```is responsible for storing necessary data upon the creation of a school and when its modified.``` |
+| articles | ```is responsible for storing necessary data upon the creation of an article and when its modified.``` |  
+| subjects | ```is responsible for storing necessary data upon the creation of a subject and when its modified.``` |
+| author_subscriptions | ```is responsible for storing necessary data upon user subscription of the authors and when its modified.``` |  
+| articles_comment | ```is responsible for storing necessary data upon the creation and modification of user comment within an article (creates social engagement among users).``` |
+| articles_reply | ```is responsible for storing necessary data upon the creation and modification of user replies within a comment.``` |  
+| cities | ```is responsible for storing necessary data of a city.``` |
+| states | ```is responsible for storing necessary data of a state.``` |  
+| countries | ```is responsible for storing necessary data of a country.``` |
 
-**`users_detail`** - is responsible for storing necessary data upon the creation and modification of a user that has identified itself as a student.
-
-**`user_class`** - is responsible for storing necessary data of a classifier for users which is used to assign each user a user level to identify to when interacting with the system.
-
-**`schools`** - is responsible for storing necessary data upon the creation of a school and when its modified.
-
-**`articles`** - is responsible for storing necessary data upon the creation of an article and when its modified.
-
-**`subjects`** - is responsible for storing necessary data upon the creation of a subject and when its modified.
-
-**`author_subscriptions`** - is responsible for storing necessary data upon user subscription of the authors and when its modified.
-
-**`articles_comment`** - is responsible for storing necessary data upon the creation and modification of user comment within an article (creates social engagement among users).
-
-**`articles_reply`** - is responsible for storing necessary data upon the creation and modification of user replies within a comment.
-
-**`cities`** - is responsible for storing necessary data of a city.
-
-**`states`** - is responsible for storing necessary data of a state.
-
-**`countries`** - is responsible for storing necessary data of a country.
-
-<br />
+<br>
 
 ## Functional Dependency Diagram (FDD)
 
