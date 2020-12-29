@@ -198,7 +198,12 @@ Here are a list of queries with their sample output from the DBRMS:
             PRIMARY KEY (`u_cl_id`)
          ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
       ```
+      <details>
+      <summary>Show more...</summary>
 
+      `Result: `
+      ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/ct-1.PNG)
+      </details>
       <br>
 
 * ***User Management (Create User, Drop User, Grant Privilege)*** - A good database system should be able to distinguish user privileges according to user levels (user class) to designate users to their respective roles in the system and secure the database from possible attack vectors.
@@ -1111,5 +1116,5 @@ Here are a list of queries with their sample output from the DBRMS:
    <br>
 
 =============================
-============ [Go back](https://github.com/centino90/Advance-Database-Documentation/#The-Database)
+============ [Go back](https://github.com/centino90/Advance-Database-Documentation/#The-database)
 =============================
