@@ -321,6 +321,9 @@ Here are a list of queries with their sample output from the DBRMS:
             WHERE art.is_active = TRUE 
             GROUP BY subj.name ORDER BY Total_Comments DESC, art.title, subj.name ASC;
          ```
+
+         Creating a view is important to represent a summarized data meaningfully into another set of container that behaves like a table
+
          <details>
          <summary>Show more...</summary>
 
@@ -343,6 +346,9 @@ Here are a list of queries with their sample output from the DBRMS:
             ORDER BY Total_Articles DESC, subj.name ASC;
 
          ```
+
+         Creating a separate view for ranked subjects based on articles created is meaningful and is easier to present summarized data sets.
+
          <details>
          <summary>Show more...</summary>
 
@@ -366,6 +372,9 @@ Here are a list of queries with their sample output from the DBRMS:
             GROUP BY ac.comment 
             ORDER BY Total_Replies DESC, us.uname ASC;
          ```
+
+         Creating a separate view for ranked comments based on replies is meaningful and is easier to present summarized data sets.
+
          <details>
          <summary>Show more...</summary>
 
@@ -378,7 +387,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
 * ***Reports*** - A good database system should be able to accept requests successfully, and process it to create consistent and accurate reports to send back to the end-users.
    
-   5. **`Query 5: Create Summary Report from Views`** - record count.
+   8. **`Query 8: Create Summary Report from Views`** - Create a report from a View.
 
       ```SQL
          -- this is a summary report of a View
@@ -388,9 +397,20 @@ Here are a list of queries with their sample output from the DBRMS:
          , MIN(Total_Comments) AS Minimum 
          FROM popartbasedoncomm
       ```
+
       This will enhance how user-friendly the reports are by providing the end-users an improved simplification of data set.
 
-   6. **`Query 6: Create Summary Report from 2 Joined Views and 1 Table`** - This is an improved version of query #5 where instead of 1, 3 views are summarized.
+      <details>
+      <summary>Show more...</summary>
+
+      `Result: `
+      
+      ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/rep1-1.PNG)
+      </details>
+
+   <br>
+
+   9. **`Query 6: Create Summary Report 2`** - This is an improved version of query #8 where instead of 1, 3 views are summarized.
 
       ```SQL
 		   SELECT 
@@ -416,6 +436,16 @@ Here are a list of queries with their sample output from the DBRMS:
       ```
       This is much more important since it improved the retrieval of data sets by supplying more summarized data into the data table.
 
+      <details>
+      <summary>Show more...</summary>
+
+      `Result: `
+      
+      ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/rep2-1.PNG)
+      ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/rep2-2.PNG)
+      </details>
+      
+      
    <br>
 
 * ***Triggers*** - A good database system should have triggers in place to perform actions that always happen before or after an insertion, updation, and delition.
