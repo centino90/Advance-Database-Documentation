@@ -410,7 +410,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
    <br>
 
-   9. **`Query 6: Create Summary Report 2`** - This is an improved version of query #8 where instead of 1, 3 views are summarized.
+   9. **`Query 9: Create Summary Report 2`** - This is an improved version of query #8 where instead of 1, 3 views are summarized.
 
       ```SQL
 		   SELECT 
@@ -448,9 +448,9 @@ Here are a list of queries with their sample output from the DBRMS:
       
    <br>
 
-* ***Triggers*** - A good database system should have triggers in place to perform actions that always happen before or after an insertion, updation, and delition.
+* ***Triggers*** - A good database system should have triggers in place to perform actions that always happen before or after an insertion, updation, and deletion.
 
-   7. **`Query 7: `**
+   10. **`Query 10: `**
    
       ```SQL
          -- create triggers for 8 tables that has modified_at field. This will update all fields based on the current timestamp of when the session is ran.
@@ -494,25 +494,27 @@ Here are a list of queries with their sample output from the DBRMS:
          -- check the initial state of the field before update
          SELECT modified_at 
          FROM articles 
-         WHERE article_id = 1001;
+         WHERE article_id = 1021;
 
          -- perform update to trigger the trigger
          UPDATE articles
          SET title = 'The History of Africa'
-         WHERE article_id = 1001;
+         WHERE article_id = 1021;
 
          -- check the field after update
          SELECT modified_at 
          FROM articles 
-         WHERE article_id = 1001;
+         WHERE article_id = 1021;
       ```
       `Result:`
-      ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/tr1-1.png)
+
+      ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/trg1-1.PNG)
+      ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/trg1-2.PNG)
       </details>
 
       <br>
 
-   8. **`Query 8: `** 
+   11. **`Query 11: `** 
       ```SQL
          DELIMITER //
 
@@ -531,27 +533,29 @@ Here are a list of queries with their sample output from the DBRMS:
 
          **`Query for the calling program:`**
          ```SQL
-            SET @id = 100008;
+            SET @id = 100027;
             -- select the initial state of the replies before delition of comments
             SELECT * FROM articles_reply WHERE art_comm_id = @id;
-            -- call this stored proc which disables all foreign key constraints associated to the query
+            -- call this stored proc which disables all foreign key constraints associated to the query (see query #20)
             CALL exec_const_qry("DELETE FROM articles_comment WHERE art_comm_id = @id");
             -- select the new state of the replies after delition of comments. All replies within the deleted comment should be deleted also
             SELECT * FROM articles_reply WHERE art_comm_id = @id;
          ```
-         `Result: `
-         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/tr2-1.png)
+      `Result: `
+
+      [image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/trg2-1.PNG)
+      ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/trg2-2.PNG)
       </details>
 
       <br>
 
-   9. **`Query 9: `** 
+   12. **`Query 12: `** 
       ```SQL
          CREATE TRIGGER trg_upd_u_ud 
             AFTER DELETE ON users
             FOR EACH ROW
             -- to save the user data even if the account is deleted
-            UPDATE users_detail SET is_active = FALSE;
+            SET is_active = FALSE;
       ```
       <details>
          <summary>Show more...</summary>
@@ -567,7 +571,9 @@ Here are a list of queries with their sample output from the DBRMS:
             SELECT * FROM users_detail WHERE user_id = @id;
          ```
          `Result: `
-         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/tr3-1.png)
+
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/trg3-1.PNG)
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/trg3-2.PNG)
       </details>
 
       <br>
