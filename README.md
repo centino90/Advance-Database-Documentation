@@ -584,7 +584,7 @@ Here are a list of queries with their sample output from the DBRMS:
          ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/trg3-2.PNG)
       </details>
 
-      <br>
+   <br>
 
 * ***Stored Fuctions*** - A good database system should have stored functions prepared to do the redundant common tasks like concatinating multiple columns or returning a scalar value (single value) from a query.
 
@@ -606,10 +606,10 @@ Here are a list of queries with their sample output from the DBRMS:
 
          **`Query for the calling program:`**
          ```SQL
-            -- calling it the traditional way
             SELECT user_id, full_name(fname, lname) FROM `users_detail` LIMIT 5 OFFSET 1;
          ```
          `Result: `
+
          ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/func1-1.PNG)
          </details>
 
@@ -638,6 +638,7 @@ Here are a list of queries with their sample output from the DBRMS:
             SELECT schools.name, full_address(schools.saddress, cities.name, states.name, countries.name) FROM schools INNER JOIN cities ON schools.city_id = cities.city_id INNER JOIN states ON cities.state_id = states.state_id INNER JOIN countries ON states.country_id = countries.country_id;
          ```
          `Result: `
+
          ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/func2-1.PNG)
          </details>
 
@@ -665,6 +666,7 @@ Here are a list of queries with their sample output from the DBRMS:
             SELECT CONCAT(file_extension(@tb), '.csv');
          ```
          `Result: `
+
          ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/func3-1.PNG)
          </details>
 
@@ -942,12 +944,12 @@ Here are a list of queries with their sample output from the DBRMS:
          ```
          `Result:`
 
-         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp2-1.png)
-         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp2-2.png) 
-         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp2-3.png)
-         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp2-4.png) 
-         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp2-5.png)
-         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp2-6.png) 
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp2-1.PNG)
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp2-2.PNG) 
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp2-3.PNG)
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp2-4.PNG) 
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp2-5.PNG)
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp2-6.PNG) 
          </details>
 
    <br>
