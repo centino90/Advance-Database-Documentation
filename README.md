@@ -244,7 +244,7 @@ Here are a list of queries with their sample output from the DBRMS:
       
       ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/gr1-1.PNG)
       </details>
-      
+
       <br>
 
    3. **`Query 3: Author Privileges`**
@@ -321,6 +321,15 @@ Here are a list of queries with their sample output from the DBRMS:
             WHERE art.is_active = TRUE 
             GROUP BY subj.name ORDER BY Total_Comments DESC, art.title, subj.name ASC;
          ```
+      <details>
+      <summary>Show more...</summary>
+
+      `Result: `
+      
+      ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/gr3-1.PNG)
+      </details>
+
+      <br>
 
    6. **`Query 6: Create View that Ranks Subjects Based On the Number of Articles Created`**
 
@@ -333,7 +342,17 @@ Here are a list of queries with their sample output from the DBRMS:
          GROUP BY subj.name 
          ORDER BY Total_Articles DESC, subj.name ASC;
 
-      ```     
+      ```
+      <details>
+      <summary>Show more...</summary>
+
+      `Result: `
+      
+      ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/cv2-1.PNG)
+      </details>
+
+      <br>
+
    7. **`Query 7: Create View that Ranks Comments Based On the Number of Replies`**    
       ```SQL
          CREATE VIEW popCommBasedOnReplies AS
@@ -347,6 +366,13 @@ Here are a list of queries with their sample output from the DBRMS:
          GROUP BY ac.comment 
          ORDER BY Total_Replies DESC, us.uname ASC;
       ```
+      <details>
+      <summary>Show more...</summary>
+
+      `Result: `
+      
+      ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/cv3-1.PNG)
+      </details>
 
       <br>
 
