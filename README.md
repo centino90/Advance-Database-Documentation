@@ -15,8 +15,17 @@ This database is made to manage the data needed for an Educational Blog Site. At
    *  Entities and Description
 * [FDD](https://github.com/centino90/Advance-Database-Documentation/#Functional-Dependency-Diagram-FDD)
 * [Complex Queries](https://github.com/centino90/Advance-Database-Documentation/#Complex-Queries-associated-with-the-database)
-   *  [Establish Tables and Relationships](https://github.com/centino90/Advance-Database-Documentation/#Establish-Tables-and-Relationships)
-   *  [User Management](https://github.com/centino90/Advance-Database-Documentation/#User-Management-Create-User,-Drop-User,-Grant-Privilege)
+   *  Establish Tables and Relationships
+   *  User Management
+   *  Views
+   *  Reports
+   *  Triggers
+   *  Stored Functions
+   *  Transactions
+   *  Stored Procedures
+   *  General Queries
+* [End of file](https://github.com/centino90/Advance-Database-Documentation/#end-of-file)
+   
 
 <br>
 
@@ -69,7 +78,7 @@ Here are a list of queries with their sample output from the DBRMS:
 </p>
 
 
-* ***Establish Tables and Relationships (Create Table, Primary key, Foreign key, etc.)*** - A good database system should be able to create relational connection between its tables
+* ***<h4>Establish Tables and Relationships (Create Table, Primary key, Foreign key, etc.)</h4>*** - A good database system should be able to create relational connection between its tables
 
    1. **`Query 1: `**
 
@@ -1351,3 +1360,4 @@ Here are a list of queries with their sample output from the DBRMS:
 =============================
 ============ [Go back](https://github.com/centino90/Advance-Database-Documentation/#The-database)
 =============================
+# End of file
