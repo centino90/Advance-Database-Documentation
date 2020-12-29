@@ -202,7 +202,7 @@ Here are a list of queries with their sample output from the DBRMS:
       <summary>Show more...</summary>
 
       `Result: `
-      ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/ct-1.PNG)
+      ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/ct1-1.PNG)
       </details>
       <br>
 
