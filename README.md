@@ -15,7 +15,7 @@ This database is made to manage the data needed for an Educational Blog Site. At
    *  Entities and Description
 * [FDD](https://github.com/centino90/Advance-Database-Documentation/#Functional-Dependency-Diagram-FDD)
 * [Complex Queries](https://github.com/centino90/Advance-Database-Documentation/#Complex-Queries-associated-with-the-database)
-   *  Establish Tables and Relationships
+   * [Establish Tables and Relationships](https://github.com/centino90/Advance-Database-Documentation/#establish-tables-and-relationships-create-table-primary-key-foreign-key-etc)
    *  User Management
    *  Views
    *  Reports
@@ -26,7 +26,7 @@ This database is made to manage the data needed for an Educational Blog Site. At
    *  General Queries
 * [End of file](https://github.com/centino90/Advance-Database-Documentation/#end-of-file)
 * [End of file](https://github.com/centino90/Advance-Database-Documentation/#general-queries)
-   
+Establish Tables and Relationships (Create Table, Primary key, Foreign key, etc.)
 
 <br>
 
