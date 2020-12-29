@@ -8,6 +8,15 @@ This database is made to manage the data needed for an Educational Blog Site. At
 
 <br>
 
+## Table of Contents
+
+* [ERD](https://github.com/centino90/Advance-Database-Documentation/#The-database)
+   *  Diagram
+   *  Entities and Description
+* [FDD](https://github.com/centino90/Advance-Database-Documentation/#Functional-Dependency-Diagram-(FDD))
+
+<br>
+
 ## Entity Relationship Diagram (ERD)
 ER diagram is a representation of the connection between entities. By creating one, we can define the relationship of each entities in a much more sensible and convenient manner with the symbols and principles help.
 <p>The following markers used in the ERD are defined as:</p><b>PK</b> - Primary key only<br><b>FK</b> - Foreign key only<b><br>PK/FK</b> - Primary and Foreign key<br><b>2 PK/FK</b> - Composite key
@@ -993,8 +1002,8 @@ Here are a list of queries with their sample output from the DBRMS:
          ```
          `Result: `
 
-         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp3-1.png)
-         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp3-2.png)
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp3-1.PNG)
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp3-2.PNG)
          </details>
 
    <br>
@@ -1085,6 +1094,7 @@ Here are a list of queries with their sample output from the DBRMS:
             SELECT @ai1, @ai2, @ai3;
          ```
          `Result: `
+
          ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp5-1.PNG)
          </details>
 
@@ -1115,7 +1125,8 @@ Here are a list of queries with their sample output from the DBRMS:
             CALL returnCustError("Custom error: User not found");
          ```
          `Result: `
-         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp6-1.png)
+
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp6-1.PNG)
          </details>
 
    <br>
@@ -1162,7 +1173,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
          `Result: `
 
-         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/gen1-1.png)
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/gen1-1.PNG)
          </details>
 
    <br>
@@ -1201,7 +1212,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
          `Result: `
 
-         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/gen2-1.png)
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/gen2-1.PNG)
          </details>
 
    <br>
@@ -1245,7 +1256,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
          `Result: `
 
-         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/gen3-1.png)
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/gen3-1.PNG)
          </details>
 
    <br>
@@ -1269,9 +1280,9 @@ Here are a list of queries with their sample output from the DBRMS:
 
          `Result: `
 
-         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/gen4-1.png)
-         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/gen4-2.png)
-         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/gen4-3.png)
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/gen4-1.PNG)
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/gen4-2.PNG)
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/gen4-3.PNG)
          </details>
 
    <br>
