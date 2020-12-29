@@ -450,85 +450,84 @@ Here are a list of queries with their sample output from the DBRMS:
 
 * ***Triggers*** - A good database system should have triggers in place to perform actions that always happen before or after an insertion, updation, and deletion.
 
-   10. **`Query 10: `**
-   
-      ```SQL
-         -- create triggers for 8 tables that has modified_at field. This will update all fields based on the current timestamp of when the session is ran.
-         CREATE TRIGGER up_artc_ma 
-            AFTER UPDATE ON articles_comment 
-            FOR EACH ROW SET OLD.modified_at = CURRENT_TIMESTAMP;
-            
-         CREATE TRIGGER up_artr_ma 
-            AFTER UPDATE ON articles_reply 
-            FOR EACH ROW SET OLD.modified_at = CURRENT_TIMESTAMP;
-            
-         CREATE TRIGGER up_art_ma 
-            AFTER UPDATE ON articles 
-            FOR EACH ROW SET OLD.modified_at = CURRENT_TIMESTAMP;
-            
-         CREATE TRIGGER up_as_ma 
-            AFTER UPDATE ON author_subscription 
-            FOR EACH ROW SET OLD.modified_at = CURRENT_TIMESTAMP;
-            
-         CREATE TRIGGER up_sch_ma 
-            AFTER UPDATE ON schools 
-            FOR EACH ROW SET OLD.modified_at = CURRENT_TIMESTAMP;
-            
-         CREATE TRIGGER up_subj_ma 
-            AFTER UPDATE ON subjects 
-            FOR EACH ROW SET OLD.modified_at = CURRENT_TIMESTAMP;
-            
-         CREATE TRIGGER up_us_ma 
-            AFTER UPDATE ON users 
-            FOR EACH ROW SET OLD.modified_at = CURRENT_TIMESTAMP;
-            
-         CREATE TRIGGER up_usd_ma 
-            AFTER UPDATE ON users_detail 
-            FOR EACH ROW SET OLD.modified_at = CURRENT_TIMESTAMP;
-      ```
-      <details>
-      <summary>Show more...</summary>
+   10. **`Query 10: Trigger modification date to current_timestamp`**
+         ```SQL
+            -- create triggers for 8 tables that has modified_at field. This will update all fields based on the current timestamp of when the session is ran.
+            CREATE TRIGGER up_artc_ma 
+               AFTER UPDATE ON articles_comment 
+               FOR EACH ROW SET OLD.modified_at = CURRENT_TIMESTAMP;
+               
+            CREATE TRIGGER up_artr_ma 
+               AFTER UPDATE ON articles_reply 
+               FOR EACH ROW SET OLD.modified_at = CURRENT_TIMESTAMP;
+               
+            CREATE TRIGGER up_art_ma 
+               AFTER UPDATE ON articles 
+               FOR EACH ROW SET OLD.modified_at = CURRENT_TIMESTAMP;
+               
+            CREATE TRIGGER up_as_ma 
+               AFTER UPDATE ON author_subscription 
+               FOR EACH ROW SET OLD.modified_at = CURRENT_TIMESTAMP;
+               
+            CREATE TRIGGER up_sch_ma 
+               AFTER UPDATE ON schools 
+               FOR EACH ROW SET OLD.modified_at = CURRENT_TIMESTAMP;
+               
+            CREATE TRIGGER up_subj_ma 
+               AFTER UPDATE ON subjects 
+               FOR EACH ROW SET OLD.modified_at = CURRENT_TIMESTAMP;
+               
+            CREATE TRIGGER up_us_ma 
+               AFTER UPDATE ON users 
+               FOR EACH ROW SET OLD.modified_at = CURRENT_TIMESTAMP;
+               
+            CREATE TRIGGER up_usd_ma 
+               AFTER UPDATE ON users_detail 
+               FOR EACH ROW SET OLD.modified_at = CURRENT_TIMESTAMP;
+         ```
+         <details>
+         <summary>Show more...</summary>
 
-      **`Query for the calling program:`**
-      ```SQL
-         -- check the initial state of the field before update
-         SELECT modified_at 
-         FROM articles 
-         WHERE article_id = 1021;
+         **`Query for the calling program:`**
+         ```SQL
+            -- check the initial state of the field before update
+            SELECT modified_at 
+            FROM articles 
+            WHERE article_id = 1021;
 
-         -- perform update to trigger the trigger
-         UPDATE articles
-         SET title = 'The History of Africa'
-         WHERE article_id = 1021;
+            -- perform update to trigger the trigger
+            UPDATE articles
+            SET title = 'The History of Africa'
+            WHERE article_id = 1021;
 
-         -- check the field after update
-         SELECT modified_at 
-         FROM articles 
-         WHERE article_id = 1021;
-      ```
-      `Result:`
+            -- check the field after update
+            SELECT modified_at 
+            FROM articles 
+            WHERE article_id = 1021;
+         ```
+         `Result:`
 
-      ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/trg1-1.PNG)
-      ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/trg1-2.PNG)
-      </details>
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/trg1-1.PNG)
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/trg1-2.PNG)
+         </details>
 
-      <br>
+   <br>
 
-   11. **`Query 11: `** 
-      ```SQL
-         DELIMITER //
+   11. **`Query 11: Trigger delete replies associated to deleted comment`** 
+         ```SQL
+            DELIMITER //
 
-         CREATE TRIGGER trg_upd_del_comm 
-            AFTER DELETE ON articles_comment
-            FOR EACH ROW BEGIN
-            -- when the deletion of a comment is successful, all replies within that comment are also deleted.
-            DELETE FROM articles_reply WHERE art_comm_id = OLD.art_comm_id;
-            
-            END //
-            
-         DELIMITER ;
-      ```
-      <details>
+            CREATE TRIGGER trg_upd_del_comm 
+               AFTER DELETE ON articles_comment
+               FOR EACH ROW BEGIN
+               -- when the deletion of a comment is successful, all replies within that comment are also deleted.
+               DELETE FROM articles_reply WHERE art_comm_id = OLD.art_comm_id;
+               
+               END //
+               
+            DELIMITER ;
+         ```
+         <details>
          <summary>Show more...</summary>
 
          **`Query for the calling program:`**
@@ -541,23 +540,23 @@ Here are a list of queries with their sample output from the DBRMS:
             -- select the new state of the replies after delition of comments. All replies within the deleted comment should be deleted also
             SELECT * FROM articles_reply WHERE art_comm_id = @id;
          ```
-      `Result: `
+         `Result: `
 
-      [image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/trg2-1.PNG)
-      ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/trg2-2.PNG)
-      </details>
+         [image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/trg2-1.PNG)
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/trg2-2.PNG)
+         </details>
 
-      <br>
+   <br>
 
-   12. **`Query 12: `** 
-      ```SQL
-         CREATE TRIGGER trg_upd_u_ud 
-            AFTER DELETE ON users
-            FOR EACH ROW
-            -- to save the user data even if the account is deleted
-            SET is_active = FALSE;
-      ```
-      <details>
+   12. **`Query 12: Trigger update is_active associated to deleted user_id`** 
+         ```SQL
+            CREATE TRIGGER trg_upd_u_ud 
+               AFTER DELETE ON users
+               FOR EACH ROW
+               -- to save the user data even if the account is deleted
+               SET is_active = FALSE;
+         ```
+         <details>
          <summary>Show more...</summary>
 
          **`Query for the calling program:`**
