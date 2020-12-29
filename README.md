@@ -56,9 +56,155 @@ Here are a list of queries with their sample output from the DBRMS:
 ><p>Note:<br>Click if you notice a dropdown button labeled <b>Show more...</b> <br> It will show the corresponding result of the query.
 </p>
 
-* ***User Management (Create User, Drop User, Grant Privilege)*** - A good database system should be able to distinguish user privileges according to user levels (user class) to designate users to their respective roles in the system and secure the database from possible attack vectors.
+
+* ***Establish Tables and Relationships (Create Table, Primary key, Foreign key, etc.)*** - A good database system should be able to create relational connection between its tables
 
    1. **`Query 1: `**
+
+      ```SQL
+         CREATE TABLE IF NOT EXISTS `articles` (
+         `article_id` int(11) NOT NULL,
+         `author_id` int(11) NOT NULL,
+         `subj_id` int(11) NOT NULL,
+         `title` text DEFAULT NULL,
+         `content` longtext DEFAULT NULL,
+         `modified_at` timestamp NULL DEFAULT NULL,
+         `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+         `is_active` tinyint(1) NOT NULL DEFAULT 1,
+            PRIMARY KEY (`article_id`),
+            FOREIGN KEY (`author_id`) REFERENCES users (`user_id`), 
+            FOREIGN KEY (`subj_id`) REFERENCES subjects (`subj_Id`)
+         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+         CREATE TABLE IF NOT EXISTS `subjects` (
+         `subj_id` int(11) NOT NULL,
+         `name` varchar(50) DEFAULT NULL,
+         `modified_at` timestamp NULL DEFAULT NULL,
+         `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+         `is_active` tinyint(1) NOT NULL DEFAULT 1,
+            PRIMARY KEY (`subj_id`)
+         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+         CREATE TABLE IF NOT EXISTS `articles_comment` (
+         `art_comm_id` int(11) NOT NULL,
+         `user_id` int(11) NOT NULL,
+         `article_id` int(11) NOT NULL,
+         `comment` mediumtext DEFAULT NULL,
+         `modified_at` timestamp NULL DEFAULT NULL,
+         `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+            PRIMARY KEY (`art_comm_id`),
+            FOREIGN KEY (`user_id`) REFERENCES users (`user_id`), 
+            FOREIGN KEY (`article_id`) REFERENCES articles (`article_id`)
+         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+         CREATE TABLE IF NOT EXISTS `articles_reply` (
+         `art_reply_id` int(11) NOT NULL,
+         `user_id` int(11) NOT NULL,
+         `art_comm_id` int(11) NOT NULL,
+         `reply` mediumtext DEFAULT NULL,
+         `modified_at` timestamp NULL DEFAULT NULL,
+         `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+            PRIMARY KEY (`art_reply_id`),
+            FOREIGN KEY (`user_id`) REFERENCES users (`user_id`), 
+            FOREIGN KEY (`art_comm_id`) REFERENCES articles_comment (`art_comm_id`)
+         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+         CREATE TABLE IF NOT EXISTS `author_subscription` (
+         `user_id` int(11) NOT NULL,
+         `author_id` int(11) NOT NULL,
+         `modified_at` timestamp NULL DEFAULT NULL,
+         `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+         `is_active` tinyint(1) NOT NULL DEFAULT 1,
+            PRIMARY KEY (`user_id`),
+            FOREIGN KEY (`author_id`) REFERENCES users (`user_id`), 
+            FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
+         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+         CREATE TABLE IF NOT EXISTS `schools` (
+         `school_id` int(11) NOT NULL,
+         `name` varchar(50) DEFAULT NULL,
+         `email` varchar(80) DEFAULT NULL,
+         `landline_no` varchar(60) DEFAULT NULL,
+         `saddress` varchar(80) DEFAULT NULL,
+         `city_id` int(11) NOT NULL,
+         `modified_at` timestamp NULL DEFAULT NULL,
+         `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+            PRIMARY KEY (`school_id`),
+            FOREIGN KEY (`city_id`) REFERENCES cities (`city_id`)
+         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+         CREATE TABLE IF NOT EXISTS `cities` (
+         `city_id` int(11) NOT NULL,
+         `name` varchar(30) DEFAULT NULL,
+         `state_id` int(11) NOT NULL,
+            PRIMARY KEY (`city_id`),
+            FOREIGN KEY (`state_id`) REFERENCES states (`state_id`) 
+         ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+         CREATE TABLE IF NOT EXISTS `states` (
+         `state_id` int(11) NOT NULL,
+         `name` varchar(30) DEFAULT NULL,
+         `country_id` int(11) NOT NULL DEFAULT 1,
+            PRIMARY KEY (`state_id`),
+            FOREIGN KEY (`country_id`) REFERENCES countries (`country_id`)
+         ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+         CREATE TABLE IF NOT EXISTS `countries` (
+         `country_id` int(11) NOT NULL,
+         `sortname` varchar(3) NOT NULL,
+         `name` varchar(150) NOT NULL,
+         `phonecode` int(11) NOT NULL,
+            PRIMARY KEY (`country_id`)
+         ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+         CREATE TABLE IF NOT EXISTS `users` (
+         `user_id` int(11) NOT NULL,
+         `u_cl_id` int(11) NOT NULL,
+         `uname` varchar(50) DEFAULT NULL,
+         `pword` varchar(50) DEFAULT NULL,
+         `rec_code` varchar(20) DEFAULT NULL,
+         `email` varchar(80) NOT NULL,
+         `modified_at` timestamp NULL DEFAULT NULL,
+         `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+         `is_active` tinyint(1) NOT NULL DEFAULT 1,
+         `guest_ip` varchar(20) DEFAULT NULL,
+         `latest_log` timestamp NULL DEFAULT NULL,
+            PRIMARY KEY (`user_id`),
+            FOREIGN KEY (`u_cl_id`) REFERENCES users_class (`u_cl_id`), 
+            FOREIGN KEY (`user_id`) REFERENCES users_detail (`user_id`)
+         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+         CREATE TABLE IF NOT EXISTS `users_detail` (
+         `user_id` int(11) NOT NULL,
+         `fname` varchar(30) DEFAULT NULL,
+         `lname` varchar(30) DEFAULT NULL,
+         `contact_no` varchar(16) DEFAULT NULL,
+         `saddress` varchar(80) DEFAULT NULL,
+         `city_id` int(11) NOT NULL,
+         `school_id` int(11) DEFAULT NULL,
+         `modified_at` timestamp NULL DEFAULT NULL,
+         `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+         `is_active` tinyint(1) NOT NULL DEFAULT 1,
+            PRIMARY KEY (`user_id`),
+            FOREIGN KEY (`city_id`) REFERENCES cities (`city_id`), 
+            FOREIGN KEY (`school_id`) REFERENCES schools (`school_id`)
+         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+         CREATE TABLE IF NOT EXISTS `user_class` (
+         `u_cl_id` int(11) NOT NULL,
+         `label` varchar(20) DEFAULT NULL,
+         `priv_pword` varchar(50) NOT NULL,
+            PRIMARY KEY (`u_cl_id`)
+         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+      ```
+
+      <br>
+
+* ***User Management (Create User, Drop User, Grant Privilege)*** - A good database system should be able to distinguish user privileges according to user levels (user class) to designate users to their respective roles in the system and secure the database from possible attack vectors.
+
+   2. **`Query 2: Student Privileges`**
+
       ```SQL
          -- student privileges
          GRANT SELECT ON studentportal.schools TO 'student'@'localhost';
@@ -85,7 +231,8 @@ Here are a list of queries with their sample output from the DBRMS:
       ```
       This is important because users should have distinct 'access level' to the database, and students have the access it needed to be able to interact with the system without jeopardizing the security;
 
-   2. **`Query 2: `**
+   3. **`Query 3: Author Privileges`**
+
       ```SQL
          -- author privileges
          GRANT SELECT ON studentportal.schools TO 'author'@'localhost';
@@ -115,22 +262,474 @@ Here are a list of queries with their sample output from the DBRMS:
       ```
       This is important because users should have distinct 'access level' to the database, and authors have the access it needed to be able to interact with the system without jeopardizing the security;
 
-   3. **`Query 3: `**
+   4. **`Query 4: Admin/Super_User Privileges`**
       ```SQL
          -- admin/super_user
          -- grant all privileges including the ability to grant other users their privilege
          GRANT ALL PRIVILEGES ON studentportal.* TO 'admin'@'localhost' WITH GRANT OPTION;   
       ```
-      The admin should have all the privileges pointed to a particular database, and should be able to grant privileges to other users to manage them in accordingly.
+      The admin should have all the privileges pointed to a particular database, and should be able to grant privileges to other users to manage them accordingly.
 
-* ***Reports (Stored procedures, Stored functions, Transactions, etc.)*** - A good database system should be able to accept requests successfully, and process it to create consistent and accurate reports to send back to the users.
+      <br>
+
+* ***Views*** - A good database system should have a summary table (view) of most frequently accessed tables to present data that are already summarized.
+
+   5.   **`Query 5: Create View that Ranks Articles Based On the Number of Comments`**
+
+         ```SQL
+            CREATE VIEW popArtBasedOnComm AS
+
+            SELECT art.title AS Article_Title, full_name(ud.fname, ud.lname) AS Author, subj.name AS Subject, art.content AS Content, COUNT(ac.art_comm_id) AS Total_Comments, art.modified_at AS Last_Modified 
+            FROM articles art
+            LEFT JOIN subjects subj  USING (subj_id) 
+            LEFT JOIN articles_comment ac USING (article_id) 
+            LEFT JOIN users_detail ud ON art.author_id = ud.user_id
+            WHERE art.is_active = TRUE 
+            GROUP BY subj.name ORDER BY Total_Comments DESC, art.title, subj.name ASC;
+         ```
+
+   6. **`Query 6: Create View that Ranks Subjects Based On the Number of Articles Created`**
+
+      ```SQL
+         CREATE VIEW popSubjBasedOnArt AS
+
+         SELECT subj.name AS Subject, subj.created_at AS Date_Created, COUNT(art.article_id) AS Total_Articles 
+         FROM subjects subj 
+         LEFT JOIN articles art USING(subj_id) 
+         GROUP BY subj.name 
+         ORDER BY Total_Articles DESC, subj.name ASC;
+
+      ```     
+   7. **`Query 7: Create View that Ranks Comments Based On the Number of Replies`**    
+      ```SQL
+         CREATE VIEW popCommBasedOnReplies AS
+
+         SELECT us.uname AS Username, art.title AS Article, ac.comment AS Comment, subj.name AS Subject, COUNT(ar.reply) AS Total_Replies, ac.created_at AS Date_Created 
+         FROM articles_comment ac 
+         LEFT JOIN articles_reply ar USING(art_comm_id) 
+         LEFT JOIN users us ON ac.user_id = us.user_id 
+         LEFT JOIN articles art USING (article_id) 
+         LEFT JOIN subjects subj USING (subj_id) 
+         GROUP BY ac.comment 
+         ORDER BY Total_Replies DESC, us.uname ASC;
+      ```
+
+      <br>
+
+* ***Reports*** - A good database system should be able to accept requests successfully, and process it to create consistent and accurate reports to send back to the end-users.
    
-   1. **Record Counting** 
+   5. **`Query 5: Create Summary Report from Views`** - record count.
+
+      ```SQL
+         -- this is a summary report of a View
+         SELECT SUM(Total_Comments) AS Grand_Total
+         , AVG(Total_Comments) AS Average
+         , MAX(Total_Comments) AS Maximum
+         , MIN(Total_Comments) AS Minimum 
+         FROM popartbasedoncomm
+      ```
+      This will enhance how user-friendly the reports are by providing the end-users an improved simplification of data set.
+
+   6. **`Query 6: Create Summary Report from 2 Joined Views and 1 Table`** - This is an improved version of query #5 where instead of 1, 3 views are summarized.
+
+      ```SQL
+		   SELECT 
+         -- articles info
+         SUM(Total_Articles) AS Articles_Grand_Total
+         , AVG(Total_Articles) AS Articles_Average
+         , MAX(Total_Articles) AS Articles_Maximum
+         , MIN(Total_Articles) AS Articles_Minimum
+         -- comments info
+         ,SUM(Total_Comments) AS Comments_Grand_Total
+         , AVG(Total_Comments) AS Comments_Average
+         , MAX(Total_Comments) AS Comments_Maximum
+         , MIN(Total_Comments) AS Comments_Minimum
+         -- replies info
+         ,SUM(Total_Replies) AS Replies_Grand_Total
+         , AVG(Total_Replies) AS Replies_Average
+         , MAX(Total_Replies) AS Replies_Maximum
+         , MIN(Total_Replies) AS Replies_Minimum 
+         
+         FROM popsubjbasedonart 
+         LEFT JOIN popartbasedoncomm USING(Subject)
+         LEFT JOIN popcommbasedonreplies USING(Subject)
+      ```
+      This is much more important since it improved the retrieval of data sets by supplying more summarized data into the data table.
+
+   <br>
+
+* ***Triggers*** - A good database system should have triggers in place to perform queries that are common and redundant.
+
+   7. **`Query 7: `**
    
-   **`Query 1:`**
-   ```SQL
-      SELECT * FROM USERS;
-   ```
+      ```SQL
+         -- create triggers for 8 tables that has modified_at field. This will update all fields based on the current timestamp of when the session is ran.
+         CREATE TRIGGER up_artc_ma 
+            AFTER UPDATE ON articles_comment 
+            FOR EACH ROW SET OLD.modified_at = CURRENT_TIMESTAMP;
+            
+         CREATE TRIGGER up_artr_ma 
+            AFTER UPDATE ON articles_reply 
+            FOR EACH ROW SET OLD.modified_at = CURRENT_TIMESTAMP;
+            
+         CREATE TRIGGER up_art_ma 
+            AFTER UPDATE ON articles 
+            FOR EACH ROW SET OLD.modified_at = CURRENT_TIMESTAMP;
+            
+         CREATE TRIGGER up_as_ma 
+            AFTER UPDATE ON author_subscription 
+            FOR EACH ROW SET OLD.modified_at = CURRENT_TIMESTAMP;
+            
+         CREATE TRIGGER up_sch_ma 
+            AFTER UPDATE ON schools 
+            FOR EACH ROW SET OLD.modified_at = CURRENT_TIMESTAMP;
+            
+         CREATE TRIGGER up_subj_ma 
+            AFTER UPDATE ON subjects 
+            FOR EACH ROW SET OLD.modified_at = CURRENT_TIMESTAMP;
+            
+         CREATE TRIGGER up_us_ma 
+            AFTER UPDATE ON users 
+            FOR EACH ROW SET OLD.modified_at = CURRENT_TIMESTAMP;
+            
+         CREATE TRIGGER up_usd_ma 
+            AFTER UPDATE ON users_detail 
+            FOR EACH ROW SET OLD.modified_at = CURRENT_TIMESTAMP;
+      ```
+      <details>
+      <summary>Show more...</summary>
+
+      **`Query for the calling program:`**
+      ```SQL
+         -- check the initial state of the field before update
+         SELECT modified_at 
+         FROM articles 
+         WHERE article_id = 1001;
+
+         -- perform update to trigger the trigger
+         UPDATE articles
+         SET title = 'The History of Africa'
+         WHERE article_id = 1001;
+
+         -- check the field after update
+         SELECT modified_at 
+         FROM articles 
+         WHERE article_id = 1001;
+      ```
+      `Result:`
+      ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/tr1-1.png)
+      </details>
+
+      <br>
+
+   8. **`Query 8: `** 
+      ```SQL
+         DELIMITER //
+
+         CREATE TRIGGER trg_upd_del_comm 
+            AFTER DELETE ON articles_comment
+            FOR EACH ROW BEGIN
+            -- when the deletion of a comment is successful, all replies within that comment are also deleted.
+            DELETE FROM articles_reply WHERE art_comm_id = OLD.art_comm_id;
+            
+            END //
+            
+         DELIMITER ;
+      ```
+      <details>
+         <summary>Show more...</summary>
+
+         **`Query for the calling program:`**
+         ```SQL
+            SET @id = 100008;
+            -- select the initial state of the replies before delition of comments
+            SELECT * FROM articles_reply WHERE art_comm_id = @id;
+            -- call this stored proc which disables all foreign key constraints associated to the query
+            CALL exec_const_qry("DELETE FROM articles_comment WHERE art_comm_id = @id");
+            -- select the new state of the replies after delition of comments. All replies within the deleted comment should be deleted also
+            SELECT * FROM articles_reply WHERE art_comm_id = @id;
+         ```
+         `Result: `
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/tr2-1.png)
+      </details>
+
+      <br>
+
+   9. **`Query 9: `** 
+      ```SQL
+         CREATE TRIGGER trg_upd_u_ud 
+            AFTER DELETE ON users
+            FOR EACH ROW
+            -- to save the user data even if the account is deleted
+            UPDATE users_detail SET is_active = FALSE;
+      ```
+      <details>
+         <summary>Show more...</summary>
+
+         **`Query for the calling program:`**
+         ```SQL
+            SET @id = 10000103;
+            -- check the initial is_active state of the user_detail
+            SELECT * FROM users_detail WHERE user_id = @id;
+            -- call this stored proc which disables all foreign key constraints associated to the query
+            CALL exec_const_qry("DELETE FROM users WHERE user_id = @id");
+            -- check the new is_active state of the user_detail after a user associated to that details is deleted
+            SELECT * FROM users_detail WHERE user_id = @id;
+         ```
+         `Result: `
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/tr3-1.png)
+      </details>
+
+      <br>
+
+* ***Stored Fuctions*** - A good database system should have stored functions prepared to do the redundant common tasks like concatinating multiple columns or returning a scalar value (single value) from a query.
+
+   10.   **`Query: 10`** 
+         ```SQL
+            CREATE FUNCTION full_name(
+               fname CHAR(30),
+               lname CHAR(30)
+            )
+            -- DETERMINISTIC means that you insure that the result will always be the same
+            RETURNS CHAR(60) DETERMINISTIC
+            RETURN CONCAT(fname, ' ', lname);
+         ```
+         <details>
+         <summary>Show more...</summary>
+
+         **`Query for the calling program:`**
+         ```SQL
+            -- calling it the traditional way
+            SELECT user_id, full_name(fname, lname) FROM `users_detail` LIMIT 5 OFFSET 1;
+            -- calling it within a stored proc which converts it into a dynamic query
+            CALL exec_qry("SELECT full_name(fname, lname) FROM users_detail WHERE id =");
+         ```
+         `Result: `
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/func1-1.png)
+         </details>
+
+         <br>
+
+   11.   **`Query 11`** 
+         ```SQL
+            CREATE FUNCTION full_address(
+               street VARCHAR(100),
+               city VARCHAR(50),
+               state VARCHAR(50),
+               country VARCHAR(50)
+            )
+            RETURNS VARCHAR(250) DETERMINISTIC
+            RETURN CONCAT(street, ", " , city, " City", ", ", state, ", ", country);
+         ```
+         <details>
+         <summary>Show more...</summary>
+
+         **`Query for the calling program:`**
+         ```SQL
+            -- call the function and supply the needed parameters
+            SELECT schools.name, full_address(schools.saddress, cities.name, states.name, countries.name) FROM schools INNER JOIN cities ON schools.city_id = cities.city_id INNER JOIN states ON cities.state_id = states.state_id INNER JOIN countries ON states.country_id = countries.country_id;
+         ```
+         `Result: `
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/func2-1.png)
+         </details>
+
+      <br>
+
+   12.   **`Query: 12`**
+         ```SQL
+            CREATE FUNCTION file_extension(
+               tbl VARCHAR(50)
+            )
+               RETURNS VARCHAR(250) NOT DETERMINISTIC
+               RETURN CONCAT(tbl,'_',CURDATE(),"_",HOUR(CURRENT_TIME),"_",MINUTE(CURRENT_TIME),"_",SECOND(CURRENT_TIME),'_copy');
+         ```
+         <details>
+         <summary>Show more...</summary>
+         **`Query for the calling program:`**
+         ```SQL
+            SET @tb = 'users';
+
+            -- use this to create a unique filename every time (see Query #9)
+            SELECT CONCAT(file_extension(@tb), '.csv');
+         ```
+         `Result: `
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/func3-1.png)
+         </details>
+
+      <br>
+
+* ***General Queries*** - A good database system should be able to perform all kinds of techniques that a RDBMS has provided.
+
+<details>
+   <summary>functions, clauses, ...</summary>
+
+   **`Aggregate Functions`** <br>
+   `COUNT()`, `COUNT(DISTINCT)`, `SUM()`, `AVG()`, `MIN()`, `MAX()`<br><br>
+   **`Mathematical Functions`** <br>
+   `CEILING()`, `FLOOR()`, `ABS()`, `POW()`, `ROUND()`, `MOD()`, `RAND()`<br><br>
+   **`Window (Non Aggregate) Functions`** <br>
+   `DENSE_RANK()`, `RANK()`, `NTILE()`, `FIRST_VALUE()`, `LAST_VALUE()`, `ROW_NUMBER`<br><br>
+   **`Date and Time Functions`** <br>
+   `CURRENT_TIMESTAMP`, `CURDATE()`, `DAY()`, `HOUR()`, `MINUTE()`, `SECOND()` <br><br>
+   **`Information Functions`** <br>
+   `USER()`, `CURRENT_USER()`, `SESSION_USER`  <br><br>
+   **`JOIN Clauses`** <br>
+   `INNER JOIN`, `LEFT JOIN`, `RIGHT JOIN` <br><br>
+   **`Others`** <br>
+   `CONCAT()`
+</details>
+
+   9. **`Query 9: Verify User`** - This stored procedure is responsible for verifying a user based on the input (username, password, email) they give and then returns username and user_id if verified.
+      ```SQL
+         CREATE PROCEDURE verifyUser(
+            IN v_uname VARCHAR(50),
+            IN v_pword VARCHAR(80),
+            IN v_email VARCHAR(80),
+            OUT ov_uname VARCHAR(50),
+            OUT ov_uid INT(11)
+         )
+         BEGIN 
+
+            SET @aid = 10000;
+            -- select user... if verified, return username and userid (to use as session_data for the application)
+            SELECT uname, user_id 
+            INTO ov_uname, ov_uid 
+            FROM users 
+            WHERE u_cl_id != @aid AND uname = v_uname AND pword = v_pword AND email = v_email 
+            LIMIT 1;
+               
+         END //
+
+         DELIMITER ;
+      ```
+      Verifying a user is important and is a standard of any application thus, stored procedure is a suitable method since it insures consistency on the results, and it improves transmission speed.
+      <details>
+      <summary>Show more...</summary>
+
+      **`Query for the calling program:`**
+      ```SQL
+         -- SET the needed data for convenience. In this case, a correct one.
+         SET @uname = 'username123';
+         SET @pword = 'password123';
+         SET @pword = 'email@email.com';
+
+         -- CALL the procedure in which it should return 2 data from users table
+         CALL verifyUser(@uname, @pword, @email, @s_uname, @s_uid);
+
+         -- SELECT the OUT parameter to get the ouput
+         SELECT @s_uname, @s_uid;
+      ```
+      </details>
+
+      <br>
+   
+   10.   **`Query 10: Retrieve Personal Information`** - This select statement is responsible for getting the full name, full address, contact number, & email of a user.
+
+         ```SQL
+            SET @aid = 10000; -- admin id
+            SET @uid = 10000105; -- student id (input)
+
+            SELECT full_name(ud.fname, ud.lname) 
+            AS Full_Name
+            ,full_address(ud.saddress, ct.name, sts.name, ctr.name) 
+            AS Full_Address
+            ,ud.contact_no 
+            AS Contact_No
+            ,us.email 
+            AS Email
+
+            FROM users us
+
+            LEFT JOIN users_detail ud 
+            USING(user_id)
+            LEFT JOIN cities ct 
+            USING(city_id)
+            LEFT JOIN states sts 
+            USING(state_id)
+            LEFT JOIN countries ctr 
+            USING(country_id)
+
+            WHERE us.u_cl_id != @aid 
+            AND us.user_id = @uid
+
+            ORDER BY ud.fname 
+            ASC;
+         ```
+         This is important since in order to present user data effectively to the end-users, we have to accept a single request to point to a query that will return all the necessary data about them.
+
+      <br>
+
+   11.   **`Query 11: Retrieve School Information`**
+
+         ```SQL
+            SET @scid = 3003; -- school id (input)
+
+            SELECT 
+            sc.name
+            AS School_Name
+            ,sc.email 
+            AS Email
+            ,full_address(sc.saddress, ct.name, sts.name, ctr.name)
+            AS Full_Address
+
+            FROM schools sc
+
+            LEFT JOIN cities ct 
+            USING(city_id)
+            LEFT JOIN states sts 
+            USING(state_id)
+            LEFT JOIN countries ctr 
+            USING(country_id)
+
+            WHERE sc.school_id = @scid
+
+            ORDER BY sc.name 
+            ASC;
+         ```
+         Since this is an educational system, this query is important and the data sets the are retrieved from it
+
+      <br>
+
+   12.   **`Query 12: Retrieve Article Information`**
+
+         ```SQL
+            SELECT art.title AS Article_Title, full_name(ud.fname, ud.lname) AS Author, subj.name AS Subject, COUNT(ac.art_comm_id) AS Total_Comments FROM subjects subj INNER JOIN articles art USING (subj_id) INNER JOIN articles_comment ac USING (article_id) INNER JOIN users_detail ud ON art.author_id = ud.user_id GROUP BY subj.name ORDER BY Total_Comments DESC, art.title, subj.name ASC;
+         ```
+
+   
+   2. Article Information - queries that are only associated with retrieving information about the articles
+
+      **`Query 8: Retrieve Article Information`**
+      ```SQL
+         SET @article_title = "the"; -- article title (input)
+         SET @act = CONCAT(@article_title,"%");
+
+         SELECT 
+         art.title
+         AS Title
+         ,art.content 
+         AS Content
+         ,subj.name
+         AS Subject
+         ,full_name(auth.fname, auth.lname)
+         AS Full_Name
+         ,art.created_at
+
+         FROM articles art
+
+         LEFT JOIN subjects subj 
+         USING(subj_id)
+         LEFT JOIN users us 
+         ON art.author_id = us.user_id
+         LEFT JOIN users_detail auth 
+         USING(user_id)
+
+         WHERE art.title LIKE @act -- where first characters 
+
+         ORDER BY art.title 
+         ASC;
+      ```
+
 
 * ***Stored Procedure***
    1. **`Query 1: `**
@@ -544,28 +1143,25 @@ Here are a list of queries with their sample output from the DBRMS:
          DELIMITER //
 
          CREATE PROCEDURE verifyUser(
-            IN un VARCHAR(50),
-            IN pw VARCHAR(50),
-            OUT is_verified BOOLEAN
+            IN v_uname VARCHAR(50),
+            IN v_pword VARCHAR(80),
+            IN v_email VARCHAR(80),
+            OUT ov_uname VARCHAR(50),
+            OUT ov_uid INT(11)
          )
-
          BEGIN 
-            -- assign the selected field into a variable
-            SELECT user_id
-               INTO @uid
-               FROM users
-               WHERE uname = un AND pword = pw;
-            
-            -- if the select operation returned null or did not find a match, verification is failed
-            IF @uid IS NULL THEN
-               -- or you can use the SIGNAL SQLSTATE to create and throw an SQL error
-               SET is_verified = FALSE;
-            -- else verification is success and return the datatable of that user
-            ELSE
-               SET is_verified = TRUE;
-               SELECT * FROM users WHERE user_id = @uid;
-            END IF;
-            
+
+            SET @aid = 10000;
+            -- select user... if verified, return username and userid (to use as session_data for the application)
+            SELECT uname, user_id 
+            INTO ov_uname, ov_uid 
+            FROM users 
+            WHERE u_cl_id != @aid 
+               AND uname = v_uname 
+               AND pword = v_pword 
+               AND email = v_email 
+            LIMIT 1;
+               
          END //
 
          DELIMITER ;
@@ -576,14 +1172,15 @@ Here are a list of queries with their sample output from the DBRMS:
       **`Query for the calling program:`**
       ```SQL
          -- SET the needed data for convenience. In this case, a correct one.
-         SET @uname = 'admin101';
-         SET @pword = 'admin101';
+         SET @uname = 'username123';
+         SET @pword = 'password123';
+         SET @pword = 'email@email.com';
 
-         -- CALL the procedure in which it should return all the data from users table
-         CALL verifyUser(@uname, @pword, @is_verified);
+         -- CALL the procedure in which it should return 2 data from users table
+         CALL verifyUser(@uname, @pword, @email, @s_uname, @s_uid);
 
          -- SELECT the OUT parameter to get the ouput
-         SELECT @is_verified;
+         SELECT @s_uname, @s_uid;
       ```
       `Result: `
       ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp8-1.png)
@@ -806,206 +1403,12 @@ Here are a list of queries with their sample output from the DBRMS:
          <br>
    
 * ***Triggers*** 
-   1. **`Query 14: `**
-      ```SQL
-         -- create triggers for 8 tables that has modified_at field. This will update all fields based on the current timestamp of when the session is ran.
-         CREATE TRIGGER up_artc_ma 
-            AFTER UPDATE ON articles_comment 
-            FOR EACH ROW SET OLD.modified_at = CURRENT_TIMESTAMP;
-            
-         CREATE TRIGGER up_artr_ma 
-            AFTER UPDATE ON articles_reply 
-            FOR EACH ROW SET OLD.modified_at = CURRENT_TIMESTAMP;
-            
-         CREATE TRIGGER up_art_ma 
-            AFTER UPDATE ON articles 
-            FOR EACH ROW SET OLD.modified_at = CURRENT_TIMESTAMP;
-            
-         CREATE TRIGGER up_as_ma 
-            AFTER UPDATE ON author_subscription 
-            FOR EACH ROW SET OLD.modified_at = CURRENT_TIMESTAMP;
-            
-         CREATE TRIGGER up_sch_ma 
-            AFTER UPDATE ON schools 
-            FOR EACH ROW SET OLD.modified_at = CURRENT_TIMESTAMP;
-            
-         CREATE TRIGGER up_subj_ma 
-            AFTER UPDATE ON subjects 
-            FOR EACH ROW SET OLD.modified_at = CURRENT_TIMESTAMP;
-            
-         CREATE TRIGGER up_us_ma 
-            AFTER UPDATE ON users 
-            FOR EACH ROW SET OLD.modified_at = CURRENT_TIMESTAMP;
-            
-         CREATE TRIGGER up_usd_ma 
-            AFTER UPDATE ON users_detail 
-            FOR EACH ROW SET OLD.modified_at = CURRENT_TIMESTAMP;
-      ```
-      <details>
-      <summary>Show more...</summary>
-
-      **`Query for the calling program:`**
-      ```SQL
-         -- check the initial state of the field before update
-         SELECT modified_at 
-         FROM articles 
-         WHERE article_id = 1001;
-
-         -- perform update to trigger the trigger
-         UPDATE articles
-         SET title = 'The History of Africa'
-         WHERE article_id = 1001;
-
-         -- check the field after update
-         SELECT modified_at 
-         FROM articles 
-         WHERE article_id = 1001;
-      ```
-       `Result:`
-       ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/tr1-1.png)
-      </details>
-
-      <br>
-
-   2. **`Query 15`** 
-      ```SQL
-         DELIMITER //
-
-         CREATE TRIGGER trg_upd_del_comm 
-            AFTER DELETE ON articles_comment
-            FOR EACH ROW BEGIN
-            -- when the deletion of a comment is successful, all replies within that comment are also deleted.
-            DELETE FROM articles_reply WHERE art_comm_id = OLD.art_comm_id;
-            
-            END //
-            
-         DELIMITER ;
-      ```
-      <details>
-         <summary>Show more...</summary>
-
-         **`Query for the calling program:`**
-         ```SQL
-            SET @id = 100008;
-            -- select the initial state of the replies before delition of comments
-            SELECT * FROM articles_reply WHERE art_comm_id = @id;
-            -- call this stored proc which disables all foreign key constraints associated to the query
-            CALL exec_const_qry("DELETE FROM articles_comment WHERE art_comm_id = @id");
-            -- select the new state of the replies after delition of comments. All replies within the deleted comment should be deleted also
-            SELECT * FROM articles_reply WHERE art_comm_id = @id;
-         ```
-         `Result: `
-         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/tr2-1.png)
-      </details>
-
-      <br>
-
-   3. **`Query: 17`** 
-      ```SQL
-         CREATE TRIGGER trg_upd_u_ud 
-            AFTER DELETE ON users
-            FOR EACH ROW
-            -- to save the user data even if the account is deleted
-            UPDATE users_detail SET is_active = FALSE;
-      ```
-      <details>
-         <summary>Show more...</summary>
-
-         **`Query for the calling program:`**
-         ```SQL
-            SET @id = 10000103;
-            -- check the initial is_active state of the user_detail
-            SELECT * FROM users_detail WHERE user_id = @id;
-            -- call this stored proc which disables all foreign key constraints associated to the query
-            CALL exec_const_qry("DELETE FROM users WHERE user_id = @id");
-            -- check the new is_active state of the user_detail after a user associated to that details is deleted
-            SELECT * FROM users_detail WHERE user_id = @id;
-         ```
-         `Result: `
-         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/tr3-1.png)
-      </details>
-
-      <br>
-
+   
    4. ```SQL
        SELECT * FROM TAGURU
        ```
 
 * ***Functions*** 
-    1.   **`Query: 15`** 
-         ```SQL
-            CREATE FUNCTION full_name(
-               fname CHAR(30),
-               lname CHAR(30)
-            )
-            -- DETERMINISTIC means that you insure that the result will always be the same
-            RETURNS CHAR(60) DETERMINISTIC
-            RETURN CONCAT(fname, ' ', lname);
-         ```
-         <details>
-         <summary>Show more...</summary>
-
-         **`Query for the calling program:`**
-         ```SQL
-            -- calling it the traditional way
-            SELECT user_id, full_name(fname, lname) FROM `users_detail` LIMIT 5 OFFSET 1;
-            -- calling it within a stored proc which converts it into a dynamic query
-            CALL exec_qry("SELECT full_name(fname, lname) FROM users_detail WHERE id =");
-         ```
-         `Result: `
-         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/func1-1.png)
-         </details>
-
-         <br>
-
-   2. **`Query 16`** 
-      ```SQL
-         CREATE FUNCTION full_address(
-            street VARCHAR(100),
-            city VARCHAR(50),
-            state VARCHAR(50),
-            country VARCHAR(50)
-         )
-         RETURNS VARCHAR(250) DETERMINISTIC
-         RETURN CONCAT(street, ", " , city, " City", ", ", state, ", ", country);
-      ```
-      <details>
-         <summary>Show more...</summary>
-
-         **`Query for the calling program:`**
-         ```SQL
-            -- call the function and supply the needed parameters
-            SELECT schools.name, full_address(schools.saddress, cities.name, states.name, countries.name) FROM schools INNER JOIN cities ON schools.city_id = cities.city_id INNER JOIN states ON cities.state_id = states.state_id INNER JOIN countries ON states.country_id = countries.country_id;
-         ```
-         `Result: `
-         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/func2-1.png)
-      </details>
-
-      <br>
-
-   3. **`Query: 19`**
-      ```SQL
-         CREATE FUNCTION file_extension(
-            tbl VARCHAR(50)
-         )
-            RETURNS VARCHAR(250) NOT DETERMINISTIC
-            RETURN CONCAT(tbl,'_',CURDATE(),"_",HOUR(CURRENT_TIME),"_",MINUTE(CURRENT_TIME),"_",SECOND(CURRENT_TIME),'_copy');
-      ```
-      <details>
-         <summary>Show more...</summary>
-
-         **`Query for the calling program:`**
-         ```SQL
-            SET @tb = 'users';
-
-            -- use this to create a unique filename every time (see Query #9)
-            SELECT CONCAT(file_extension(@tb), '.csv');
-         ```
-         `Result: `
-         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/func3-1.png)
-      </details>
-
-      <br>
 
    4. ```SQL
        SELECT * FROM TAGURU
