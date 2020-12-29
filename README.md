@@ -321,60 +321,60 @@ Here are a list of queries with their sample output from the DBRMS:
             WHERE art.is_active = TRUE 
             GROUP BY subj.name ORDER BY Total_Comments DESC, art.title, subj.name ASC;
          ```
-      <details>
-      <summary>Show more...</summary>
+         <details>
+         <summary>Show more...</summary>
 
-      `Result: `
-      
-      ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/gr3-1.PNG)
-      </details>
+         `Result: `
+         
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/gr3-1.PNG)
+         </details>
 
-      <br>
+   <br>
 
    6. **`Query 6: Create View that Ranks Subjects Based On the Number of Articles Created`**
 
-      ```SQL
-         CREATE VIEW popSubjBasedOnArt AS
+         ```SQL
+            CREATE VIEW popSubjBasedOnArt AS
 
-         SELECT subj.name AS Subject, subj.created_at AS Date_Created, COUNT(art.article_id) AS Total_Articles 
-         FROM subjects subj 
-         LEFT JOIN articles art USING(subj_id) 
-         GROUP BY subj.name 
-         ORDER BY Total_Articles DESC, subj.name ASC;
+            SELECT subj.name AS Subject, subj.created_at AS Date_Created, COUNT(art.article_id) AS Total_Articles 
+            FROM subjects subj 
+            LEFT JOIN articles art USING(subj_id) 
+            GROUP BY subj.name 
+            ORDER BY Total_Articles DESC, subj.name ASC;
 
-      ```
-      <details>
-      <summary>Show more...</summary>
+         ```
+         <details>
+         <summary>Show more...</summary>
 
-      `Result: `
-      
-      ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/cv2-1.PNG)
-      </details>
+         `Result: `
+         
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/cv2-1.PNG)
+         </details>
 
-      <br>
+   <br>
 
    7. **`Query 7: Create View that Ranks Comments Based On the Number of Replies`**    
-      ```SQL
-         CREATE VIEW popCommBasedOnReplies AS
+         ```SQL
+            CREATE VIEW popCommBasedOnReplies AS
 
-         SELECT us.uname AS Username, art.title AS Article, ac.comment AS Comment, subj.name AS Subject, COUNT(ar.reply) AS Total_Replies, ac.created_at AS Date_Created 
-         FROM articles_comment ac 
-         LEFT JOIN articles_reply ar USING(art_comm_id) 
-         LEFT JOIN users us ON ac.user_id = us.user_id 
-         LEFT JOIN articles art USING (article_id) 
-         LEFT JOIN subjects subj USING (subj_id) 
-         GROUP BY ac.comment 
-         ORDER BY Total_Replies DESC, us.uname ASC;
-      ```
-      <details>
-      <summary>Show more...</summary>
+            SELECT us.uname AS Username, art.title AS Article, ac.comment AS Comment, subj.name AS Subject, COUNT(ar.reply) AS Total_Replies, ac.created_at AS Date_Created 
+            FROM articles_comment ac 
+            LEFT JOIN articles_reply ar USING(art_comm_id) 
+            LEFT JOIN users us ON ac.user_id = us.user_id 
+            LEFT JOIN articles art USING (article_id) 
+            LEFT JOIN subjects subj USING (subj_id) 
+            GROUP BY ac.comment 
+            ORDER BY Total_Replies DESC, us.uname ASC;
+         ```
+         <details>
+         <summary>Show more...</summary>
 
-      `Result: `
-      
-      ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/cv3-1.PNG)
-      </details>
+         `Result: `
+         
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/cv3-1.PNG)
+         </details>
 
-      <br>
+   <br>
 
 * ***Reports*** - A good database system should be able to accept requests successfully, and process it to create consistent and accurate reports to send back to the end-users.
    
