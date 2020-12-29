@@ -1358,4 +1358,3 @@ Here are a list of queries with their sample output from the DBRMS:
 =============================
 ============ [Go back](https://github.com/centino90/Advance-Database-Documentation/#The-database)
 =============================
-# End of file
