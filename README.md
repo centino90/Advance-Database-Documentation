@@ -545,6 +545,7 @@ Here are a list of queries with their sample output from the DBRMS:
          ```
          <details>
          <summary>Show more...</summary>
+
          **`Query for the calling program:`**
          ```SQL
             SET @tb = 'users';
@@ -558,28 +559,115 @@ Here are a list of queries with their sample output from the DBRMS:
 
    <br>
 
-* ***General Queries*** - A good database system should be able to perform all kinds of techniques that a RDBMS has provided.
+* ***Transactions*** - A good database system should ACID (Atomicity, Consitency, Isolation, Durability) properties in place to manage operations (transactions) that are essential to the end-users.
 
-<details>
-   <summary>functions, clauses, ...</summary>
+   13. **`Query 13: `**
+      ```SQL
+         -- means that queries next to it are now insde a transaction
+         START TRANSACTION;
 
-   **`Aggregate Functions`** <br>
-   `COUNT()`, `COUNT(DISTINCT)`, `SUM()`, `AVG()`, `MIN()`, `MAX()`<br><br>
-   **`Mathematical Functions`** <br>
-   `CEILING()`, `FLOOR()`, `ABS()`, `POW()`, `ROUND()`, `MOD()`, `RAND()`<br><br>
-   **`Window (Non Aggregate) Functions`** <br>
-   `DENSE_RANK()`, `RANK()`, `NTILE()`, `FIRST_VALUE()`, `LAST_VALUE()`, `ROW_NUMBER`<br><br>
-   **`Date and Time Functions`** <br>
-   `CURRENT_TIMESTAMP`, `CURDATE()`, `DAY()`, `HOUR()`, `MINUTE()`, `SECOND()` <br><br>
-   **`Information Functions`** <br>
-   `USER()`, `CURRENT_USER()`, `SESSION_USER`  <br><br>
-   **`JOIN Clauses`** <br>
-   `INNER JOIN`, `LEFT JOIN`, `RIGHT JOIN` <br><br>
-   **`Others`** <br>
-   `CONCAT()`
-</details>
+         -- the effects of these queries are temporary and reflected only in session.
+         -- outside this session, nothing is changed yet
+         INSERT INTO articles_comment
+            (user_Id, article_id, comment)
+            VALUES(10000105, 1001, 'Wow this article is so great. I love africa.');
+         -- savepoint is basically saving this part of the transaction (first insertion)
+         SAVEPOINT ins_a;
 
-   9. **`Query 9: Verify User`** - This stored procedure is responsible for verifying a user based on the input (username, password, email) they give and then returns username and user_id if verified.
+         INSERT INTO articles_comment
+            (user_Id, article_id, comment)
+            VALUES(10000106, 1001, 'This article is not great. I hate africa.');
+         -- save second insertion
+         SAVEPOINT ins_b;
+
+         -- select the changes so far before doign a rollback. It should return 2 data set
+         SELECT * FROM articles_comment;
+
+         -- Rollback means to go back or redo the changes back to a previous state
+         -- in this case, go back to the first insertion state
+         ROLLBACK TO ins_a;
+
+         -- select the changes after the rollback. The table should only have 1 data set
+         SELECT * FROM articles_comment;
+      ```
+      <details>
+         <summary>Show more...</summary>
+
+         `Result: `
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/trans1-1.png)
+      </details>
+
+      <br>
+
+   14. **`Query 14: `**
+      ```SQL
+         DELIMITER //
+
+         CREATE PROCEDURE testTransaction(
+            -- use this 2 variables to output the 2 test results
+            OUT result1 VARCHAR(100),
+            OUT result2 VARCHAR(100)
+         )
+
+         BEGIN
+
+            START TRANSACTION;
+
+            -- wrong credentials
+            SELECT COUNT(*) INTO @cc1 FROM users WHERE uname = 'qwesdaw' AND pword = 'qweoasdiqwe';
+            -- update the latest log of the user (base on the credentials submitted) into the current datetime
+            UPDATE users SET latest_log = CURRENT_TIMESTAMP WHERE uname = 'qwesdaw' AND pword = 'qweoasdiqwe';
+
+            IF @cc1 > 0 THEN
+               COMMIT;
+               SET result1 = 'verified';
+            ELSE
+               ROLLBACK;
+               SET result1 = 'wrong credentials';
+            END IF;
+
+            -- do the same thing but with correct credentials
+            SELECT COUNT(*) INTO @cc2 FROM users WHERE uname = 'admin101' AND pword = 'admin101';
+            UPDATE users SET latest_log = CURRENT_TIMESTAMP WHERE uname = 'admin101' AND pword = 'admin101';
+
+            IF @cc2 > 0 THEN
+               COMMIT;
+               SET result2 = 'verified';
+            ELSE
+               ROLLBACK;
+               SET result2 = 'wrong credentials';
+            END IF;
+
+            -- select the users table to check for changes
+            SELECT latest_log FROM users WHERE uname = 'admin101' AND pword = 'admin101';
+
+         END //
+
+         DELIMITER ;
+      ```
+      <details>
+      <summary>Show more...</summary>
+
+      **`Query for the calling program:`**
+      ```SQL
+         -- call procedure
+         CALL testTransaction(
+            @result1,
+            @result2
+         );
+
+         -- check the test results
+         SELECT @result1, @result2;
+      ```
+      `Result: `
+      ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/trans2-1.png)
+      </details>
+
+      <br>
+
+* ***Stored Procedures*** - A good database system should have stored procedures stored within the database to further automate the processes and operations when interacting with the system.
+
+   15. **`Query 15: Verify User`** - This stored procedure is responsible for verifying a user based on the input (username, password, email) they give and then returns username and user_id if verified.
       ```SQL
          CREATE PROCEDURE verifyUser(
             IN v_uname VARCHAR(50),
@@ -622,6 +710,27 @@ Here are a list of queries with their sample output from the DBRMS:
       </details>
 
       <br>
+
+* ***General Queries*** - A good database system should be able to perform all kinds of techniques that a RDBMS has provided.
+
+<details>
+   <summary>functions, clauses, ...</summary>
+
+   **`Aggregate Functions`** <br>
+   `COUNT()`, `COUNT(DISTINCT)`, `SUM()`, `AVG()`, `MIN()`, `MAX()`<br><br>
+   **`Mathematical Functions`** <br>
+   `CEILING()`, `FLOOR()`, `ABS()`, `POW()`, `ROUND()`, `MOD()`, `RAND()`<br><br>
+   **`Window (Non Aggregate) Functions`** <br>
+   `DENSE_RANK()`, `RANK()`, `NTILE()`, `FIRST_VALUE()`, `LAST_VALUE()`, `ROW_NUMBER`<br><br>
+   **`Date and Time Functions`** <br>
+   `CURRENT_TIMESTAMP`, `CURDATE()`, `DAY()`, `HOUR()`, `MINUTE()`, `SECOND()` <br><br>
+   **`Information Functions`** <br>
+   `USER()`, `CURRENT_USER()`, `SESSION_USER`  <br><br>
+   **`JOIN Clauses`** <br>
+   `INNER JOIN`, `LEFT JOIN`, `RIGHT JOIN` <br><br>
+   **`Others`** <br>
+   `CONCAT()`
+</details>
    
    10.   **`Query 10: Retrieve Personal Information`** - This select statement is responsible for getting the full name, full address, contact number, & email of a user.
 
@@ -1402,121 +1511,6 @@ Here are a list of queries with their sample output from the DBRMS:
 
          <br>
    
-* ***Triggers*** 
-   
-   4. ```SQL
-       SELECT * FROM TAGURU
-       ```
-
-* ***Functions*** 
-
-   4. ```SQL
-       SELECT * FROM TAGURU
-       ```
-       
-* ***Transactions*** 
-   1. **`Query: _`**
-      ```SQL
-         -- means that queries next to it are now insde a transaction
-         START TRANSACTION;
-
-         -- the effects of these queries are temporary and reflected only in session.
-         -- outside this session, nothing is changed yet
-         INSERT INTO articles_comment
-            (user_Id, article_id, comment)
-            VALUES(10000105, 1001, 'Wow this article is so great. I love africa.');
-         -- savepoint is basically saving this part of the transaction (first insertion)
-         SAVEPOINT ins_a;
-
-         INSERT INTO articles_comment
-            (user_Id, article_id, comment)
-            VALUES(10000106, 1001, 'This article is not great. I hate africa.');
-         -- save second insertion
-         SAVEPOINT ins_b;
-
-         -- select the changes so far before doign a rollback. It should return 2 data set
-         SELECT * FROM articles_comment;
-
-         -- Rollback means to go back or redo the changes back to a previous state
-         -- in this case, go back to the first insertion state
-         ROLLBACK TO ins_a;
-
-         -- select the changes after the rollback. The table should only have 1 data set
-         SELECT * FROM articles_comment;
-      ```
-      <details>
-         <summary>Show more...</summary>
-         `Result: `
-         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/trans1-1.png)
-      </details>
-
-      <br>
-
-   2. **`Query: _`**
-      ```SQL
-            DELIMITER //
-
-            CREATE PROCEDURE testTransaction(
-               -- use this 2 variables to output the 2 test results
-               OUT result1 VARCHAR(100),
-               OUT result2 VARCHAR(100)
-            )
-
-            BEGIN
-
-               START TRANSACTION;
-
-               -- wrong credentials
-               SELECT COUNT(*) INTO @cc1 FROM users WHERE uname = 'qwesdaw' AND pword = 'qweoasdiqwe';
-               -- update the latest log of the user (base on the credentials submitted) into the current datetime
-               UPDATE users SET latest_log = CURRENT_TIMESTAMP WHERE uname = 'qwesdaw' AND pword = 'qweoasdiqwe';
-
-               IF @cc1 > 0 THEN
-                  COMMIT;
-                  SET result1 = 'verified';
-               ELSE
-                  ROLLBACK;
-                  SET result1 = 'wrong credentials';
-               END IF;
-
-               -- do the same thing but with correct credentials
-               SELECT COUNT(*) INTO @cc2 FROM users WHERE uname = 'admin101' AND pword = 'admin101';
-               UPDATE users SET latest_log = CURRENT_TIMESTAMP WHERE uname = 'admin101' AND pword = 'admin101';
-
-               IF @cc2 > 0 THEN
-                  COMMIT;
-                  SET result2 = 'verified';
-               ELSE
-                  ROLLBACK;
-                  SET result2 = 'wrong credentials';
-               END IF;
-
-               -- select the users table to check for changes
-               SELECT latest_log FROM users WHERE uname = 'admin101' AND pword = 'admin101';
-
-            END //
-
-            DELIMITER ;
-      ```
-      <details>
-         <summary>Show more...</summary>
-         **`Query for the calling program:`**
-         ```SQL
-            -- call procedure
-            CALL testTransaction(
-               @result1,
-               @result2
-            );
-
-            -- check the test results
-            SELECT @result1, @result2;
-         ```
-         `Result: `
-         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/trans2-1.png)
-      </details>
-
-      <br>
-
 * ***Db User Management***
 <pre style="height: 500px">
    1. CREATE USER
