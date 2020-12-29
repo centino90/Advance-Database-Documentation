@@ -559,7 +559,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
    <br>
 
-* ***Transactions*** - A good database system should ACID (Atomicity, Consitency, Isolation, Durability) properties in place to manage operations (transactions) that are essential to the end-users.
+* ***Transactions*** - A good database system should have ACID (Atomicity, Consitency, Isolation, Durability) properties in place to manage operations (transactions) that are essential to the end-users.
 
    13. **`Query 13: `**
          ```SQL
@@ -663,7 +663,7 @@ Here are a list of queries with their sample output from the DBRMS:
          ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/trans2-1.png)
          </details>
 
-      <br>
+   <br>
 
 * ***Stored Procedures*** - A good database system should have stored procedures stored within the database to further automate the processes and operations when interacting with the system.
 
@@ -691,7 +691,7 @@ Here are a list of queries with their sample output from the DBRMS:
             DELIMITER ;
          ```
 
-            Verifying a user is important and is a standard of any application thus, stored procedure is a suitable method since it insures consistency on the results, and it improves transmission speed.
+         Verifying a user is important and is a standard of any application thus, stored procedure is a suitable method since it insures consistency on the results, and it improves transmission speed.
             
          <details>
          <summary>Show more...</summary>
@@ -713,28 +713,269 @@ Here are a list of queries with their sample output from the DBRMS:
 
    <br>
 
-* ***General Queries*** - A good database system should be able to perform all kinds of techniques that a RDBMS has provided.
+   16. **`Query 16: Insert New User Via Stored Procedure`**
+         ```SQL
+            DELIMITER //
 
-<details>
-   <summary>functions, clauses, ...</summary>
+            CREATE PROCEDURE insertUser(
+            -- users table
+            IN ucl int(11),
+            IN un varchar(50),
+            IN pw varchar(50),
+            IN rec varchar(20),
+            IN em VARCHAR(80),
+            -- users_detail table
+            IN fn varchar(30),
+            IN ln varchar(30),
+            IN ct varchar(16),
+            IN sadd varchar(80),
+            IN city_id int(11),
+            IN schid int(11)    
+            )
+            -- use BEGIN - END if there are multiple logic/schema in one session
+            BEGIN
 
-   **`Aggregate Functions`** <br>
-   `COUNT()`, `COUNT(DISTINCT)`, `SUM()`, `AVG()`, `MIN()`, `MAX()`<br><br>
-   **`Mathematical Functions`** <br>
-   `CEILING()`, `FLOOR()`, `ABS()`, `POW()`, `ROUND()`, `MOD()`, `RAND()`<br><br>
-   **`Window (Non Aggregate) Functions`** <br>
-   `DENSE_RANK()`, `RANK()`, `NTILE()`, `FIRST_VALUE()`, `LAST_VALUE()`, `ROW_NUMBER`<br><br>
-   **`Date and Time Functions`** <br>
-   `CURRENT_TIMESTAMP`, `CURDATE()`, `DAY()`, `HOUR()`, `MINUTE()`, `SECOND()` <br><br>
-   **`Information Functions`** <br>
-   `USER()`, `CURRENT_USER()`, `SESSION_USER`  <br><br>
-   **`JOIN Clauses`** <br>
-   `INNER JOIN`, `LEFT JOIN`, `RIGHT JOIN` <br><br>
-   **`Others`** <br>
-   `CONCAT()`
-</details>
+               -- call a procedure that gets the current increment value of the table supplied as parameter
+               CALL getTableIncrement('users_detail', @ai);
+               
+               -- here is where the primary key originated
+               INSERT INTO users_detail 
+                  ( fname, lname, contact_no, saddress, city_id, school_id ) 
+               VALUES
+                  ( fn, ln, ct, sadd, city_id, schid );
+
+               -- here is where the @ai value is used as primary/foreign key
+               INSERT INTO users
+                  ( user_id, u_cl_id, uname, pword, rec_code, email ) 
+               VALUES
+                  (@ai, ucl, un, pw, rec,em);
+
+               -- create users (admin, author, and student) to insure that when created it has a Db account to refer from
+               CREATE user IF NOT EXISTS 'admin'@'localhost';
+               CREATE user IF NOT EXISTS 'author'@'localhost';
+               CREATE user IF NOT EXISTS 'student'@'localhost';
+
+               -- select the label from user_class
+               SELECT label INTO @lb FROM user_class WHERE u_cl_id = ucl;
+
+               -- perform prepared statements that is contained within another stored proc "exec_qry":
+               -- do this to insure that the db user is created
+               CALL exec_qry(CONCAT("CREATE user IF NOT EXISTS @lb@localhost"));
+               
+               -- check privilege and react according to the findings:         
+               -- use that selected value here to determine if the original number of privileges has been updated (decreased)
+               CALL exec_qry(CONCAT("SELECT COUNT(user) INTO @c1 FROM mysql.columns_priv WHERE user = @lb"));
+               CALL exec_qry(CONCAT("SELECT COUNT(user) INTO @c2 FROM mysql.tables_priv WHERE user = @lb"));
+               
+               -- if so, then run this stored proc to rerun the original privileges that I initially set for them
+               IF (@c1 < 14 || @c2 < 10) THEN
+                  CALL grantPrivUsers();
+               END IF;
+                  
+            END //
+
+            DELIMITER ;
+         ```
+         <details>
+         <summary>Show more...</summary>
+
+         **`Query for the calling program:`**
+         ```SQL
+         -- check the total rows before calling the procedure to get the initial number
+            SELECT COUNT(user_id) 
+               FROM users_detail;
+            SELECT COUNT(user_id) 
+               FROM users;
+         ```
+         `Result:`
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp2-1.png)
+
+         ```SQL
+            -- call the procedure using dummy data as parameters
+            CALL insertUser(
+               10001,
+               'username123',
+               'password123',
+               'MyCoD3',
+               'email@email.com',
+               '192.168.5.5', -- this can be based on the user_ip_address or browser info that you get from a user of the application
+               'John',
+               'Doe',
+               '63-909-555-4117',
+               'km 11 Bayview, Sasa',
+               5,
+               3005
+            );
+
+            -- check the total rows again after the procedure is called which should now have 1 row added to it
+            SELECT COUNT(user_id) 
+               FROM users_detail;
+            SELECT COUNT(user_id)
+               FROM users;
+            -- in addition, also check if the current user was added to the userlist of all mysql account
+            SELECT * 
+               FROM mysql.user 
+               WHERE host = '192.168.5.5';
+
+            -- also check the previliges it has 
+            SHOW GRANTS FOR 'user'@'192.168.5.5'
+         ```
+         `Result:`
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp2-2.png) 
+         </details>
+
+   <br>
+
+   17. **`Query: 17: Create .CSV file based on selected data from a table`**
+         ```SQL
+            DELIMITER //
+
+            CREATE PROCEDURE copyToCSV(
+               IN tbl VARCHAR(50),
+               IN lim INT(11)
+            )
+            BEGIN
+
+               -- fileExtension() is a stored function that concatenate dates in order to produce a unique string (see Query #12)
+               SET @sql = CONCAT("SELECT * FROM ", tbl," LIMIT ", lim," OFFSET 1 INTO OUTFILE 'C:/CSV/",fileExtension(tbl),".csv' FIELDS ENCLOSED BY '`' TERMINATED BY ';' ESCAPED BY '`' LINES TERMINATED BY '\r\n'");
+               
+               -- limit should be less or equal to the total row of the table
+               IF (lim > 0) THEN
+                  PREPARE stmt FROM @sql;
+                  EXECUTE stmt;
+                  DEALLOCATE PREPARE stmt;
+               END IF;
+               
+            END //
+
+            DELIMITER ;
+         ```
+         <details>
+         <summary>Show more...</summary>
+
+         **`Query for the calling program:`**
+         ```SQL
+            -- call procedure in which it should send a .csv file to our directory "C:/CSV/"
+            -- if its less or equal to 0 it should not create a csv file. If its over the row_count then it should include all data in that table
+            CALL copyToCSV("users", 0);
+            CALL copyToCSV("users", 9999);
+         ```
+         `Result: `
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp9-1.png)
+         </details>
+
+   <br>
+
+   18. **`Query 18: Execute Parameterized Query that Disables Foreign Constraints momentarily`**
+         ```SQL
+            DELIMITER //
+
+            CREATE PROCEDURE exec_const_qry(
+               IN p_sql varchar(500)
+            )
+            
+            BEGIN
+
+            SET FOREIGN_KEY_CHECKS = 0;
+
+            SET @tquery = p_sql;
+            PREPARE stmt FROM @tquery;
+            EXECUTE stmt;
+            DEALLOCATE PREPARE stmt;
+            
+            SET FOREIGN_KEY_CHECKS = 1;
+
+            END //
+            
+            DELIMITER ;
+         ```
+         <details>
+         <summary>Show more...</summary>
+
+         **`Query for the calling program:`**
+         ```SQL
+            -- this proc can receive even complex queries (see query #2)
+            -- call query 3 times with different query targets
+            -- basic select
+            CALL exec_const_qry('SELECT * FROM articles');
+            -- select with limit and offset
+            CALL exec_const_qry('SELECT * FROM users LIMIT 10 OFFSET 1');
+            -- shows all preveliges of root@localhost
+            CALL exec_const_qry('SHOW GRANTS FOR root@localhost');
+         ```
+         `Result: `
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp10-1.png)
+         </details>
+
+   <br>
+
+   19. **`Query 19: Retrieve Current Increment of a Table`**
+         ```SQL
+            DELIMITER //
+
+            CREATE PROCEDURE getTableIncrement(
+               IN tbl VARCHAR(50),
+               OUT ai VARCHAR(11)
+            )
+
+            BEGIN
+            -- assign the next increment value to a variable to use it as reference (since the next primary key is predictable due to it being incremented automatically by 1) to the user_id from users_detail table
+               SET @tbl = tbl;
+               SELECT `AUTO_INCREMENT`
+               INTO ai FROM INFORMATION_SCHEMA.TABLES
+               WHERE TABLE_SCHEMA = 'studentportal' AND TABLE_NAME = tbl;
+
+            END //
+               
+            DELIMITER ;
+         ```            
+         <details>
+         <summary>Show more...</summary>
+
+         **`Query for the calling program:`**
+         ```SQL
+            CALL getTableIncrement('articles_reply', @ai1);
+            CALL getTableIncrement('articles', @ai2);
+            CALL getTableIncrement('articles_comment', @ai3);
+
+            SELECT @ai1, @ai2, @ai3;
+         ```
+         `Result: `
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp11-1.png)
+         </details>
+
+   <br>
+
+   20.   **`Query 20: Trigger a Customer Error by Calling it within a Store Procedure`**
+         ```SQL
+            DELIMITER //
+
+            CREATE PROCEDURE returnCustError(
+               IN err VARCHAR(100)
+            )
+
+            SIGNAL SQLSTATE '45000'
+               SET MESSAGE_TEXT = err //
+
+            DELIMITER ;
+         ```
+         <details>
+         <summary>Show more...</summary>
+
+         **`Query for the calling program:`**
+         ```SQL
+            -- call proc and insert the error msg you want to return
+            CALL returnCustError("Custom error: User not found");
+         ```
+         `Result: `
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp12-1.png)
+         </details>
+
+   <br>
+
+* ***General Queries*** - A good database system should be able to perform all kinds of techniques that the RDBMS has provided.
    
-   10.   **`Query 10: Retrieve Personal Information`** - This select statement is responsible for getting the full name, full address, contact number, & email of a user.
+   21.   **`Query 10: Retrieve Personal Information`** - This select statement is responsible for getting the full name, full address, contact number, & email of a user.
 
          ```SQL
             SET @aid = 10000; -- admin id
@@ -770,7 +1011,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
       <br>
 
-   11.   **`Query 11: Retrieve School Information`**
+   22. **`Query 22: Retrieve School Information`**
 
          ```SQL
             SET @scid = 3003; -- school id (input)
@@ -799,18 +1040,25 @@ Here are a list of queries with their sample output from the DBRMS:
          ```
          Since this is an educational system, this query is important and the data sets the are retrieved from it
 
-      <br>
+   <br>
 
-   12.   **`Query 12: Retrieve Article Information`**
+   23. **`Query 23: Retrieve All Article Information`**
 
          ```SQL
-            SELECT art.title AS Article_Title, full_name(ud.fname, ud.lname) AS Author, subj.name AS Subject, COUNT(ac.art_comm_id) AS Total_Comments FROM subjects subj INNER JOIN articles art USING (subj_id) INNER JOIN articles_comment ac USING (article_id) INNER JOIN users_detail ud ON art.author_id = ud.user_id GROUP BY subj.name ORDER BY Total_Comments DESC, art.title, subj.name ASC;
+            SELECT art.title AS Article_Title, full_name(ud.fname, ud.lname) AS Author, subj.name AS Subject, COUNT(ac.art_comm_id) AS Total_Comments 
+            FROM subjects subj 
+            INNER JOIN articles art USING (subj_id) 
+            INNER JOIN articles_comment ac USING (article_id) 
+            INNER JOIN users_detail ud ON art.author_id = ud.user_id 
+            GROUP BY subj.name 
+            ORDER BY Total_Comments 
+            DESC, art.title, subj.name ASC;
          ```
+   <br>
 
-   
-   2. Article Information - queries that are only associated with retrieving information about the articles
+   24. Article Information - queries that are only associated with retrieving information about the articles
 
-      **`Query 8: Retrieve Article Information`**
+      **`Query 24: Retrieve Article Information base on Title Match`**
       ```SQL
          SET @article_title = "the"; -- article title (input)
          SET @act = CONCAT(@article_title,"%");
@@ -841,681 +1089,40 @@ Here are a list of queries with their sample output from the DBRMS:
          ASC;
       ```
 
-
-* ***Stored Procedure***
-   1. **`Query 1: `**
-       ```SQL
-         DELIMITER //
-
-         CREATE PROCEDURE selectUser(
-         IN uid INT(11),
-         OUT un VARCHAR (30),
-         OUT em VARCHAR(80),
-         OUT sadd VARCHAR(80),
-         OUT stat BOOLEAN
-         )
-         -- SELECT but not show the values that is received from this statement and assign it to different variables
-         SELECT users.uname, users.email, users_detail.saddress, users_detail.is_active 
-            INTO un, em, sadd, stat 
-            FROM users 
-         INNER JOIN users_detail 
-            ON users.user_id = users_detail.user_id 
-         WHERE users.user_id = uid //
-
-         DELIMITER ;
-       ```
-       <details>
-       <summary>Show more...</summary>
-
-        **`Query for the calling program:`**
-        ```SQL
-         -- call procedure
-         CALL selectUser(
-            10000418,
-            @un,
-            @em,
-            @sadd,
-            @stat
-         );
-
-         -- SELECT the variables one more time. This time, we are selecting it with the intention of showing the returned value
-         SELECT @un, @em, @sadd, @stat;
-        ```
-        `Result:`
-        ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp1-1.PNG)
-        </details>
-       
-       <br>
-
-   2. **`Query 2: `**
-      ```SQL
-         DELIMITER //
-
-         CREATE PROCEDURE insertUser(
-         -- users table
-         IN ucl int(11),
-         IN un varchar(50),
-         IN pw varchar(50),
-         IN rec varchar(20),
-         IN em VARCHAR(80),
-         IN gip VARCHAR(20),
-         -- users_detail table
-         IN fn varchar(30),
-         IN ln varchar(30),
-         IN ct varchar(16),
-         IN sadd varchar(80),
-         IN city_id int(11),
-         IN schid int(11)    
-         )
-         -- use BEGIN - END if there are multiple logic/schema in one session
-         BEGIN
-
-            -- call a procedure that gets the current increment value of the table supplied as parameter
-            CALL getTableIncrement('users_detail', @ai);
-            
-            -- here is where the primary key originated
-            INSERT INTO users_detail 
-               ( fname, lname, contact_no, saddress, city_id, school_id ) 
-            VALUES
-               ( fn, ln, ct, sadd, city_id, schid );
-
-            -- here is where the @ai value is used as primary/foreign key
-            INSERT INTO users
-               ( user_id, u_cl_id, uname, pword, rec_code, email ) 
-            VALUES
-               (@ai, ucl, un, pw, rec,em);
-
-            -- create users (admin, author, and student) to insure that when created it has a Db account to refer from
-            CREATE user IF NOT EXISTS 'admin'@'localhost';
-            CREATE user IF NOT EXISTS 'author'@'localhost';
-            CREATE user IF NOT EXISTS 'student'@'localhost';
-
-            -- select the label from user_class
-            SELECT label INTO @lb FROM user_class WHERE u_cl_id = ucl;
-
-            -- perform prepared statements that is contained within another stored proc "exec_qry":
-            -- create user as guest with their ip attached as their host
-            CALL exec_qry(CONCAT("CREATE user IF NOT EXISTS @lb@localhost"));
-            
-            -- check privilege and react according to the findings:         
-            -- use that selected value here to determine if the original number of privileges has been updated (decreased)
-            CALL exec_qry(CONCAT("SELECT COUNT(user) INTO @c1 FROM mysql.columns_priv WHERE user = @lb"));
-            CALL exec_qry(CONCAT("SELECT COUNT(user) INTO @c2 FROM mysql.tables_priv WHERE user = @lb"));
-            
-            -- if so, then run this stored proc to rerun the original privileges that I initially set for them
-            IF (@c1 < 14 || @c2 < 10) THEN
-               CALL grantPrivUsers();
-            END IF;
-               
-         END //
-
-         DELIMITER ;
-      ```
-       <details>
-       <summary>Show more...</summary>
-
-       **`Query for the calling program:`**
-      ```SQL
-       -- check the total rows before calling the procedure to get the initial number
-         SELECT COUNT(user_id) 
-            FROM users_detail;
-         SELECT COUNT(user_id) 
-            FROM users;
-      ```
-       `Result:`
-       ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp2-1.png)
-
-       ```SQL
-         -- call the procedure using dummy data as parameters
-         CALL insertUser(
-            10001,
-            'username123',
-            'password123',
-            'MyCoD3',
-            'email@email.com',
-            '192.168.5.5', -- this can be based on the user_ip_address or browser info that you get from a user of the application
-            'John',
-            'Doe',
-            '63-909-555-4117',
-            'km 11 Bayview, Sasa',
-            5,
-            3005
-         );
-
-         -- check the total rows again after the procedure is called which should now have 1 row added to it
-         SELECT COUNT(user_id) 
-            FROM users_detail;
-         SELECT COUNT(user_id)
-            FROM users;
-         -- in addition, also check if the current user was added to the userlist of all mysql account
-         SELECT * 
-            FROM mysql.user 
-            WHERE host = '192.168.5.5';
-         -- also check the previliges it has 
-         SHOW GRANTS FOR 'user'@'192.168.5.5'
-       ```
-       `Result:`
-       ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp2-2.png) 
-      </details>
-
-        <br>
-
-   3. **`Query 3: `**
-      ```SQL
-         DELIMITER //
-
-         CREATE PROCEDURE insertCityIllegaly(
-            nm VARCHAR(50),
-            em VARCHAR(80),
-            ln VARCHAR(16),
-            sadd VARCHAR(80),
-            cid INT(11)
-         )
-         BEGIN
-
-            -- disable the keycheck for foreign keys since we are inserting an illegal city_id. If not disabled, it will throw a constraint restriction
-            SET foreign_key_checks = 0;
-               
-            -- insert a false city_id illegally    
-            INSERT INTO schools 
-               (name, email, landline_no, saddress, city_id)
-            VALUES 
-               (nm, em, ln, sadd, cid);
-                     
-            -- set keycheck back to normal        
-            SET foreign_key_checks = 1;
-            
-         END //
-
-         DELIMITER ;
-      ```
-      <details>
-      <summary>Show more...</summary>
-
-      **`Query for the calling program:`**
-
-      ```SQL
-         CALL insertCityIllegaly(
-            'False University',
-            'false@false.com',
-            '911',
-            'False street',
-            -- this id does not exist in the city table so its an illegal insertion
-            91111111
-         );
-
-         -- select the row that was just added and it should be there.
-         SELECT * 
-            FROM schools 
-         WHERE city_id = 91111111;
-      ```
-      `Result:`
-      ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp3-1.png) 
-      </details>
-
       <br>
-      
-   4. **`Query 4: `**
-      ```SQL
-         DELIMITER //
-
-         CREATE PROCEDURE updateUsersMod(
-            IN tbn VARCHAR(50),
-            IN uid INT(11)
-         )
-
-         BEGIN
-
-            IF tbn = 'users' THEN
-               UPDATE users 
-               SET `modified_at` = CURRENT_TIMESTAMP 
-               WHERE user_id = uid;
-            ELSEIF tbn = 'users_detail' THEN
-               UPDATE users_detail 
-               SET `modified_at` = CURRENT_TIMESTAMP 
-               WHERE user_id = uid;
-            -- create and throw a custom error when condition is met
-            ELSE
-               SIGNAL SQLSTATE '45000'
-               SET MESSAGE_TEXT = 'Custom error: The credentials you submitted did not reflect the internal requirements (users or users_detail), try again';
-            END IF;
-
-         END //
-
-         DELIMITER ;
-      ```
-      <details>
-      <summary>Show more...</summary>
-
-      **`Query for the calling program:`**
-      ```SQL
-         -- check the initial state
-         SELECT modified_at 
-            FROM users 
-         WHERE user_id = 10000000;
-
-         CALL updateUsersMod(
-            'users',
-            10000000
-         );
-
-         -- check the updated state
-         SELECT modified_at 
-            FROM users 
-         WHERE user_id = 10000000;
-      ```
-         `Result:`
-       ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp4-1.png) 
-      </details>
-
-      <br>
-
-   5. **`Query 5: `**
-      ```SQL
-         DELIMITER //
-
-         CREATE PROCEDURE copyToCSV()
-
-         BEGIN
-
-            SELECT COUNT(user_id) 
-               INTO @cu 
-               FROM users;
-            
-            IF @cu >= 263 THEN
-               SELECT * 
-                  FROM users
-            -- convert the data table into csv and setup the direction of which the converted table will be sent   
-               INTO OUTFILE 'C:/CSV/users_copy.csv' 
-               FIELDS ENCLOSED BY '"' 
-               TERMINATED BY ';' 
-               ESCAPED BY '"' 
-               LINES TERMINATED BY '\r\n';
-            -- throw an error if the condition is not met
-            ELSE
-               SIGNAL SQLSTATE '45001'
-               SET MESSAGE_TEXT = 'Custom error: Table has not reached specified row count (263), try again';
-            END IF;
-         END //
-
-         DELIMITER ;
-      ```
-      <details>
-      <summary>Show more...</summary>
-
-      **`Query for the calling program:`**
-      ```SQL
-         -- first count the total rows in the users table to make sure
-         SELECT 
-            COUNT(user_id), CURRENT_TIMESTAMP 
-            FROM users;
-
-         -- call the procedure
-         CALL copyToCSV();
-      ```
-       `Result:`
-       ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp5-1.png)
-       ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp5-2.png)
-      </details>
-
-      <br>
-
-   6. **`Query 6: `**
-      ```SQL
-         DELIMITER //
-
-         CREATE PROCEDURE showRoutines(
-            IN name VARCHAR(30)
-         )
-
-         BEGIN
-            
-            IF name = 'trigger' THEN
+   
+   25. **`Query 25: Show all Stored Routines (Procedure, Function, Trigger)`**
+         ```SQL
+               -- show all triggers
                SELECT TRIGGER_NAME 
                FROM INFORMATION_SCHEMA.triggers 
                WHERE TRIGGER_SCHEMA = 'studentportal';
-            ELSEIF name = 'procedure' THEN
+           
+               -- show all procedures
                SHOW PROCEDURE STATUS 
                WHERE Db = 'studentportal';
-            ELSEIF name = 'function' THEN
+
+               -- show all stored functions
                SHOW FUNCTION STATUS 
                WHERE Db = 'studentportal';
-            ELSE
-               SIGNAL SQLSTATE '45500'
-                  SET MESSAGE_TEXT = 'Custom error: The "routine" you submitted is not found, try again';
-            END IF;
-            
-         END //
-
-         DELIMITER ;
-      ```   
-      <details>
-      <summary>Show more...</summary>
-
-      **`Query for the calling program:`**
-      ```SQL
-         -- call the procedure to check each routines with either one of these parameters (procedure, trigger, function)
-         CALL showRoutines('procedure');
-      ```
-      `Result: `
-      ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp6-1.png)
-      </details>
-
-      <br>
-
-   7. **`Query 7:`**
-      ```SQL
-         DROP PROCEDURE IF EXISTS selectTable;
-
-         DELIMITER //
-
-         CREATE PROCEDURE selectTable(
-            IN tb VARCHAR(30),
-            -- use this parameter type to return a value to the caller
-            INOUT updatedTb VARCHAR(30)
-         )
-
-         BEGIN
-            -- update the returned value to the one that is just submitted
-            SET updatedTb = tb;
-            
-            -- use Prepared Statement to perform a dynamic query
-            SET @sql = CONCAT("SELECT * FROM ", tb);
-            PREPARE stmt FROM @sql;
-            EXECUTE stmt;
-            DEALLOCATE PREPARE stmt;
-            
-         END //
-
-         DELIMITER ;
-      ```
-      <details>
-      <summary>Show more...</summary>
-
-      **`Query for the calling program:`**
-      ```SQL
-         -- set the extension (label) to be appended before the table name
-         SET @ext = 'table: ';
-
-         -- call procedure in which INOUT parameter can have a 'pre-procedure' or initial value unlike either IN or OUT
-         CALL selectTable('articles', @table);
-
-         -- select the INOUT parameter to return a value just like OUT
-         SELECT CONCAT(@ext, @table) AS new_table;
-      ```
-      `Result: `
-      ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp7-1.png)
-      </details>
-
-      <br>
-
-   8. **`Query: 8`**
-      ```SQL
-         DELIMITER //
-
-         CREATE PROCEDURE verifyUser(
-            IN v_uname VARCHAR(50),
-            IN v_pword VARCHAR(80),
-            IN v_email VARCHAR(80),
-            OUT ov_uname VARCHAR(50),
-            OUT ov_uid INT(11)
-         )
-         BEGIN 
-
-            SET @aid = 10000;
-            -- select user... if verified, return username and userid (to use as session_data for the application)
-            SELECT uname, user_id 
-            INTO ov_uname, ov_uid 
-            FROM users 
-            WHERE u_cl_id != @aid 
-               AND uname = v_uname 
-               AND pword = v_pword 
-               AND email = v_email 
-            LIMIT 1;
-               
-         END //
-
-         DELIMITER ;
-      ```
-      <details>
-      <summary>Show more...</summary>
-
-      **`Query for the calling program:`**
-      ```SQL
-         -- SET the needed data for convenience. In this case, a correct one.
-         SET @uname = 'username123';
-         SET @pword = 'password123';
-         SET @pword = 'email@email.com';
-
-         -- CALL the procedure in which it should return 2 data from users table
-         CALL verifyUser(@uname, @pword, @email, @s_uname, @s_uid);
-
-         -- SELECT the OUT parameter to get the ouput
-         SELECT @s_uname, @s_uid;
-      ```
-      `Result: `
-      ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp8-1.png)
-      </details>
-
-      <br>
-
-   9. **`Query: 9:`**
-      ```SQL
-         DELIMITER //
-
-         CREATE PROCEDURE copyToCSV(
-            IN tbl VARCHAR(50),
-            IN lim INT(11)
-         )
-         BEGIN
-
-            -- fileExtension() is a stored function that concatenate dates in order to produce a unique string (see Query #16)
-            SET @sql = CONCAT("SELECT * FROM ", tbl," LIMIT ", lim," OFFSET 1 INTO OUTFILE 'C:/CSV/",fileExtension(tbl),".csv' FIELDS ENCLOSED BY '`' TERMINATED BY ';' ESCAPED BY '`' LINES TERMINATED BY '\r\n'");
-            
-            -- limit should be less or equal to the total row of the table
-            IF (lim > 0) THEN
-               PREPARE stmt FROM @sql;
-               EXECUTE stmt;
-               DEALLOCATE PREPARE stmt;
-            END IF;
-            
-         END //
-
-         DELIMITER ;
-      ```
-      <details>
-      <summary>Show more...</summary>
-
-      **`Query for the calling program:`**
-      ```SQL
-         -- call procedure in which it should send a .csv file to our directory "C:/CSV/"
-         -- if its less or equal to 0 it should not create a csv file. If its over the row_count then it should include all data in that table
-         CALL copyToCSV("users", 0);
-         CALL copyToCSV("users", 9999);
-      ```
-      `Result: `
-      ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp9-1.png)
-      </details>
-
-      <br>
-
-   10.   **`Query: 10`**
-         ```SQL
-            DELIMITER //
-
-            CREATE PROCEDURE exec_qry(
-               IN p_sql varchar(500)
-            )
-
-            BEGIN
-            SET @tquery = p_sql;
-            PREPARE stmt FROM @tquery;
-            EXECUTE stmt;
-            DEALLOCATE PREPARE stmt;
-            END //
-
-            DELIMITER ;
          ```
-         <details>
-         <summary>Show more...</summary>
-
-         **`Query for the calling program:`**
-         ```SQL
-            -- this proc can receive even complex queries (see query #2)
-            -- call query 3 times with different query targets
-
-            -- basic select
-            CALL exec_qry('SELECT * FROM articles');
-            -- select with limit and offset
-            CALL exec_qry('SELECT * FROM users LIMIT 10 OFFSET 1');
-            -- shows all preveliges of root@localhost
-            CALL exec_qry('SHOW GRANTS FOR root@localhost');
-
-         ```
-         `Result: `
-         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp10-1.png)
-         </details>
-
-         <br>
-
-   11.   **`Query 11: `**
-         ```SQL
-            DELIMITER //
-
-            CREATE PROCEDURE getTableIncrement(
-               IN tbl VARCHAR(50),
-               OUT ai VARCHAR(11)
-            )
-
-            BEGIN
-            -- assign the next increment value to a variable to use it as reference (since the next primary key is predictable due to it being incremented automatically by 1) to the user_id from users_detail table
-               SET @tbl = tbl;
-               SELECT `AUTO_INCREMENT`
-               INTO ai FROM INFORMATION_SCHEMA.TABLES
-               WHERE TABLE_SCHEMA = 'studentportal' AND TABLE_NAME = tbl;
-
-            END //
-               
-            DELIMITER ;
-         ```            
-         <details>
-         <summary>Show more...</summary>
-
-         **`Query for the calling program:`**
-         ```SQL
-            -- this proc can receive even complex queries (see query #2)
-            -- call query 3 times with different query targets
-
-            -- basic select
-            CALL exec_qry('SELECT * FROM articles');
-            -- select with limit and offset
-            CALL exec_qry('SELECT * FROM users LIMIT 10 OFFSET 1');
-            -- shows all preveliges of root@localhost
-            CALL exec_qry('SHOW GRANTS FOR root@localhost');
-
-         ```
-         `Result: `
-         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp11-1.png)
-         </details>
-
-         <br>
-
-   12.   **`Query: 12`**
-         ```SQL
-            DELIMITER //
-
-            CREATE PROCEDURE returnCustError(
-               IN err VARCHAR(100)
-            )
-
-            SIGNAL SQLSTATE '45000'
-               SET MESSAGE_TEXT = err //
-
-            DELIMITER ;
-         ```
-         <details>
-         <summary>Show more...</summary>
-
-         **`Query for the calling program:`**
-         ```SQL
-            -- call proc and insert the error msg you want to return
-            CALL returnCustError("Custom error: User not found");
-         ```
-         `Result: `
-         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp12-1.png)
-         </details>
-
-         <br>
+   <br>
    
-   13.   **`Query: 13`**
-         ```SQL
-            -- student privileges
-            GRANT SELECT ON studentportal.schools TO 'student'@'localhost';
-            GRANT SELECT ON studentportal.cities TO 'student'@'localhost';
-            GRANT SELECT ON studentportal.states TO 'student'@'localhost';
-            GRANT SELECT ON studentportal.countries TO 'student'@'localhost';
-            GRANT SELECT ON studentportal.articles TO 'student'@'localhost';
-            GRANT SELECT ON studentportal.subjects TO 'student'@'localhost';
-            GRANT SELECT ON studentportal.articles_comment TO 'student'@'localhost';
-            GRANT SELECT ON studentportal.articles_reply TO 'student'@'localhost';
-            GRANT SELECT ON studentportal.author_subscription TO 'student'@'localhost';
-            GRANT SELECT (uname, pword, rec_code, email, modified_at, created_at) ON studentportal.users TO 'student'@'localhost';
-            GRANT SELECT (fname, lname, contact_no, saddress, city_id, school_id) ON studentportal.users_detail TO 'student'@'localhost';
+<details>
+   <summary>functions, clauses, ...</summary>
 
-            GRANT UPDATE (uname, pword, is_active) ON studentportal.users TO 'student'@'localhost';
-            GRANT UPDATE (fname, lname, contact_no, saddress, city_id, school_id) ON studentportal.users_detail TO 'student'@'localhost';
-            GRANT UPDATE (comment, modified_at) ON studentportal.articles_comment TO 'student'@'localhost';
-            GRANT UPDATE (reply, modified_at) ON studentportal.articles_reply TO 'student'@'localhost';
-            GRANT UPDATE (is_active, modified_at) ON studentportal.author_subscription TO 'student'@'localhost';
-
-            GRANT INSERT ON studentportal.articles_comment TO 'student'@'localhost';
-            GRANT INSERT ON studentportal.articles_reply TO 'student'@'localhost';
-            GRANT INSERT ON studentportal.author_subscription TO 'student'@'localhost';
-
-            -- author privileges
-            GRANT SELECT ON studentportal.schools TO 'author'@'localhost';
-            GRANT SELECT ON studentportal.cities TO 'author'@'localhost';
-            GRANT SELECT ON studentportal.states TO 'author'@'localhost';
-            GRANT SELECT ON studentportal.countries TO 'author'@'localhost';
-            GRANT SELECT ON studentportal.articles TO 'author'@'localhost';
-            GRANT SELECT ON studentportal.subjects TO 'author'@'localhost';
-            GRANT SELECT ON studentportal.articles_comment TO 'author'@'localhost';
-            GRANT SELECT ON studentportal.articles_reply TO 'author'@'localhost';
-            GRANT SELECT ON studentportal.author_subscription TO 'author'@'localhost';
-            GRANT SELECT (uname, pword, rec_code, email, modified_at, created_at) ON studentportal.users TO 'author'@'localhost';
-            GRANT SELECT (fname, lname, contact_no, saddress, city_id) ON studentportal.users_detail TO 'author'@'localhost';
-
-            GRANT UPDATE (uname, pword, is_active) ON studentportal.users TO 'author'@'localhost';
-            GRANT UPDATE (fname, lname, contact_no, saddress, city_id) ON studentportal.users_detail TO 'author'@'localhost';
-            GRANT UPDATE (comment, modified_at) ON studentportal.articles_comment TO 'author'@'localhost';
-            GRANT UPDATE (reply, modified_at) ON studentportal.articles_reply TO 'author'@'localhost';
-            GRANT UPDATE (subj_id, title, content, modified_at) ON studentportal.articles TO 'author'@'localhost';
-
-            GRANT INSERT ON studentportal.articles TO 'author'@'localhost';
-            GRANT INSERT ON studentportal.articles_comment TO 'author'@'localhost';
-            GRANT INSERT ON studentportal.articles_reply TO 'author'@'localhost';
-
-            GRANT DELETE ON studentportal.articles_comment TO 'author'@'localhost';
-            GRANT DELETE ON studentportal.articles_reply TO 'author'@'localhost';
-
-            -- admin/super_user
-            -- grant all privileges including the ability to grant other users their privilege
-            GRANT ALL PRIVILEGES ON studentportal.* TO 'admin'@'localhost' WITH GRANT OPTION;
-         ```
-         <details>
-         <summary>Show more...</summary>
-
-         **`Query for the calling program:`**
-         `Result: `
-
-         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/gr1-1.png)
-         </details>
-
-         <br>
-   
-* ***Db User Management***
-<pre style="height: 500px">
-   1. CREATE USER
-   2. GRANT PRIVILEGE
-   3. DROP USER / FLUSH PRIVILEGES
-</pre>
+   **`Aggregate Functions`** <br>
+   `COUNT()`, `COUNT(DISTINCT)`, `SUM()`, `AVG()`, `MIN()`, `MAX()`<br><br>
+   **`Mathematical Functions`** <br>
+   `CEILING()`, `FLOOR()`, `ABS()`, `POW()`, `ROUND()`, `MOD()`, `RAND()`<br><br>
+   **`Window (Non Aggregate) Functions`** <br>
+   `DENSE_RANK()`, `RANK()`, `NTILE()`, `FIRST_VALUE()`, `LAST_VALUE()`, `ROW_NUMBER`<br><br>
+   **`Date and Time Functions`** <br>
+   `CURRENT_TIMESTAMP`, `CURDATE()`, `DAY()`, `HOUR()`, `MINUTE()`, `SECOND()` <br><br>
+   **`Information Functions`** <br>
+   `USER()`, `CURRENT_USER()`, `SESSION_USER`  <br><br>
+   **`JOIN Clauses`** <br>
+   `INNER JOIN`, `LEFT JOIN`, `RIGHT JOIN` <br><br>
+   **`Others`** <br>
+   `CONCAT()`
+</details>
