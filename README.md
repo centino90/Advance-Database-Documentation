@@ -645,6 +645,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
          DELIMITER ;
       ```
+      
       <details>
       <summary>Show more...</summary>
 
@@ -667,50 +668,49 @@ Here are a list of queries with their sample output from the DBRMS:
 
 * ***Stored Procedures*** - A good database system should have stored procedures stored within the database to further automate the processes and operations when interacting with the system.
 
-      15. **`Query 15: Verify User`** - This stored procedure is responsible for verifying a user based on the input (username, password, email) they give and then returns username and user_id if verified.
+   15. **`Query 15: Verify User`** - This stored procedure is responsible for verifying a user based on the input (username, password, email) they give and then returns username and user_id if verified.
+      ```SQL
+         CREATE PROCEDURE verifyUser(
+            IN v_uname VARCHAR(50),
+            IN v_pword VARCHAR(80),
+            IN v_email VARCHAR(80),
+            OUT ov_uname VARCHAR(50),
+            OUT ov_uid INT(11)
+         )
+         BEGIN 
 
-         ```SQL
-            CREATE PROCEDURE verifyUser(
-               IN v_uname VARCHAR(50),
-               IN v_pword VARCHAR(80),
-               IN v_email VARCHAR(80),
-               OUT ov_uname VARCHAR(50),
-               OUT ov_uid INT(11)
-            )
-            BEGIN 
+            SET @aid = 10000;
+            -- select user... if verified, return username and userid (to use as session_data for the application)
+            SELECT uname, user_id 
+            INTO ov_uname, ov_uid 
+            FROM users 
+            WHERE u_cl_id != @aid AND uname = v_uname AND pword = v_pword AND email = v_email 
+            LIMIT 1;
+               
+         END //
 
-               SET @aid = 10000;
-               -- select user... if verified, return username and userid (to use as session_data for the application)
-               SELECT uname, user_id 
-               INTO ov_uname, ov_uid 
-               FROM users 
-               WHERE u_cl_id != @aid AND uname = v_uname AND pword = v_pword AND email = v_email 
-               LIMIT 1;
-                  
-            END //
+         DELIMITER ;
+      ```
 
-            DELIMITER ;
-         ```
+         Verifying a user is important and is a standard of any application thus, stored procedure is a suitable method since it insures consistency on the results, and it improves transmission speed.
+         
+      <details>
+      <summary>Show more...</summary>
 
-            Verifying a user is important and is a standard of any application thus, stored procedure is a suitable method since it insures consistency on the results, and it improves transmission speed.
-            
-         <details>
-         <summary>Show more...</summary>
+      **`Query for the calling program:`**
+      ```SQL
+            -- SET the needed data for convenience. In this case, a correct one.
+            SET @uname = 'username123';
+            SET @pword = 'password123';
+            SET @pword = 'email@email.com';
 
-         **`Query for the calling program:`**
-         ```SQL
-               -- SET the needed data for convenience. In this case, a correct one.
-               SET @uname = 'username123';
-               SET @pword = 'password123';
-               SET @pword = 'email@email.com';
+            -- CALL the procedure in which it should return 2 data from users table
+            CALL verifyUser(@uname, @pword, @email, @s_uname, @s_uid);
 
-               -- CALL the procedure in which it should return 2 data from users table
-               CALL verifyUser(@uname, @pword, @email, @s_uname, @s_uid);
-
-               -- SELECT the OUT parameter to get the ouput
-               SELECT @s_uname, @s_uid;
-         ```
-         </details>
+            -- SELECT the OUT parameter to get the ouput
+            SELECT @s_uname, @s_uid;
+      ```
+      </details>
 
       <br>
 
