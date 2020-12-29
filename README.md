@@ -485,6 +485,9 @@ Here are a list of queries with their sample output from the DBRMS:
                AFTER UPDATE ON users_detail 
                FOR EACH ROW SET OLD.modified_at = CURRENT_TIMESTAMP;
          ```
+
+         This is essential to minimize the coding everytime we update something by rows.
+
          <details>
          <summary>Show more...</summary>
 
@@ -527,6 +530,9 @@ Here are a list of queries with their sample output from the DBRMS:
                
             DELIMITER ;
          ```
+
+         This is essential to automatically remove the replies associated in that comment without hassling to code it everytime we delete a comment.
+
          <details>
          <summary>Show more...</summary>
 
@@ -542,7 +548,7 @@ Here are a list of queries with their sample output from the DBRMS:
          ```
          `Result: `
 
-         [image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/trg2-1.PNG)
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/trg2-1.PNG)
          ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/trg2-2.PNG)
          </details>
 
@@ -569,6 +575,9 @@ Here are a list of queries with their sample output from the DBRMS:
             -- check the new is_active state of the user_detail after a user associated to that details is deleted
             SELECT * FROM users_detail WHERE user_id = @id;
          ```
+
+         This is basically the same from the previous one, but it keeps the data instead of deleting it so its crucial for keeping datas.
+
          `Result: `
 
          ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/trg3-1.PNG)
@@ -579,7 +588,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
 * ***Stored Fuctions*** - A good database system should have stored functions prepared to do the redundant common tasks like concatinating multiple columns or returning a scalar value (single value) from a query.
 
-   10.   **`Query: 10`** 
+   13.   **`Query 13: Concatinate Fname and Lname`** 
          ```SQL
             CREATE FUNCTION full_name(
                fname CHAR(30),
@@ -589,6 +598,9 @@ Here are a list of queries with their sample output from the DBRMS:
             RETURNS CHAR(60) DETERMINISTIC
             RETURN CONCAT(fname, ' ', lname);
          ```
+
+         Every iteration of concatinating a full name is made less hassle and effective by this function.
+
          <details>
          <summary>Show more...</summary>
 
@@ -596,16 +608,14 @@ Here are a list of queries with their sample output from the DBRMS:
          ```SQL
             -- calling it the traditional way
             SELECT user_id, full_name(fname, lname) FROM `users_detail` LIMIT 5 OFFSET 1;
-            -- calling it within a stored proc which converts it into a dynamic query
-            CALL exec_qry("SELECT full_name(fname, lname) FROM users_detail WHERE id =");
          ```
          `Result: `
-         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/func1-1.png)
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/func1-1.PNG)
          </details>
 
    <br>
 
-   11.   **`Query 11`** 
+   14. **`Query 14: Concatinate full address`** 
          ```SQL
             CREATE FUNCTION full_address(
                street VARCHAR(100),
@@ -616,6 +626,9 @@ Here are a list of queries with their sample output from the DBRMS:
             RETURNS VARCHAR(250) DETERMINISTIC
             RETURN CONCAT(street, ", " , city, " City", ", ", state, ", ", country);
          ```
+
+         Every iteration of concatinating multiple variables such as a full address is made faster and effective by this function.
+
          <details>
          <summary>Show more...</summary>
 
@@ -625,12 +638,12 @@ Here are a list of queries with their sample output from the DBRMS:
             SELECT schools.name, full_address(schools.saddress, cities.name, states.name, countries.name) FROM schools INNER JOIN cities ON schools.city_id = cities.city_id INNER JOIN states ON cities.state_id = states.state_id INNER JOIN countries ON states.country_id = countries.country_id;
          ```
          `Result: `
-         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/func2-1.png)
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/func2-1.PNG)
          </details>
 
    <br>
 
-   12.   **`Query: 12`**
+   15.   **`Query 15: Concatinate file name and extension`**
          ```SQL
             CREATE FUNCTION file_extension(
                tbl VARCHAR(50)
@@ -638,6 +651,9 @@ Here are a list of queries with their sample output from the DBRMS:
                RETURNS VARCHAR(250) NOT DETERMINISTIC
                RETURN CONCAT(tbl,'_',CURDATE(),"_",HOUR(CURRENT_TIME),"_",MINUTE(CURRENT_TIME),"_",SECOND(CURRENT_TIME),'_copy');
          ```
+
+         Creating a unique file name and extension is made faster and effective by this function.
+
          <details>
          <summary>Show more...</summary>
 
@@ -649,52 +665,55 @@ Here are a list of queries with their sample output from the DBRMS:
             SELECT CONCAT(file_extension(@tb), '.csv');
          ```
          `Result: `
-         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/func3-1.png)
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/func3-1.PNG)
          </details>
 
    <br>
 
 * ***Transactions*** - A good database system should have ACID (Atomicity, Consitency, Isolation, Durability) properties in place to manage operations (transactions) that are essential to the end-users.
 
-   13. **`Query 13: `**
+   16. **`Query 16: Transaction with Rollback`**
          ```SQL
-            -- means that queries next to it are now insde a transaction
             START TRANSACTION;
 
             -- the effects of these queries are temporary and reflected only in session.
             -- outside this session, nothing is changed yet
             INSERT INTO articles_comment
-               (user_Id, article_id, comment)
+               (user_id, article_id, comment)
                VALUES(10000105, 1001, 'Wow this article is so great. I love africa.');
             -- savepoint is basically saving this part of the transaction (first insertion)
             SAVEPOINT ins_a;
 
             INSERT INTO articles_comment
-               (user_Id, article_id, comment)
+               (user_id, article_id, comment)
                VALUES(10000106, 1001, 'This article is not great. I hate africa.');
             -- save second insertion
             SAVEPOINT ins_b;
 
             -- select the changes so far before doign a rollback. It should return 2 data set
-            SELECT * FROM articles_comment;
+            SELECT * FROM articles_comment WHERE art_comm_id >= 100882;
 
             -- Rollback means to go back or redo the changes back to a previous state
             -- in this case, go back to the first insertion state
             ROLLBACK TO ins_a;
 
             -- select the changes after the rollback. The table should only have 1 data set
-            SELECT * FROM articles_comment;
+            SELECT * FROM articles_comment WHERE art_comm_id >= 100882;
          ```
-         <details>
-            <summary>Show more...</summary>
 
-            `Result: `
-            ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/trans1-1.png)
+         This is very important when it comes to dealin with sensitive operations that are happening in real time. Transaction and rollback keeps 'transactions' within session and its changes do not affect the global state, yet.
+
+         <details>
+         <summary>Show more...</summary>
+
+         `Result: `
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/trans1-1.PNG)
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/trans1-2.PNG)
          </details>
 
    <br>
 
-   14. **`Query 14: `**
+   17. **`Query 17: Transaction with Commit`**
          ```SQL
             DELIMITER //
 
@@ -740,6 +759,9 @@ Here are a list of queries with their sample output from the DBRMS:
 
             DELIMITER ;
          ```
+
+         Commits allow transactions to be permanent in session and global.
+
          <details>
          <summary>Show more...</summary>
 
@@ -755,7 +777,7 @@ Here are a list of queries with their sample output from the DBRMS:
             SELECT @result1, @result2;
          ```
          `Result: `
-         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/trans2-1.png)
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/trans2-1.PNG)
          </details>
 
    <br>
