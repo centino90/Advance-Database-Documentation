@@ -562,42 +562,42 @@ Here are a list of queries with their sample output from the DBRMS:
 * ***Transactions*** - A good database system should ACID (Atomicity, Consitency, Isolation, Durability) properties in place to manage operations (transactions) that are essential to the end-users.
 
    13. **`Query 13: `**
-      ```SQL
-         -- means that queries next to it are now insde a transaction
-         START TRANSACTION;
+         ```SQL
+            -- means that queries next to it are now insde a transaction
+            START TRANSACTION;
 
-         -- the effects of these queries are temporary and reflected only in session.
-         -- outside this session, nothing is changed yet
-         INSERT INTO articles_comment
-            (user_Id, article_id, comment)
-            VALUES(10000105, 1001, 'Wow this article is so great. I love africa.');
-         -- savepoint is basically saving this part of the transaction (first insertion)
-         SAVEPOINT ins_a;
+            -- the effects of these queries are temporary and reflected only in session.
+            -- outside this session, nothing is changed yet
+            INSERT INTO articles_comment
+               (user_Id, article_id, comment)
+               VALUES(10000105, 1001, 'Wow this article is so great. I love africa.');
+            -- savepoint is basically saving this part of the transaction (first insertion)
+            SAVEPOINT ins_a;
 
-         INSERT INTO articles_comment
-            (user_Id, article_id, comment)
-            VALUES(10000106, 1001, 'This article is not great. I hate africa.');
-         -- save second insertion
-         SAVEPOINT ins_b;
+            INSERT INTO articles_comment
+               (user_Id, article_id, comment)
+               VALUES(10000106, 1001, 'This article is not great. I hate africa.');
+            -- save second insertion
+            SAVEPOINT ins_b;
 
-         -- select the changes so far before doign a rollback. It should return 2 data set
-         SELECT * FROM articles_comment;
+            -- select the changes so far before doign a rollback. It should return 2 data set
+            SELECT * FROM articles_comment;
 
-         -- Rollback means to go back or redo the changes back to a previous state
-         -- in this case, go back to the first insertion state
-         ROLLBACK TO ins_a;
+            -- Rollback means to go back or redo the changes back to a previous state
+            -- in this case, go back to the first insertion state
+            ROLLBACK TO ins_a;
 
-         -- select the changes after the rollback. The table should only have 1 data set
-         SELECT * FROM articles_comment;
-      ```
-      <details>
-         <summary>Show more...</summary>
+            -- select the changes after the rollback. The table should only have 1 data set
+            SELECT * FROM articles_comment;
+         ```
+         <details>
+            <summary>Show more...</summary>
 
-         `Result: `
-         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/trans1-1.png)
-      </details>
+            `Result: `
+            ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/trans1-1.png)
+         </details>
 
-      <br>
+   <br>
 
    14. **`Query 14: `**
          ```SQL
@@ -711,7 +711,7 @@ Here are a list of queries with their sample output from the DBRMS:
          ```
          </details>
 
-      <br>
+   <br>
 
 * ***General Queries*** - A good database system should be able to perform all kinds of techniques that a RDBMS has provided.
 
