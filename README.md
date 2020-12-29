@@ -12,7 +12,7 @@ This database is made to manage the data needed for an Educational Blog Site. At
 
 * [ERD](https://github.com/centino90/Advance-Database-Documentation/#The-database)
    *  Diagram
-   *  [Entities and Description](https://github.com/centino90/Advance-Database-Documentation/#entity-names-and-desciption)
+   *  [Entities and Description](https://github.com/centino90/Advance-Database-Documentation/#entity-names-and-description)
 * [FDD](https://github.com/centino90/Advance-Database-Documentation/#Functional-Dependency-Diagram-FDD)
 * [Complex Queries](https://github.com/centino90/Advance-Database-Documentation/#Complex-Queries-associated-with-the-database)
    * [Establish Tables and Relationships](https://github.com/centino90/Advance-Database-Documentation/#establish-tables-and-relationships-create-table-primary-key-foreign-key-etc)
@@ -20,10 +20,10 @@ This database is made to manage the data needed for an Educational Blog Site. At
    *  [Views](https://github.com/centino90/Advance-Database-Documentation/#views)
    *  [Views](https://github.com/centino90/Advance-Database-Documentation/#reports)
    *  [Triggers](https://github.com/centino90/Advance-Database-Documentation/#triggers)
-   *  [Stored Functions](https://github.com/centino90/Advance-Database-Documentation/#stored-functions)
+   *  [Stored Functions](https://github.com/centino90/Advance-Database-Documentation/#Stored-Functions)
    *  [Transactions](https://github.com/centino90/Advance-Database-Documentation/#transactions)
    *  [Stored Procedures](https://github.com/centino90/Advance-Database-Documentation/#stored-procedures)
-   * [General Queries](https://github.com/centino90/Advance-Database-Documentation/#general-queries)
+   *  [General Queries](https://github.com/centino90/Advance-Database-Documentation/#general-queries)
 
 <br>
 
@@ -605,7 +605,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
    <br>
 
-* ***<h4>Stored Fuctions</h4>*** - A good database system should have stored functions prepared to do the redundant common tasks like concatinating multiple columns or returning a scalar value (single value) from a query.
+* ***<h4>Stored Functions</h4>*** - A good database system should have stored functions prepared to do the redundant common tasks like concatinating multiple columns or returning a scalar value (single value) from a query.
 
    13.   **`Query 13: Concatinate Fname and Lname`** 
          ```SQL
