@@ -358,7 +358,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
    <br>
 
-* ***Triggers*** - A good database system should have triggers in place to perform queries that are common and redundant.
+* ***Triggers*** - A good database system should have triggers in place to perform actions that always happen before or after an insertion, updation, and delition.
 
    7. **`Query 7: `**
    
@@ -508,7 +508,7 @@ Here are a list of queries with their sample output from the DBRMS:
          ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/func1-1.png)
          </details>
 
-         <br>
+   <br>
 
    11.   **`Query 11`** 
          ```SQL
@@ -533,7 +533,7 @@ Here are a list of queries with their sample output from the DBRMS:
          ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/func2-1.png)
          </details>
 
-      <br>
+   <br>
 
    12.   **`Query: 12`**
          ```SQL
@@ -556,7 +556,7 @@ Here are a list of queries with their sample output from the DBRMS:
          ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/func3-1.png)
          </details>
 
-      <br>
+   <br>
 
 * ***General Queries*** - A good database system should be able to perform all kinds of techniques that a RDBMS has provided.
 
