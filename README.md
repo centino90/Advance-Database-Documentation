@@ -600,117 +600,116 @@ Here are a list of queries with their sample output from the DBRMS:
       <br>
 
    14. **`Query 14: `**
-      ```SQL
-         DELIMITER //
+         ```SQL
+            DELIMITER //
 
-         CREATE PROCEDURE testTransaction(
-            -- use this 2 variables to output the 2 test results
-            OUT result1 VARCHAR(100),
-            OUT result2 VARCHAR(100)
-         )
+            CREATE PROCEDURE testTransaction(
+               -- use this 2 variables to output the 2 test results
+               OUT result1 VARCHAR(100),
+               OUT result2 VARCHAR(100)
+            )
 
-         BEGIN
+            BEGIN
 
-            START TRANSACTION;
+               START TRANSACTION;
 
-            -- wrong credentials
-            SELECT COUNT(*) INTO @cc1 FROM users WHERE uname = 'qwesdaw' AND pword = 'qweoasdiqwe';
-            -- update the latest log of the user (base on the credentials submitted) into the current datetime
-            UPDATE users SET latest_log = CURRENT_TIMESTAMP WHERE uname = 'qwesdaw' AND pword = 'qweoasdiqwe';
+               -- wrong credentials
+               SELECT COUNT(*) INTO @cc1 FROM users WHERE uname = 'qwesdaw' AND pword = 'qweoasdiqwe';
+               -- update the latest log of the user (base on the credentials submitted) into the current datetime
+               UPDATE users SET latest_log = CURRENT_TIMESTAMP WHERE uname = 'qwesdaw' AND pword = 'qweoasdiqwe';
 
-            IF @cc1 > 0 THEN
-               COMMIT;
-               SET result1 = 'verified';
-            ELSE
-               ROLLBACK;
-               SET result1 = 'wrong credentials';
-            END IF;
+               IF @cc1 > 0 THEN
+                  COMMIT;
+                  SET result1 = 'verified';
+               ELSE
+                  ROLLBACK;
+                  SET result1 = 'wrong credentials';
+               END IF;
 
-            -- do the same thing but with correct credentials
-            SELECT COUNT(*) INTO @cc2 FROM users WHERE uname = 'admin101' AND pword = 'admin101';
-            UPDATE users SET latest_log = CURRENT_TIMESTAMP WHERE uname = 'admin101' AND pword = 'admin101';
+               -- do the same thing but with correct credentials
+               SELECT COUNT(*) INTO @cc2 FROM users WHERE uname = 'admin101' AND pword = 'admin101';
+               UPDATE users SET latest_log = CURRENT_TIMESTAMP WHERE uname = 'admin101' AND pword = 'admin101';
 
-            IF @cc2 > 0 THEN
-               COMMIT;
-               SET result2 = 'verified';
-            ELSE
-               ROLLBACK;
-               SET result2 = 'wrong credentials';
-            END IF;
+               IF @cc2 > 0 THEN
+                  COMMIT;
+                  SET result2 = 'verified';
+               ELSE
+                  ROLLBACK;
+                  SET result2 = 'wrong credentials';
+               END IF;
 
-            -- select the users table to check for changes
-            SELECT latest_log FROM users WHERE uname = 'admin101' AND pword = 'admin101';
+               -- select the users table to check for changes
+               SELECT latest_log FROM users WHERE uname = 'admin101' AND pword = 'admin101';
 
-         END //
+            END //
 
-         DELIMITER ;
-      ```
-      
-      <details>
-      <summary>Show more...</summary>
+            DELIMITER ;
+         ```
+         <details>
+         <summary>Show more...</summary>
 
-      **`Query for the calling program:`**
-      ```SQL
-         -- call procedure
-         CALL testTransaction(
-            @result1,
-            @result2
-         );
+         **`Query for the calling program:`**
+         ```SQL
+            -- call procedure
+            CALL testTransaction(
+               @result1,
+               @result2
+            );
 
-         -- check the test results
-         SELECT @result1, @result2;
-      ```
-      `Result: `
-      ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/trans2-1.png)
-      </details>
+            -- check the test results
+            SELECT @result1, @result2;
+         ```
+         `Result: `
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/trans2-1.png)
+         </details>
 
       <br>
 
 * ***Stored Procedures*** - A good database system should have stored procedures stored within the database to further automate the processes and operations when interacting with the system.
 
    15. **`Query 15: Verify User`** - This stored procedure is responsible for verifying a user based on the input (username, password, email) they give and then returns username and user_id if verified.
-      ```SQL
-         CREATE PROCEDURE verifyUser(
-            IN v_uname VARCHAR(50),
-            IN v_pword VARCHAR(80),
-            IN v_email VARCHAR(80),
-            OUT ov_uname VARCHAR(50),
-            OUT ov_uid INT(11)
-         )
-         BEGIN 
+         ```SQL
+            CREATE PROCEDURE verifyUser(
+               IN v_uname VARCHAR(50),
+               IN v_pword VARCHAR(80),
+               IN v_email VARCHAR(80),
+               OUT ov_uname VARCHAR(50),
+               OUT ov_uid INT(11)
+            )
+            BEGIN 
 
-            SET @aid = 10000;
-            -- select user... if verified, return username and userid (to use as session_data for the application)
-            SELECT uname, user_id 
-            INTO ov_uname, ov_uid 
-            FROM users 
-            WHERE u_cl_id != @aid AND uname = v_uname AND pword = v_pword AND email = v_email 
-            LIMIT 1;
-               
-         END //
+               SET @aid = 10000;
+               -- select user... if verified, return username and userid (to use as session_data for the application)
+               SELECT uname, user_id 
+               INTO ov_uname, ov_uid 
+               FROM users 
+               WHERE u_cl_id != @aid AND uname = v_uname AND pword = v_pword AND email = v_email 
+               LIMIT 1;
+                  
+            END //
 
-         DELIMITER ;
-      ```
+            DELIMITER ;
+         ```
 
-         Verifying a user is important and is a standard of any application thus, stored procedure is a suitable method since it insures consistency on the results, and it improves transmission speed.
-         
-      <details>
-      <summary>Show more...</summary>
+            Verifying a user is important and is a standard of any application thus, stored procedure is a suitable method since it insures consistency on the results, and it improves transmission speed.
+            
+         <details>
+         <summary>Show more...</summary>
 
-      **`Query for the calling program:`**
-      ```SQL
-            -- SET the needed data for convenience. In this case, a correct one.
-            SET @uname = 'username123';
-            SET @pword = 'password123';
-            SET @pword = 'email@email.com';
+         **`Query for the calling program:`**
+         ```SQL
+               -- SET the needed data for convenience. In this case, a correct one.
+               SET @uname = 'username123';
+               SET @pword = 'password123';
+               SET @pword = 'email@email.com';
 
-            -- CALL the procedure in which it should return 2 data from users table
-            CALL verifyUser(@uname, @pword, @email, @s_uname, @s_uid);
+               -- CALL the procedure in which it should return 2 data from users table
+               CALL verifyUser(@uname, @pword, @email, @s_uname, @s_uid);
 
-            -- SELECT the OUT parameter to get the ouput
-            SELECT @s_uname, @s_uid;
-      ```
-      </details>
+               -- SELECT the OUT parameter to get the ouput
+               SELECT @s_uname, @s_uid;
+         ```
+         </details>
 
       <br>
 
