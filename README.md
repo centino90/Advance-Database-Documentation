@@ -25,6 +25,7 @@ This database is made to manage the data needed for an Educational Blog Site. At
    *  Stored Procedures
    *  General Queries
 * [End of file](https://github.com/centino90/Advance-Database-Documentation/#end-of-file)
+* [End of file](https://github.com/centino90/Advance-Database-Documentation/#general-queries)
    
 
 <br>
@@ -1143,7 +1144,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
    <br>
 
-* ***General Queries*** - A good database system should be able to perform all kinds of techniques that the RDBMS has provided.
+* ***<h4>General Queries</h4>*** - A good database system should be able to perform all kinds of techniques that the RDBMS has provided.
    
    24.   **`Query 24: Retrieve Personal Information`** - This select statement is responsible for getting the full name, full address, contact number, & email of a user.
 
