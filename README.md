@@ -202,6 +202,7 @@ Here are a list of queries with their sample output from the DBRMS:
       <summary>Show more...</summary>
 
       `Result: `
+
       ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/ct1-1.PNG)
       </details>
       <br>
@@ -236,6 +237,16 @@ Here are a list of queries with their sample output from the DBRMS:
       ```
       This is important because users should have distinct 'access level' to the database, and students have the access it needed to be able to interact with the system without jeopardizing the security;
 
+      <details>
+      <summary>Show more...</summary>
+
+      `Result: `
+      
+      ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/gr1-1.PNG)
+      </details>
+      
+      <br>
+
    3. **`Query 3: Author Privileges`**
 
       ```SQL
@@ -267,6 +278,16 @@ Here are a list of queries with their sample output from the DBRMS:
       ```
       This is important because users should have distinct 'access level' to the database, and authors have the access it needed to be able to interact with the system without jeopardizing the security;
 
+      <details>
+      <summary>Show more...</summary>
+
+      `Result: `
+      
+      ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/gr2-1.PNG)
+      </details>
+
+      <br>
+
    4. **`Query 4: Admin/Super_User Privileges`**
       ```SQL
          -- admin/super_user
@@ -274,6 +295,14 @@ Here are a list of queries with their sample output from the DBRMS:
          GRANT ALL PRIVILEGES ON studentportal.* TO 'admin'@'localhost' WITH GRANT OPTION;   
       ```
       The admin should have all the privileges pointed to a particular database, and should be able to grant privileges to other users to manage them accordingly.
+
+      <details>
+      <summary>Show more...</summary>
+
+      `Result: `
+      
+      ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/gr3-1.PNG)
+      </details>
 
       <br>
 
