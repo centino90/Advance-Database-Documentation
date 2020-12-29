@@ -707,13 +707,14 @@ Here are a list of queries with their sample output from the DBRMS:
          <summary>Show more...</summary>
 
          `Result: `
+
          ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/trans1-1.PNG)
          ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/trans1-2.PNG)
          </details>
 
    <br>
 
-   17. **`Query 17: Transaction with Commit`**
+   17. **`Query 17: Transaction with Commit inside Stored Procedure`**
          ```SQL
             DELIMITER //
 
@@ -777,6 +778,7 @@ Here are a list of queries with their sample output from the DBRMS:
             SELECT @result1, @result2;
          ```
          `Result: `
+
          ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/trans2-1.PNG)
          </details>
 
@@ -784,7 +786,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
 * ***Stored Procedures*** - A good database system should have stored procedures stored within the database to further automate the processes and operations when interacting with the system.
 
-   15. **`Query 15: Verify User`** - This stored procedure is responsible for verifying a user based on the input (username, password, email) they give and then returns username and user_id if verified.
+   18. **`Query 18: Verify User`** - This stored procedure is responsible for verifying a user based on the input (username, password, email) they give and then returns username and user_id if verified.
          ```SQL
             CREATE PROCEDURE verifyUser(
                IN v_uname VARCHAR(50),
@@ -818,7 +820,7 @@ Here are a list of queries with their sample output from the DBRMS:
                -- SET the needed data for convenience. In this case, a correct one.
                SET @uname = 'username123';
                SET @pword = 'password123';
-               SET @pword = 'email@email.com';
+               SET @email = 'email@email.com';
 
                -- CALL the procedure in which it should return 2 data from users table
                CALL verifyUser(@uname, @pword, @email, @s_uname, @s_uid);
@@ -826,11 +828,14 @@ Here are a list of queries with their sample output from the DBRMS:
                -- SELECT the OUT parameter to get the ouput
                SELECT @s_uname, @s_uid;
          ```
+         `Result: `
+
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp1-1.PNG)
          </details>
 
    <br>
 
-   16. **`Query 16: Insert New User Via Stored Procedure`**
+   19. **`Query 19: Insert New User Via Stored Procedure`**
          ```SQL
             DELIMITER //
 
@@ -885,7 +890,7 @@ Here are a list of queries with their sample output from the DBRMS:
                CALL exec_qry(CONCAT("SELECT COUNT(user) INTO @c2 FROM mysql.tables_priv WHERE user = @lb"));
                
                -- if so, then run this stored proc to rerun the original privileges that I initially set for them
-               IF (@c1 < 14 || @c2 < 10) THEN
+               IF (@c1 < 19 || @c2 < 11) THEN
                   CALL grantPrivUsers();
                END IF;
                   
@@ -893,6 +898,9 @@ Here are a list of queries with their sample output from the DBRMS:
 
             DELIMITER ;
          ```
+
+         inserting a new user is very common and happens everytime a new user goes to the application, putting it inside stored procedure is a good choice where we can do if..else statements to further restrict the input.
+
          <details>
          <summary>Show more...</summary>
 
@@ -903,11 +911,7 @@ Here are a list of queries with their sample output from the DBRMS:
                FROM users_detail;
             SELECT COUNT(user_id) 
                FROM users;
-         ```
-         `Result:`
-         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp2-1.png)
 
-         ```SQL
             -- call the procedure using dummy data as parameters
             CALL insertUser(
                10001,
@@ -915,7 +919,6 @@ Here are a list of queries with their sample output from the DBRMS:
                'password123',
                'MyCoD3',
                'email@email.com',
-               '192.168.5.5', -- this can be based on the user_ip_address or browser info that you get from a user of the application
                'John',
                'Doe',
                '63-909-555-4117',
@@ -932,18 +935,24 @@ Here are a list of queries with their sample output from the DBRMS:
             -- in addition, also check if the current user was added to the userlist of all mysql account
             SELECT * 
                FROM mysql.user 
-               WHERE host = '192.168.5.5';
+               WHERE host = 'localhost';
 
             -- also check the previliges it has 
-            SHOW GRANTS FOR 'user'@'192.168.5.5'
+            SHOW GRANTS FOR 'student'@'localhost'
          ```
          `Result:`
+
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp2-1.png)
          ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp2-2.png) 
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp2-3.png)
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp2-4.png) 
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp2-5.png)
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp2-6.png) 
          </details>
 
    <br>
 
-   17. **`Query: 17: Create .CSV file based on selected data from a table`**
+   20. **`Query: 20: Create .CSV file based on selected data from a table`**
          ```SQL
             DELIMITER //
 
@@ -967,6 +976,9 @@ Here are a list of queries with their sample output from the DBRMS:
 
             DELIMITER ;
          ```
+
+         This is important to insure the uniqueness of all outgoing .csv files.
+
          <details>
          <summary>Show more...</summary>
 
@@ -978,12 +990,14 @@ Here are a list of queries with their sample output from the DBRMS:
             CALL copyToCSV("users", 9999);
          ```
          `Result: `
-         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp9-1.png)
+
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp3-1.png)
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp3-2.png)
          </details>
 
    <br>
 
-   18. **`Query 18: Execute Parameterized Query that Disables Foreign Constraints momentarily`**
+   21. **`Query 21: Execute Parameterized Query that Disables Foreign Constraints momentarily`**
          ```SQL
             DELIMITER //
 
@@ -1008,27 +1022,33 @@ Here are a list of queries with their sample output from the DBRMS:
             
             DELIMITER ;
          ```
+
+         This is very handy helper to disable foreign key constraint when querying.
+
          <details>
          <summary>Show more...</summary>
 
          **`Query for the calling program:`**
          ```SQL
-            -- this proc can receive even complex queries (see query #2)
-            -- call query 3 times with different query targets
-            -- basic select
-            CALL exec_const_qry('SELECT * FROM articles');
-            -- select with limit and offset
-            CALL exec_const_qry('SELECT * FROM users LIMIT 10 OFFSET 1');
-            -- shows all preveliges of root@localhost
-            CALL exec_const_qry('SHOW GRANTS FOR root@localhost');
+            -- deleting a user_detail should not be permitted since it is connected to a user somewhere
+            -- but through this procedure it can be done
+            -- initial count
+            SELECT COUNT(*) FROM users_detail;
+            
+            CALL exec_const_qry('DELETE FROM users_detail where user_id = 10000461');
+            
+            -- after count
+            SELECT COUNT(*) FROM users_detail;
          ```
          `Result: `
-         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp10-1.png)
+
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp4-1.PNG)
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp4-2.PNG)
          </details>
 
    <br>
 
-   19. **`Query 19: Retrieve Current Increment of a Table`**
+   22. **`Query 22: Retrieve Current Increment of a Table`**
          ```SQL
             DELIMITER //
 
@@ -1047,7 +1067,10 @@ Here are a list of queries with their sample output from the DBRMS:
             END //
                
             DELIMITER ;
-         ```            
+         ```
+
+         This comes in handy when we to get the current increment count of a table to insert, update, or delete data
+            
          <details>
          <summary>Show more...</summary>
 
@@ -1060,12 +1083,12 @@ Here are a list of queries with their sample output from the DBRMS:
             SELECT @ai1, @ai2, @ai3;
          ```
          `Result: `
-         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp11-1.png)
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp5-1.PNG)
          </details>
 
    <br>
 
-   20.   **`Query 20: Trigger a Customer Error by Calling it within a Store Procedure`**
+   23.   **`Query 23: Trigger a Customer Error by Calling it within a Store Procedure`**
          ```SQL
             DELIMITER //
 
@@ -1078,6 +1101,9 @@ Here are a list of queries with their sample output from the DBRMS:
 
             DELIMITER ;
          ```
+
+         This will come handy when we want to force a request to fail and return an error instead of an empty row;
+
          <details>
          <summary>Show more...</summary>
 
@@ -1087,14 +1113,14 @@ Here are a list of queries with their sample output from the DBRMS:
             CALL returnCustError("Custom error: User not found");
          ```
          `Result: `
-         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp12-1.png)
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/sp6-1.png)
          </details>
 
    <br>
 
 * ***General Queries*** - A good database system should be able to perform all kinds of techniques that the RDBMS has provided.
    
-   21.   **`Query 21: Retrieve Personal Information`** - This select statement is responsible for getting the full name, full address, contact number, & email of a user.
+   24.   **`Query 24: Retrieve Personal Information`** - This select statement is responsible for getting the full name, full address, contact number, & email of a user.
 
          ```SQL
             SET @aid = 10000; -- admin id
@@ -1126,11 +1152,20 @@ Here are a list of queries with their sample output from the DBRMS:
             ORDER BY ud.fname 
             ASC;
          ```
+
          This is important since in order to present user data effectively to the end-users, we have to accept a single request to point to a query that will return all the necessary data about them.
+
+         <details>
+         <summary>Show more...</summary>
+
+         `Result: `
+
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/gen1-1.png)
+         </details>
 
    <br>
 
-   22. **`Query 22: Retrieve School Information`**
+   25. **`Query 25: Retrieve School Information`**
 
          ```SQL
             SET @scid = 3003; -- school id (input)
@@ -1159,23 +1194,17 @@ Here are a list of queries with their sample output from the DBRMS:
          ```
          Since this is an educational system, this query is important and the data sets the are retrieved from it
 
+         <details>
+         <summary>Show more...</summary>
+
+         `Result: `
+
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/gen2-1.png)
+         </details>
+
    <br>
 
-   23. **`Query 23: Retrieve All Article Information`**
-
-         ```SQL
-            SELECT art.title AS Article_Title, full_name(ud.fname, ud.lname) AS Author, subj.name AS Subject, COUNT(ac.art_comm_id) AS Total_Comments 
-            FROM subjects subj 
-            INNER JOIN articles art USING (subj_id) 
-            INNER JOIN articles_comment ac USING (article_id) 
-            INNER JOIN users_detail ud ON art.author_id = ud.user_id 
-            GROUP BY subj.name 
-            ORDER BY Total_Comments 
-            DESC, art.title, subj.name ASC;
-         ```
-   <br>
-
-   24. **`Query 24: Retrieve Article Information base on Title Match`**
+   26. **`Query 26: Retrieve Article Information base on Title Match`**
 
          ```SQL
             SET @article_title = "the"; -- article title (input)
@@ -1207,25 +1236,101 @@ Here are a list of queries with their sample output from the DBRMS:
             ASC;
          ```
 
+         This is important when searching through about an article with partial data and just match it to return possible matches
+
+         <details>
+         <summary>Show more...</summary>
+
+         `Result: `
+
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/gen3-1.png)
+         </details>
+
    <br>
    
-   25. **`Query 25: Show all Stored Routines (Procedure, Function, Trigger)`**
+   27. **`Query 27: Show all Stored Routines (Procedure, Function, Trigger)`**
 
          ```SQL
                -- show all triggers
                SELECT TRIGGER_NAME 
                FROM INFORMATION_SCHEMA.triggers 
                WHERE TRIGGER_SCHEMA = 'studentportal';
-           
-               -- show all procedures
-               SHOW PROCEDURE STATUS 
-               WHERE Db = 'studentportal';
 
-               -- show all stored functions
-               SHOW FUNCTION STATUS 
-               WHERE Db = 'studentportal';
+               -- show functions and procedures
+               SELECT * FROM INFORMATION_SCHEMA.ROUTINES;
          ```
+
+         This is important when you want to check all routines you have in database
+
+         <details>
+         <summary>Show more...</summary>
+
+         `Result: `
+
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/gen4-1.png)
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/gen4-2.png)
+         ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/gen4-3.png)
+         </details>
+
    <br>
+
+   28. **`Query 28: Store all initial user privileges`**
+
+      ```SQL
+         DELIMITER //
+
+         CREATE PROCEDURE grantPrivUsers()
+
+         BEGIN 
+               GRANT SELECT ON studentportal.schools TO 'student'@'localhost';
+                  GRANT SELECT ON studentportal.cities TO 'student'@'localhost';
+                  GRANT SELECT ON studentportal.states TO 'student'@'localhost';
+                  GRANT SELECT ON studentportal.countries TO 'student'@'localhost';
+                  GRANT SELECT ON studentportal.articles TO 'student'@'localhost';
+                  GRANT SELECT ON studentportal.subjects TO 'student'@'localhost';
+                  GRANT SELECT ON studentportal.articles_comment TO 'student'@'localhost';
+                  GRANT SELECT ON studentportal.articles_reply TO 'student'@'localhost';
+                  GRANT SELECT ON studentportal.author_subscription TO 'student'@'localhost';
+                  GRANT SELECT (uname, pword, rec_code, email, modified_at, created_at) ON studentportal.users TO 'student'@'localhost';
+                  GRANT SELECT (fname, lname, contact_no, saddress, city_id, school_id) ON studentportal.users_detail TO 'student'@'localhost';
+
+                  GRANT UPDATE (uname, pword, is_active) ON studentportal.users TO 'student'@'localhost';
+                  GRANT UPDATE (fname, lname, contact_no, saddress, city_id, school_id) ON studentportal.users_detail TO 'student'@'localhost';
+                  GRANT UPDATE (comment, modified_at) ON studentportal.articles_comment TO 'student'@'localhost';
+                  GRANT UPDATE (reply, modified_at) ON studentportal.articles_reply TO 'student'@'localhost';
+                  GRANT UPDATE (is_active, modified_at) ON studentportal.author_subscription TO 'student'@'localhost';
+
+                  GRANT INSERT ON studentportal.articles_comment TO 'student'@'localhost';
+                  GRANT INSERT ON studentportal.articles_reply TO 'student'@'localhost';
+                  GRANT INSERT ON studentportal.author_subscription TO 'student'@'localhost';
+                  GRANT SELECT ON studentportal.schools TO 'author'@'localhost';
+                  GRANT SELECT ON studentportal.cities TO 'author'@'localhost';
+                  GRANT SELECT ON studentportal.states TO 'author'@'localhost';
+                  GRANT SELECT ON studentportal.countries TO 'author'@'localhost';
+                  GRANT SELECT ON studentportal.articles TO 'author'@'localhost';
+                  GRANT SELECT ON studentportal.subjects TO 'author'@'localhost';
+                  GRANT SELECT ON studentportal.articles_comment TO 'author'@'localhost';
+                  GRANT SELECT ON studentportal.articles_reply TO 'author'@'localhost';
+                  GRANT SELECT ON studentportal.author_subscription TO 'author'@'localhost';
+                  GRANT SELECT (uname, pword, rec_code, email, modified_at, created_at) ON studentportal.users TO 'author'@'localhost';
+                  GRANT SELECT (fname, lname, contact_no, saddress, city_id) ON studentportal.users_detail TO 'author'@'localhost';
+
+                  GRANT UPDATE (uname, pword, is_active) ON studentportal.users TO 'author'@'localhost';
+                  GRANT UPDATE (fname, lname, contact_no, saddress, city_id) ON studentportal.users_detail TO 'author'@'localhost';
+                  GRANT UPDATE (comment, modified_at) ON studentportal.articles_comment TO 'author'@'localhost';
+                  GRANT UPDATE (reply, modified_at) ON studentportal.articles_reply TO 'author'@'localhost';
+                  GRANT UPDATE (subj_id, title, content, modified_at) ON studentportal.articles TO 'author'@'localhost';
+
+                  GRANT INSERT ON studentportal.articles TO 'author'@'localhost';
+                  GRANT INSERT ON studentportal.articles_comment TO 'author'@'localhost';
+                  GRANT INSERT ON studentportal.articles_reply TO 'author'@'localhost';
+
+                  GRANT DELETE ON studentportal.articles_comment TO 'author'@'localhost';
+                  GRANT DELETE ON studentportal.articles_reply TO 'author'@'localhost';
+         END //
+
+         DELIMITER ;
+      ```
 
 =============================
 ============ [Go back](https://github.com/centino90/Advance-Database-Documentation/#The-database)
