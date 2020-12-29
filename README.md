@@ -18,7 +18,7 @@ This database is made to manage the data needed for an Educational Blog Site. At
    * [Establish Tables and Relationships](https://github.com/centino90/Advance-Database-Documentation/#establish-tables-and-relationships-create-table-primary-key-foreign-key-etc)
    *  [User Management](https://github.com/centino90/Advance-Database-Documentation/#user-management-create-user-drop-user-grant-privilege)
    *  [Views](https://github.com/centino90/Advance-Database-Documentation/#views)
-   *  [Views](https://github.com/centino90/Advance-Database-Documentation/#reports)
+   *  [Reports](https://github.com/centino90/Advance-Database-Documentation/#reports)
    *  [Triggers](https://github.com/centino90/Advance-Database-Documentation/#triggers)
    *  [Stored Functions](https://github.com/centino90/Advance-Database-Documentation/#Stored-Functions)
    *  [Transactions](https://github.com/centino90/Advance-Database-Documentation/#transactions)
