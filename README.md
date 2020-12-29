@@ -12,21 +12,18 @@ This database is made to manage the data needed for an Educational Blog Site. At
 
 * [ERD](https://github.com/centino90/Advance-Database-Documentation/#The-database)
    *  Diagram
-   *  Entities and Description
+   *  [Entities and Description](https://github.com/centino90/Advance-Database-Documentation/#entity-names-and-desciption)
 * [FDD](https://github.com/centino90/Advance-Database-Documentation/#Functional-Dependency-Diagram-FDD)
 * [Complex Queries](https://github.com/centino90/Advance-Database-Documentation/#Complex-Queries-associated-with-the-database)
    * [Establish Tables and Relationships](https://github.com/centino90/Advance-Database-Documentation/#establish-tables-and-relationships-create-table-primary-key-foreign-key-etc)
-   *  User Management
-   *  Views
-   *  Reports
-   *  Triggers
-   *  Stored Functions
-   *  Transactions
-   *  Stored Procedures
-   *  General Queries
-* [End of file](https://github.com/centino90/Advance-Database-Documentation/#end-of-file)
-* [End of file](https://github.com/centino90/Advance-Database-Documentation/#general-queries)
-Establish Tables and Relationships (Create Table, Primary key, Foreign key, etc.)
+   *  [User Management](https://github.com/centino90/Advance-Database-Documentation/#user-management-create-user-drop-user-grant-privilege)
+   *  [Views](https://github.com/centino90/Advance-Database-Documentation/#views)
+   *  [Views](https://github.com/centino90/Advance-Database-Documentation/#reports)
+   *  [Triggers](https://github.com/centino90/Advance-Database-Documentation/#triggers)
+   *  [Stored Functions](https://github.com/centino90/Advance-Database-Documentation/#stored-functions)
+   *  [Transactions](https://github.com/centino90/Advance-Database-Documentation/#transactions)
+   *  [Stored Procedures](https://github.com/centino90/Advance-Database-Documentation/#stored-procedures)
+   * [General Queries](https://github.com/centino90/Advance-Database-Documentation/#general-queries)
 
 <br>
 
@@ -229,7 +226,7 @@ Here are a list of queries with their sample output from the DBRMS:
       </details>
       <br>
 
-* ***User Management (Create User, Drop User, Grant Privilege)*** - A good database system should be able to distinguish user privileges according to user levels (user class) to designate users to their respective roles in the system and secure the database from possible attack vectors.
+* ***<h4>User Management (Create User, Drop User, Grant Privilege)</h4>*** - A good database system should be able to distinguish user privileges according to user levels (user class) to designate users to their respective roles in the system and secure the database from possible attack vectors.
 
    2. **`Query 2: Student Privileges`**
 
@@ -328,7 +325,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
       <br>
 
-* ***Views*** - A good database system should have a summary table (view) of most frequently accessed tables to present data that are already summarized.
+* ***<h4>Views</h4>*** - A good database system should have a summary table (view) of most frequently accessed tables to present data that are already summarized.
 
    5.   **`Query 5: Create View that Ranks Articles Based On the Number of Comments`**
 
@@ -407,7 +404,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
    <br>
 
-* ***Reports*** - A good database system should be able to accept requests successfully, and process it to create consistent and accurate reports to send back to the end-users.
+* ***<h4>Reports</h4>*** - A good database system should be able to accept requests successfully, and process it to create consistent and accurate reports to send back to the end-users.
    
    8. **`Query 8: Create Summary Report from Views`** - Create a report from a View.
 
@@ -470,7 +467,7 @@ Here are a list of queries with their sample output from the DBRMS:
       
    <br>
 
-* ***Triggers*** - A good database system should have triggers in place to perform actions that always happen before or after an insertion, updation, and deletion.
+* ***<h4>Triggers</h4>*** - A good database system should have triggers in place to perform actions that always happen before or after an insertion, updation, and deletion.
 
    10. **`Query 10: Trigger modification date to current_timestamp`**
          ```SQL
@@ -608,7 +605,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
    <br>
 
-* ***Stored Fuctions*** - A good database system should have stored functions prepared to do the redundant common tasks like concatinating multiple columns or returning a scalar value (single value) from a query.
+* ***<h4>Stored Fuctions</h4>*** - A good database system should have stored functions prepared to do the redundant common tasks like concatinating multiple columns or returning a scalar value (single value) from a query.
 
    13.   **`Query 13: Concatinate Fname and Lname`** 
          ```SQL
@@ -694,7 +691,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
    <br>
 
-* ***Transactions*** - A good database system should have ACID (Atomicity, Consitency, Isolation, Durability) properties in place to manage operations (transactions) that are essential to the end-users.
+* ***<h4>Transactions</h4>*** - A good database system should have ACID (Atomicity, Consitency, Isolation, Durability) properties in place to manage operations (transactions) that are essential to the end-users.
 
    16. **`Query 16: Transaction with Rollback`**
          ```SQL
@@ -808,7 +805,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
    <br>
 
-* ***Stored Procedures*** - A good database system should have stored procedures stored within the database to further automate the processes and operations when interacting with the system.
+* ***<h4>Stored Procedures</h4>*** - A good database system should have stored procedures stored within the database to further automate the processes and operations when interacting with the system.
 
    18. **`Query 18: Verify User`** - This stored procedure is responsible for verifying a user based on the input (username, password, email) they give and then returns username and user_id if verified.
          ```SQL
