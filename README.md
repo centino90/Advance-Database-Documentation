@@ -839,7 +839,7 @@ Here are a list of queries with their sample output from the DBRMS:
                -- fileExtension() is a stored function that concatenate dates in order to produce a unique string (see Query #12)
                SET @sql = CONCAT("SELECT * FROM ", tbl," LIMIT ", lim," OFFSET 1 INTO OUTFILE 'C:/CSV/",fileExtension(tbl),".csv' FIELDS ENCLOSED BY '`' TERMINATED BY ';' ESCAPED BY '`' LINES TERMINATED BY '\r\n'");
                
-               -- limit should be less or equal to the total row of the table
+               -- limit should not be less or equal to 0 to be able to perform the prepared stmt
                IF (lim > 0) THEN
                   PREPARE stmt FROM @sql;
                   EXECUTE stmt;
@@ -876,13 +876,15 @@ Here are a list of queries with their sample output from the DBRMS:
             
             BEGIN
 
+            -- disable foreign key constraint
             SET FOREIGN_KEY_CHECKS = 0;
 
             SET @tquery = p_sql;
             PREPARE stmt FROM @tquery;
             EXECUTE stmt;
             DEALLOCATE PREPARE stmt;
-            
+
+            -- enable foreign key constraint
             SET FOREIGN_KEY_CHECKS = 1;
 
             END //
@@ -919,7 +921,7 @@ Here are a list of queries with their sample output from the DBRMS:
             )
 
             BEGIN
-            -- assign the next increment value to a variable to use it as reference (since the next primary key is predictable due to it being incremented automatically by 1) to the user_id from users_detail table
+            -- this can be used to assign the next increment value to a variable to use it as reference (since the next primary key is predictable due to it being incremented automatically by 1)
                SET @tbl = tbl;
                SELECT `AUTO_INCREMENT`
                INTO ai FROM INFORMATION_SCHEMA.TABLES
@@ -975,7 +977,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
 * ***General Queries*** - A good database system should be able to perform all kinds of techniques that the RDBMS has provided.
    
-   21.   **`Query 10: Retrieve Personal Information`** - This select statement is responsible for getting the full name, full address, contact number, & email of a user.
+   21.   **`Query 21: Retrieve Personal Information`** - This select statement is responsible for getting the full name, full address, contact number, & email of a user.
 
          ```SQL
             SET @aid = 10000; -- admin id
@@ -1009,7 +1011,7 @@ Here are a list of queries with their sample output from the DBRMS:
          ```
          This is important since in order to present user data effectively to the end-users, we have to accept a single request to point to a query that will return all the necessary data about them.
 
-      <br>
+   <br>
 
    22. **`Query 22: Retrieve School Information`**
 
@@ -1056,42 +1058,42 @@ Here are a list of queries with their sample output from the DBRMS:
          ```
    <br>
 
-   24. Article Information - queries that are only associated with retrieving information about the articles
+   24. **`Query 24: Retrieve Article Information base on Title Match`**
 
-      **`Query 24: Retrieve Article Information base on Title Match`**
-      ```SQL
-         SET @article_title = "the"; -- article title (input)
-         SET @act = CONCAT(@article_title,"%");
+         ```SQL
+            SET @article_title = "the"; -- article title (input)
+            SET @act = CONCAT(@article_title,"%");
 
-         SELECT 
-         art.title
-         AS Title
-         ,art.content 
-         AS Content
-         ,subj.name
-         AS Subject
-         ,full_name(auth.fname, auth.lname)
-         AS Full_Name
-         ,art.created_at
+            SELECT 
+            art.title
+            AS Title
+            ,art.content 
+            AS Content
+            ,subj.name
+            AS Subject
+            ,full_name(auth.fname, auth.lname)
+            AS Full_Name
+            ,art.created_at
 
-         FROM articles art
+            FROM articles art
 
-         LEFT JOIN subjects subj 
-         USING(subj_id)
-         LEFT JOIN users us 
-         ON art.author_id = us.user_id
-         LEFT JOIN users_detail auth 
-         USING(user_id)
+            LEFT JOIN subjects subj 
+            USING(subj_id)
+            LEFT JOIN users us 
+            ON art.author_id = us.user_id
+            LEFT JOIN users_detail auth 
+            USING(user_id)
 
-         WHERE art.title LIKE @act -- where first characters 
+            WHERE art.title LIKE @act -- where first characters 
 
-         ORDER BY art.title 
-         ASC;
-      ```
+            ORDER BY art.title 
+            ASC;
+         ```
 
-      <br>
+   <br>
    
    25. **`Query 25: Show all Stored Routines (Procedure, Function, Trigger)`**
+
          ```SQL
                -- show all triggers
                SELECT TRIGGER_NAME 
@@ -1107,22 +1109,7 @@ Here are a list of queries with their sample output from the DBRMS:
                WHERE Db = 'studentportal';
          ```
    <br>
-   
-<details>
-   <summary>functions, clauses, ...</summary>
 
-   **`Aggregate Functions`** <br>
-   `COUNT()`, `COUNT(DISTINCT)`, `SUM()`, `AVG()`, `MIN()`, `MAX()`<br><br>
-   **`Mathematical Functions`** <br>
-   `CEILING()`, `FLOOR()`, `ABS()`, `POW()`, `ROUND()`, `MOD()`, `RAND()`<br><br>
-   **`Window (Non Aggregate) Functions`** <br>
-   `DENSE_RANK()`, `RANK()`, `NTILE()`, `FIRST_VALUE()`, `LAST_VALUE()`, `ROW_NUMBER`<br><br>
-   **`Date and Time Functions`** <br>
-   `CURRENT_TIMESTAMP`, `CURDATE()`, `DAY()`, `HOUR()`, `MINUTE()`, `SECOND()` <br><br>
-   **`Information Functions`** <br>
-   `USER()`, `CURRENT_USER()`, `SESSION_USER`  <br><br>
-   **`JOIN Clauses`** <br>
-   `INNER JOIN`, `LEFT JOIN`, `RIGHT JOIN` <br><br>
-   **`Others`** <br>
-   `CONCAT()`
-</details>
+=============================
+============ [Go back](https://github.com/oizy404/SQL-Data-Source#The-Database)
+=============================
