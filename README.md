@@ -13,7 +13,10 @@ This database is made to manage the data needed for an Educational Blog Site. At
 * [ERD](https://github.com/centino90/Advance-Database-Documentation/#The-database)
    *  Diagram
    *  Entities and Description
-* [FDD](https://github.com/centino90/Advance-Database-Documentation/#Functional-Dependency-Diagram-(FDD))
+* [FDD](https://github.com/centino90/Advance-Database-Documentation/#Functional-Dependency-Diagram-FDD)
+* [Complex Queries](https://github.com/centino90/Advance-Database-Documentation/#Complex-Queries-associated-with-the-database)
+   *  [Establish Tables and Relationships](https://github.com/centino90/Advance-Database-Documentation/#Establish-Tables-and-Relationships)
+   *  [User Management](https://github.com/centino90/Advance-Database-Documentation/#User-Management-Create-User,-Drop-User,-Grant-Privilege)
 
 <br>
 
