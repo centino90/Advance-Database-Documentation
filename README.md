@@ -16,7 +16,7 @@ This database is made to manage the data needed for an Educational Blog Site. At
 * [FDD](https://github.com/centino90/Advance-Database-Documentation/#Functional-Dependency-Diagram-FDD)
 * [Complex Queries](https://github.com/centino90/Advance-Database-Documentation/#Complex-Queries-associated-with-the-database)
    * [Establish Tables and Relationships](https://github.com/centino90/Advance-Database-Documentation/#establish-tables-and-relationships-create-table-primary-key-foreign-key-etc)
-   *  [User Management](https://github.com/centino90/Advance-Database-Documentation/#user-management-create-user-drop-user-grant-privilege)
+   *  [User Management](https://github.com/centino90/Advance-Database-Documentation/#user-management-grant-privilege)
    *  [Views](https://github.com/centino90/Advance-Database-Documentation/#views)
    *  [Reports](https://github.com/centino90/Advance-Database-Documentation/#reports)
    *  [Triggers](https://github.com/centino90/Advance-Database-Documentation/#triggers)
@@ -226,9 +226,9 @@ Here are a list of queries with their sample output from the DBRMS:
       </details>
       <br>
 
-* ***<h4>User Management (Create User, Drop User, Grant Privilege)</h4>*** - A good database system should be able to distinguish user privileges according to user levels (user class) to designate users to their respective roles in the system and secure the database from possible attack vectors.
+* ***<h4>User Management (Grant Privilege)</h4>*** - A good database system should be able to distinguish user privileges according to user levels (user class) to designate users to their respective roles in the system and secure the database from possible attack vectors.
 
-   2. **`Query 2: Student Privileges`**
+   2. **`Query 2: Student Privileges`** - Grant privileges (SELECT, UPDATE, INSERT) to the `students`
 
       ```SQL
          -- student privileges
@@ -266,7 +266,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
       <br>
 
-   3. **`Query 3: Author Privileges`**
+   3. **`Query 3: Author Privileges`** - Grant privileges (SELECT, UPDATE, INSERT, DELETE) to the `authors`
 
       ```SQL
          -- author privileges
@@ -307,7 +307,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
       <br>
 
-   4. **`Query 4: Admin/Super_User Privileges`**
+   4. **`Query 4: Admin/Super_User Privileges`** - Grant All Privileges to the `admin`
       ```SQL
          -- admin/super_user
          -- grant all privileges including the ability to grant other users their privilege
@@ -327,7 +327,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
 * ***<h4>Views</h4>*** - A good database system should have a summary table (view) of most frequently accessed tables to present data that are already summarized.
 
-   5.   **`Query 5: Create View that Ranks Articles Based On the Number of Comments`**
+   5.   **`Query 5: Create View`** Create View that Ranks Articles Based On the Number of Comments
 
          ```SQL
             CREATE VIEW popArtBasedOnComm AS
@@ -353,7 +353,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
    <br>
 
-   6. **`Query 6: Create View that Ranks Subjects Based On the Number of Articles Created`**
+   6. **`Query 6: Create View 2`** - Create View that Ranks Subjects Based On the Number of Articles Created
 
          ```SQL
             CREATE VIEW popSubjBasedOnArt AS
@@ -378,7 +378,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
    <br>
 
-   7. **`Query 7: Create View that Ranks Comments Based On the Number of Replies`**    
+   7. **`Query 7: Create View 3`** - Create View that Ranks Comments Based On the Number of Replies
          ```SQL
             CREATE VIEW popCommBasedOnReplies AS
 
@@ -406,7 +406,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
 * ***<h4>Reports</h4>*** - A good database system should be able to accept requests successfully, and process it to create consistent and accurate reports to send back to the end-users.
    
-   8. **`Query 8: Create Summary Report from Views`** - Create a report from a View.
+   8. **`Query 8: Create Report`** - Create Summary Report from a View
 
       ```SQL
          -- this is a summary report of a View
@@ -469,7 +469,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
 * ***<h4>Triggers</h4>*** - A good database system should have triggers in place to perform actions that always happen before or after an insertion, updation, and deletion.
 
-   10. **`Query 10: Trigger modification date to current_timestamp`**
+   10. **`Query 10: Trigger 1`** - Trigger modification date to current_timestamp after update of a row
          ```SQL
             -- create triggers for 8 tables that has modified_at field. This will update all fields based on the current timestamp of when the session is ran.
             CREATE TRIGGER up_artc_ma 
@@ -535,7 +535,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
    <br>
 
-   11. **`Query 11: Trigger delete replies associated to deleted comment`** 
+   11. **`Query 11: Trigger 2`** - Trigger delete replies associated to deleted comment(s)
          ```SQL
             DELIMITER //
 
@@ -573,7 +573,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
    <br>
 
-   12. **`Query 12: Trigger update is_active associated to deleted user_id`** 
+   12. **`Query 12: Trigger 3`** - Update is_active associated to deleted user_id into False 
          ```SQL
             CREATE TRIGGER trg_upd_u_ud 
                AFTER DELETE ON users
@@ -607,7 +607,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
 * ***<h4>Stored Functions</h4>*** - A good database system should have stored functions prepared to do the redundant common tasks like concatinating multiple columns or returning a scalar value (single value) from a query.
 
-   13.   **`Query 13: Concatinate Fname and Lname`** 
+   13.   **`Query 13: Function 1`** - Concatinates Fname and Lname to create Fullname
          ```SQL
             CREATE FUNCTION full_name(
                fname CHAR(30),
@@ -634,7 +634,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
    <br>
 
-   14. **`Query 14: Concatinate full address`** 
+   14. **`Query 14: Function 2`** - Concatinates 4 address-related paremeters to create full address
          ```SQL
             CREATE FUNCTION full_address(
                street VARCHAR(100),
@@ -663,7 +663,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
    <br>
 
-   15.   **`Query 15: Concatinate file name and extension`**
+   15.   **`Query 15: Function 3`** - Returns a concatinated file name/extension
          ```SQL
             CREATE FUNCTION file_extension(
                tbl VARCHAR(50)
@@ -693,7 +693,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
 * ***<h4>Transactions</h4>*** - A good database system should have ACID (Atomicity, Consitency, Isolation, Durability) properties in place to manage operations (transactions) that are essential to the end-users.
 
-   16. **`Query 16: Transaction with Rollback`**
+   16. **`Query 16: Transaction 1`** - A basic transaction operation that rollbacks to a certain point (savepoint)
          ```SQL
             START TRANSACTION;
 
@@ -735,7 +735,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
    <br>
 
-   17. **`Query 17: Transaction with Commit inside Stored Procedure`**
+   17. **`Query 17: Transaction 2`** - A Transaction with Commit inside Stored Procedure
          ```SQL
             DELIMITER //
 
@@ -807,7 +807,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
 * ***<h4>Stored Procedures</h4>*** - A good database system should have stored procedures stored within the database to further automate the processes and operations when interacting with the system.
 
-   18. **`Query 18: Verify User`** - This stored procedure is responsible for verifying a user based on the input (username, password, email) they give and then returns username and user_id if verified.
+   18. **`Query 18: Stored Procedure 1`** - This stored procedure is responsible for verifying a user based on the input (username, password, email) they give and then returns username and user_id if verified.
          ```SQL
             CREATE PROCEDURE verifyUser(
                IN v_uname VARCHAR(50),
@@ -856,7 +856,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
    <br>
 
-   19. **`Query 19: Insert New User Via Stored Procedure`**
+   19. **`Query 19: Stored Procedure 2`** - Insert New User Via Stored Procedure with input filtering and GRANT conditions.
          ```SQL
             DELIMITER //
 
@@ -973,7 +973,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
    <br>
 
-   20. **`Query: 20: Create .CSV file based on selected data from a table`**
+   20. **`Query: 20: Stored Procedure 3`** - Create .CSV file based on selected data from a table
          ```SQL
             DELIMITER //
 
@@ -1018,7 +1018,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
    <br>
 
-   21. **`Query 21: Execute Parameterized Query that Disables Foreign Constraints momentarily`**
+   21. **`Query 21: Store Procedure 4`** - Execute Parameterized Query that Disables Foreign Constraints momentarily
          ```SQL
             DELIMITER //
 
@@ -1069,7 +1069,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
    <br>
 
-   22. **`Query 22: Retrieve Current Increment of a Table`**
+   22. **`Query 22: Stored Procedure 5`** - Retrieve Current Increment of a Table
          ```SQL
             DELIMITER //
 
@@ -1110,7 +1110,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
    <br>
 
-   23.   **`Query 23: Trigger a Customer Error by Calling it within a Store Procedure`**
+   23.   **`Query 23: Stored Procedure 6`** - Trigger a Customer Error by Calling it within a Store Procedure
          ```SQL
             DELIMITER //
 
@@ -1188,7 +1188,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
    <br>
 
-   25. **`Query 25: Retrieve School Information`**
+   25. **`Query 25: General Query 1`** - Retrieve School Information
 
          ```SQL
             SET @scid = 3003; -- school id (input)
@@ -1227,7 +1227,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
    <br>
 
-   26. **`Query 26: Retrieve Article Information base on Title Match`**
+   26. **`Query 26: General Query 2`** - Retrieve Article Information base on Title Match
 
          ```SQL
             SET @article_title = "the"; -- article title (input)
@@ -1271,7 +1271,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
    <br>
    
-   27. **`Query 27: Show all Stored Routines (Procedure, Function, Trigger)`**
+   27. **`Query 27: General Query 3`** - Show all Stored Routines (Procedure, Function, Trigger)
 
          ```SQL
                -- show all triggers
@@ -1297,7 +1297,7 @@ Here are a list of queries with their sample output from the DBRMS:
 
    <br>
 
-   28. **`Query 28: Store all initial user privileges`**
+   28. **`Query 28: General Query 4`** - Store all initial user privileges
 
       ```SQL
          DELIMITER //
