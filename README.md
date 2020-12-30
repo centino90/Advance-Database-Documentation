@@ -217,6 +217,9 @@ Here are a list of queries with their sample output from the DBRMS:
             PRIMARY KEY (`u_cl_id`)
          ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
       ```
+      
+      This is important to put constraints on primary and foreign keys which will keep the relationships between tables legitimate and always up to date.
+      
       <details>
       <summary>Show more...</summary>
 
