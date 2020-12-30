@@ -1302,61 +1302,61 @@ Here are a list of queries with their sample output from the DBRMS:
 
    28. **`Query 28: General Query 4`** - Store all initial user privileges
 
-      ```SQL
-         DELIMITER //
+	      ```SQL
+		 DELIMITER //
 
-         CREATE PROCEDURE grantPrivUsers()
+		 CREATE PROCEDURE grantPrivUsers()
 
-         BEGIN 
-               GRANT SELECT ON studentportal.schools TO 'student'@'localhost';
-                  GRANT SELECT ON studentportal.cities TO 'student'@'localhost';
-                  GRANT SELECT ON studentportal.states TO 'student'@'localhost';
-                  GRANT SELECT ON studentportal.countries TO 'student'@'localhost';
-                  GRANT SELECT ON studentportal.articles TO 'student'@'localhost';
-                  GRANT SELECT ON studentportal.subjects TO 'student'@'localhost';
-                  GRANT SELECT ON studentportal.articles_comment TO 'student'@'localhost';
-                  GRANT SELECT ON studentportal.articles_reply TO 'student'@'localhost';
-                  GRANT SELECT ON studentportal.author_subscription TO 'student'@'localhost';
-                  GRANT SELECT (uname, pword, rec_code, email, modified_at, created_at) ON studentportal.users TO 'student'@'localhost';
-                  GRANT SELECT (fname, lname, contact_no, saddress, city_id, school_id) ON studentportal.users_detail TO 'student'@'localhost';
+		 BEGIN 
+		       GRANT SELECT ON studentportal.schools TO 'student'@'localhost';
+			  GRANT SELECT ON studentportal.cities TO 'student'@'localhost';
+			  GRANT SELECT ON studentportal.states TO 'student'@'localhost';
+			  GRANT SELECT ON studentportal.countries TO 'student'@'localhost';
+			  GRANT SELECT ON studentportal.articles TO 'student'@'localhost';
+			  GRANT SELECT ON studentportal.subjects TO 'student'@'localhost';
+			  GRANT SELECT ON studentportal.articles_comment TO 'student'@'localhost';
+			  GRANT SELECT ON studentportal.articles_reply TO 'student'@'localhost';
+			  GRANT SELECT ON studentportal.author_subscription TO 'student'@'localhost';
+			  GRANT SELECT (uname, pword, rec_code, email, modified_at, created_at) ON studentportal.users TO 'student'@'localhost';
+			  GRANT SELECT (fname, lname, contact_no, saddress, city_id, school_id) ON studentportal.users_detail TO 'student'@'localhost';
 
-                  GRANT UPDATE (uname, pword, is_active) ON studentportal.users TO 'student'@'localhost';
-                  GRANT UPDATE (fname, lname, contact_no, saddress, city_id, school_id) ON studentportal.users_detail TO 'student'@'localhost';
-                  GRANT UPDATE (comment, modified_at) ON studentportal.articles_comment TO 'student'@'localhost';
-                  GRANT UPDATE (reply, modified_at) ON studentportal.articles_reply TO 'student'@'localhost';
-                  GRANT UPDATE (is_active, modified_at) ON studentportal.author_subscription TO 'student'@'localhost';
+			  GRANT UPDATE (uname, pword, is_active) ON studentportal.users TO 'student'@'localhost';
+			  GRANT UPDATE (fname, lname, contact_no, saddress, city_id, school_id) ON studentportal.users_detail TO 'student'@'localhost';
+			  GRANT UPDATE (comment, modified_at) ON studentportal.articles_comment TO 'student'@'localhost';
+			  GRANT UPDATE (reply, modified_at) ON studentportal.articles_reply TO 'student'@'localhost';
+			  GRANT UPDATE (is_active, modified_at) ON studentportal.author_subscription TO 'student'@'localhost';
 
-                  GRANT INSERT ON studentportal.articles_comment TO 'student'@'localhost';
-                  GRANT INSERT ON studentportal.articles_reply TO 'student'@'localhost';
-                  GRANT INSERT ON studentportal.author_subscription TO 'student'@'localhost';
-                  GRANT SELECT ON studentportal.schools TO 'author'@'localhost';
-                  GRANT SELECT ON studentportal.cities TO 'author'@'localhost';
-                  GRANT SELECT ON studentportal.states TO 'author'@'localhost';
-                  GRANT SELECT ON studentportal.countries TO 'author'@'localhost';
-                  GRANT SELECT ON studentportal.articles TO 'author'@'localhost';
-                  GRANT SELECT ON studentportal.subjects TO 'author'@'localhost';
-                  GRANT SELECT ON studentportal.articles_comment TO 'author'@'localhost';
-                  GRANT SELECT ON studentportal.articles_reply TO 'author'@'localhost';
-                  GRANT SELECT ON studentportal.author_subscription TO 'author'@'localhost';
-                  GRANT SELECT (uname, pword, rec_code, email, modified_at, created_at) ON studentportal.users TO 'author'@'localhost';
-                  GRANT SELECT (fname, lname, contact_no, saddress, city_id) ON studentportal.users_detail TO 'author'@'localhost';
+			  GRANT INSERT ON studentportal.articles_comment TO 'student'@'localhost';
+			  GRANT INSERT ON studentportal.articles_reply TO 'student'@'localhost';
+			  GRANT INSERT ON studentportal.author_subscription TO 'student'@'localhost';
+			  GRANT SELECT ON studentportal.schools TO 'author'@'localhost';
+			  GRANT SELECT ON studentportal.cities TO 'author'@'localhost';
+			  GRANT SELECT ON studentportal.states TO 'author'@'localhost';
+			  GRANT SELECT ON studentportal.countries TO 'author'@'localhost';
+			  GRANT SELECT ON studentportal.articles TO 'author'@'localhost';
+			  GRANT SELECT ON studentportal.subjects TO 'author'@'localhost';
+			  GRANT SELECT ON studentportal.articles_comment TO 'author'@'localhost';
+			  GRANT SELECT ON studentportal.articles_reply TO 'author'@'localhost';
+			  GRANT SELECT ON studentportal.author_subscription TO 'author'@'localhost';
+			  GRANT SELECT (uname, pword, rec_code, email, modified_at, created_at) ON studentportal.users TO 'author'@'localhost';
+			  GRANT SELECT (fname, lname, contact_no, saddress, city_id) ON studentportal.users_detail TO 'author'@'localhost';
 
-                  GRANT UPDATE (uname, pword, is_active) ON studentportal.users TO 'author'@'localhost';
-                  GRANT UPDATE (fname, lname, contact_no, saddress, city_id) ON studentportal.users_detail TO 'author'@'localhost';
-                  GRANT UPDATE (comment, modified_at) ON studentportal.articles_comment TO 'author'@'localhost';
-                  GRANT UPDATE (reply, modified_at) ON studentportal.articles_reply TO 'author'@'localhost';
-                  GRANT UPDATE (subj_id, title, content, modified_at) ON studentportal.articles TO 'author'@'localhost';
+			  GRANT UPDATE (uname, pword, is_active) ON studentportal.users TO 'author'@'localhost';
+			  GRANT UPDATE (fname, lname, contact_no, saddress, city_id) ON studentportal.users_detail TO 'author'@'localhost';
+			  GRANT UPDATE (comment, modified_at) ON studentportal.articles_comment TO 'author'@'localhost';
+			  GRANT UPDATE (reply, modified_at) ON studentportal.articles_reply TO 'author'@'localhost';
+			  GRANT UPDATE (subj_id, title, content, modified_at) ON studentportal.articles TO 'author'@'localhost';
 
-                  GRANT INSERT ON studentportal.articles TO 'author'@'localhost';
-                  GRANT INSERT ON studentportal.articles_comment TO 'author'@'localhost';
-                  GRANT INSERT ON studentportal.articles_reply TO 'author'@'localhost';
+			  GRANT INSERT ON studentportal.articles TO 'author'@'localhost';
+			  GRANT INSERT ON studentportal.articles_comment TO 'author'@'localhost';
+			  GRANT INSERT ON studentportal.articles_reply TO 'author'@'localhost';
 
-                  GRANT DELETE ON studentportal.articles_comment TO 'author'@'localhost';
-                  GRANT DELETE ON studentportal.articles_reply TO 'author'@'localhost';
-         END //
+			  GRANT DELETE ON studentportal.articles_comment TO 'author'@'localhost';
+			  GRANT DELETE ON studentportal.articles_reply TO 'author'@'localhost';
+		 END //
 
-         DELIMITER ;
-      ```
+		 DELIMITER ;
+	      ```
 
 =============================
 ============ [Go back](https://github.com/centino90/Advance-Database-Documentation/#The-database)
