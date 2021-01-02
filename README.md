@@ -226,6 +226,7 @@ Here are a list of queries with their sample output from the DBRMS:
       `Result: `
 
       ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/ct1-1.PNG)
+      ![image](https://github.com/centino90/Advance-Database-Documentation/blob/main/img/stored_procedures/ct1-2.PNG)
       </details>
       <br>
 
