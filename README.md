@@ -8,7 +8,7 @@ This database is made to manage the data needed for an Educational Blog Site. At
 
 <br>
 
-## Table of Contents
+## Contents
 
 * [ERD](https://github.com/centino90/Advance-Database-Documentation/#entity-relationship-diagram-erd)
    *  Diagram
